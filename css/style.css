@@ -204,10 +204,6 @@ legend {
 }
 
 /* CLIENTES*/
-/* .sec-clientes {
-  align-items: flex-end;
-} */
-
 .div__clientes {
   width: 100%;
 }
@@ -237,7 +233,6 @@ legend {
   padding: 0.25em;
 }
 
-
 .cliente__button {
   width: 60%;
   margin-top: 20px;
@@ -250,7 +245,6 @@ legend {
 }
 
 /* VEHICULOS*/
-
 .cli-vehiculos {
   max-width: 320px;
   margin-top: 15px;
