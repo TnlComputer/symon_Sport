@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta description="Taller Mecánico en Caseros, reparación integral de vehiculos, nafta o diesel">
 
-  <link rel="canonical" href="https://tnlcomputer.com.ar/ssp/">
+  <link rel="canonical" href="https://tnlcomputer.com.ar/ssp">
   <meta name="application-name" content="tnlcomputer">
   <meta property="og:title" content="Tnlcomputer">
   <meta property="og:site_name" content="Tnlcomputer">
@@ -41,9 +41,8 @@
   <title>Symon Sport</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2? family=Lato:wght@400;700;900&mostrar=intercambiar"
-    rel="hoja de estilo">
-  <link rel="preconnect" href="https://pro.fontawesome.com/releases/v5.15.4/css/all.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&mostrar=intercambiar" rel="hoja de estilo">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.15.4/css/all.css">
 
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -56,7 +55,7 @@
       </label>
     </div>
     <nav class="main-nav">
-      <input type="checkbox" class="toggle-menu__checkbox" id="toggle-menu-checkbox" />
+      <!-- <input type="checkbox" class="toggle-menu__checkbox" id="toggle-menu-checkbox" /> -->
       <ul id="main-menu" class="main-menu">
         <img class="main-logo" src="assets/img/logo symon sport-150.png" alt="SYMON SPORT">
         <hr class="linea">
@@ -68,7 +67,6 @@
           <a href="clientes.html" class="main-menu__link"><i class="nav__item fas fa-file-user"></i>Clientes</a>
         </li>
         <li class="main-menu__item">
-
           <a href="trabajos.html" class="main-menu__link"><i class="nav__item fas fa-car-mechanic"></i>Trabajos</a>
         </li>
         <li class="main-menu__item">
@@ -97,43 +95,56 @@
       </ul>
     </nav>
     <section class="main-section">
+      <h1><span>S</span>YMON <span>S</span>PORT</h1>
       <article class="sec-clientes">
-        <div class="div__clientes">
-          <h2>CLIENTES</h2>
-          <form id="cli-formulario" action="">
-            <select class="slc-clientes" name="id_cliente" id="id_cliente">
-            </select>
-          </form>
-        </div>
+        <!-- <div class="div__clientes"> -->
+        <h2>CLIENTES</h2>
+        <form id="cli-formulario" action="">
+          <select class="slc-clientes" name="id_cliente" id="id_cliente">
+          </select>
+        </form>
+        <!-- </div> -->
       </article>
       <article id="cli-vehiculos" class="cli-vehiculos">
         <template>
           <div class="cli-vehiculos-main">
-            <div class="cli-vehiculos-titulo">Patente :
-              <input class="cli-vehiculos-detalle" type="text">
+
+            <div class="cli-vehiculos-linea">
+              <div class="cli-vehiculos-titulo">Patente : </div>
+              <div><input class="cli-vehiculos-detalle" type="text"></div>
             </div>
-            <div class="cli-vehiculos-titulo">Marca :
-              <input class="cli-vehiculos-detalle" type="text" t>
+
+            <div class="cli-vehiculos-linea">
+              <div class="cli-vehiculos-titulo">Marca : </div>
+              <div><input class="cli-vehiculos-detalle" type="text" t></div>
             </div>
-            <div class="cli-vehiculos-titulo">Modelo :
-              <input class="cli-vehiculos-detalle" type="text">
+
+            <div class="cli-vehiculos-linea">
+              <div class="cli-vehiculos-titulo">Modelo : </div>
+              <div> <input class="cli-vehiculos-detalle" type="text"></div>
             </div>
-            <div class="cli-vehiculos-titulo">KM :
-              <input class="cli-vehiculos-detalle" type="text">
+
+            <div class="cli-vehiculos-linea">
+              <div class="cli-vehiculos-titulo">KM : </div>
+              <div> <input class="cli-vehiculos-detalle" type="text"></div>
             </div>
-            <div class="cli-vehiculos-titulo">Tanque :
-              <input class="cli-vehiculos-detalle" type="text">
+
+            <div class="cli-vehiculos-linea">
+              <div class="cli-vehiculos-titulo">Tanque : </div>
+              <div> <input class="cli-vehiculos-detalle" type="text"></div>
             </div>
-            <div class="cli-vehiculos-titulo">Detalles :
-              <input class="cli-vehiculos-detalle" type="text" multiple="5">
+
+            <div class="cli-vehiculos-linea">
+              <div class="cli-vehiculos-titulo">Detalles :</div>
+              <div> <input class="cli-vehiculos-detalle" type="text"></div>
             </div>
-          </div>
         </template>
       </article>
     </section>
   </main>
   <footer></footer>
   <script src="js/clientes.js" defer></script>
+  <script src="js/scripts.js" defer></script>
 </body>
 
 </html>

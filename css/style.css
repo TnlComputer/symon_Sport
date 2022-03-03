@@ -31,7 +31,7 @@ span {
 }
 
 .toggle-menu {
-  position: absolute;
+  position: fixed;
   width: 40px;
   bottom: 0.5rem;
   left: 1.5rem;
@@ -41,10 +41,10 @@ span {
 }
 
 .main-menu {
-  position: absolute;
+  position: fixed;
   top: 0;
   list-style: none;
-  margin-top: 0;
+  margin-top: 0px;
   margin-bottom: 0;
   margin-left: 0;
   padding-left: 10px;
@@ -62,13 +62,13 @@ span {
   transform: translateY(0);
 }
 
-.toggle-menu__checkbox {
+/* .toggle-menu__checkbox {
   display: none;
 }
 
 .toggle-menu__checkbox:checked+.main-menu {
   transform: translateY(0);
-}
+} */
 
 .main-menu__item {
   padding: 1em;
@@ -87,7 +87,7 @@ span {
 .social {
   width: 100%;
   margin: 20px 20px;
-  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .social__link {
@@ -98,6 +98,7 @@ span {
 
 .main {
   width: 100%;
+  height: 100%;
   margin-top: 0;
 }
 
@@ -114,11 +115,6 @@ span {
 .linea {
   font-weight: normal;
   width: 100%;
-}
-
-main {
-  width: 100%;
-  height: 100%;
 }
 
 .main-section {
@@ -204,14 +200,6 @@ legend {
 }
 
 /* CLIENTES*/
-.div__clientes {
-  width: 100%;
-}
-
-.form__clientes {
-  width: 100%;
-}
-
 .slc-clientes {
   font-size: 18px;
 }
@@ -233,6 +221,7 @@ legend {
   padding: 0.25em;
 }
 
+
 .cliente__button {
   width: 60%;
   margin-top: 20px;
@@ -244,37 +233,50 @@ legend {
   font-weight: 600;
 }
 
-/* VEHICULOS*/
-.cli-vehiculos {
-  max-width: 320px;
-  margin-top: 15px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 10px;
+/*alta clientes*/
+.form__clientes {
+  width: 100%;
 }
 
-.error__vehiculo,
+/* VEHICULOS*/
+
+.cli-vehiculos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  max-width: 320px;
+  margin: 10px auto;
+  /* padding-bottom: 10px; */
+}
+
 .cli-vehiculos-main {
-  display: inline;
-  padding: 10px;
-  border: 2px solid var(--text-primary);
-  border-radius: 5px;
+  margin: 20px;
+}
+
+.cli-vehiculos-linea {
+  display: inline-flex;
+  flex-direction: row;
+  width: 100%;
+  /* display: inline-block; */
+  text-align: left;
+  padding: 20px auto;
 }
 
 .cli-vehiculos-titulo {
-  min-width: 25px;
-  padding-top: 10px;
-  padding-left: 20px;
+  /* position: relative; */
+  width: 80px;
   color: var(--text-secondary);
-  text-align: left;
 }
 
 .cli-vehiculos-detalle {
-  width: 200px;
-  height: 20px;
-  /* margin-left: 20px; */
+  /* position: relative; */
+  width: 210px;
   color: var(--color-primary);
-  text-align: left;
+  /* text-align: left; */
+  font-size: 18px;
+  font-weight: 600;
+  font-style: oblique;
 }
 
 .error__vehiculo {
@@ -282,11 +284,23 @@ legend {
   color: var(--text-terciary);
 }
 
+.error__vehiculo,
+.cli-vehiculos-main {
+  padding: 10px 10px;
+  border: 2px solid var(--text-primary);
+  border-radius: 7px;
+
+}
+
 /* @MEDIA*/
 
 @media (hover:hover) {
   .main-menu__link:hover {
     color: var(--color-terciary);
+  }
+
+  .seccion.proyecto .modulo.paso {
+    width: 100%;
   }
 }
 
@@ -296,27 +310,74 @@ legend {
     display: none;
   }
 
-  .main-menu {
-    position: absolute;
-    flex-direction: column;
-    transform: translateY(0);
-    height: 100vh;
+  .linea {
+    display: none;
   }
 
-  .main-section {
-    /* display: flex;
-    */
+  .main-logo {
+    display: none;
+  }
+
+  .main-nav {
+    width: 100vw;
+  }
+
+  .main-menu {
+    position: fixed;
+    width: 100%;
+    height: 40px;
+    flex-direction: row;
+    /* justify-content: space-center; */
     align-content: center;
     align-items: center;
-    width: calc(100vw - 200px);
-    margin-left: 200px;
-    text-align: center;
-    /* background-color: var(--color-terciary); */
+    transform: translateY(0);
+    font-size: 12px;
+    /* padding: 0; */
+    font-weight: 600;
+    /* margin: 0;
+    margin-left: auto;
+    margin-right: auto; */
+    /* text-align: center; */
+
   }
 
-  .sec-clientes {
-    align-items: flex-end;
+  .main-menu__link {
+    padding: 10px;
   }
+
+  .main-menu__link i {
+    display: none;
+  }
+
+  .social {
+    width: auto;
+    margin: 10px 10px;
+    margin-top: 10px;
+  }
+
+  /* .social__link {
+    width: auto;
+    height: auto;
+    margin: auto;
+  } */
+
+  /*  fin menu*/
+
+
+  .main-section {
+    position: relative;
+    top: 40px;
+    width: 100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+
+  /* .sec-clientes {
+    position: relative;
+    left: 200px;
+  } */
 
   .div__clientes {
     width: 80%;
@@ -328,6 +389,255 @@ legend {
     max-width: 400px;
     margin-top: 5em;
     margin-left: 40%;
+  }
+
+  /* vehiculos*/
+  .cli-vehiculos {
+    max-width: 1240px;
+    display: flex;
+    /* flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center; */
+    /* margin-left: 30px; */
+  }
+
+  .cli-vehiculos-main {
+    width: 320px;
+    min-height: 300px;
+  }
+
+  /* agregados en index.html*/
+  .row {
+    width: 100%;
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+
+    display: flex;
+    align-content: center;
+    align-items: center;
+  }
+
+  .seccion .proyecto {
+    background-color: #fff;
+    text-align: center
+  }
+
+  .seccion.proyecto h2 {
+    color: #4A4A4E;
+    text-align: center
+  }
+
+  .seccion .proyecto .sub .sub-proyecto {
+    background-color: #004970;
+  }
+
+  .seccion .proyecto p {
+    font-size: 15px;
+    line-height: 25px;
+    color: #4A4A4E;
+    font-weight: 100;
+    padding: 0px 215px;
+  }
+
+  .seccion .proyecto p:nth-of-type(1) {
+    font-family: 'Georgia', sans-serif;
+    font-size: 20px;
+    line-height: 29px;
+    font-style: italic;
+    margin: 15px 0;
+    /*padding: 0px 300px;*/
+  }
+
+  .seccion .proyecto .sub .sub-proyecto.sub-p {
+    background-color: #ABA5A5;
+    display: inline-block;
+  }
+
+  .seccion .proyecto .modulo .pasos {
+    padding: 30px 0px;
+  }
+
+  .seccion .proyecto .modulo.paso {
+    width: 100%;
+    border: 1px solid #d8d8d8;
+  }
+
+  .seccion .proyecto .modulo .paso:last-child {
+    margin-right: 0;
+  }
+
+  .seccion .proyecto .modulo .paso h3 {
+    font-size: 14px;
+    line-height: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    min-height: 45px;
+    padding: 10px 5px 0;
+  }
+
+  .seccion .proyecto .modulo .paso h3:after {
+    display: block;
+    content: '';
+    background-color: #004970;
+    height: 4px;
+    width: 56px;
+    margin: 6px auto;
+  }
+
+
+  .seccion .proyecto .modulo .paso .img-wrap {
+    min-height: 150px;
+  }
+
+  .seccion .proyecto .modulo .paso .img-wrap img {
+    width: 150px;
+    align-content: center;
+    margin: 0 auto;
+  }
+
+  .seccion .proyecto .modulo .paso ul {
+    font-size: 14px;
+    line-height: 15px;
+    padding: 10px;
+    border-top: 1px solid #d8d8d8;
+    min-height: 60px;
+    text-align: left;
+    max-width: 81%;
+    margin: 0 auto;
+  }
+
+  .seccion .proyecto .modulo .paso ul li,
+  .seccion .proyecto .modulo .paso ul p {
+    font-family: 'Georgia', sans-serif;
+    font-style: italic;
+    line-height: 17px;
+    padding-left: 20px;
+    margin: 0;
+  }
+
+  .seccion .proyecto .modulo .paso ul li:before {
+    display: inline-block;
+    content: 'â€¢';
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .seccion .servicios {
+    background-color: #E2E1D4;
+  }
+
+  .seccion .servicios h2 {
+    color: #4A4A4E;
+    text-align: center
+  }
+
+  .seccion .servicios .sub .sub-servicios {
+    background-color: #004970;
+  }
+
+  .seccion .servicios .col {
+    padding: 0px 119px 0 12px;
+  }
+
+  .seccion .servicios .col.col-1 {
+    width: 70%;
+    margin: 0 0 0 20%;
+  }
+
+  .seccion .servicios ul {
+    list-style: none;
+  }
+
+  .seccion .servicios ul li ul {
+    left: 28px;
+  }
+
+  .seccion .servicios ul li span {
+    background-image: url("../assets/img/servicios/sprite-2.png");
+    top: 4px;
+    left: -8px;
+  }
+
+  .seccion .servicios ul li ul li span {
+    background-image: url("../assets/img/servicios/sprite-2.png");
+    top: 4px;
+    left: -8px;
+    background-position: 0px -16px;
+  }
+
+  .seccion .servicios ul li p {
+    color: #4A4A4E;
+    font-size: 15px;
+    line-height: 25px;
+    font-weight: 100;
+    display: inline;
+  }
+
+  .seccion .servicios ul li ul li p {
+    font-style: italic
+  }
+
+  /* =========================== Helper classes ================================= */
+
+  .ir {
+    background-color: transparent;
+    border: 0;
+    overflow: hidden;
+    *text-indent: -9999px;
+  }
+
+  .ir:before {
+    content: " ";
+    display: block;
+    width: 0;
+    height: 150%;
+  }
+
+  .hidden {
+    display: none !important;
+    visibility: hidden;
+  }
+
+  .visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  .visuallyhidden .focusable:active,
+  .visuallyhidden .focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+  }
+
+  .invisible {
+    visibility: hidden;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    content: " ";
+    display: table;
+  }
+
+  .clearfix:after {
+    clear: both;
+  }
+
+  .clearfix {
+    *zoom: 1;
   }
 
 }

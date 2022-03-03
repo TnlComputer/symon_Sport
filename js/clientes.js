@@ -38,24 +38,37 @@ async function loadVehiculos(datos) {
       } else {
         data.forEach((ele) => {
           $options += `<div class="cli-vehiculos-main">
-          <div class="cli-vehiculos-titulo">Patente : </div>
-          <span class="cli-vehiculos-detalle">  ${ele.patente} </span>
-          
-          <div class="cli-vehiculos-titulo">Marca   : </label>
-          <span class="cli-vehiculos-detalle">${ele.marca} </span>
-          
-          <div class="cli-vehiculos-titulo">Modelo : </div>
-          <span class="cli-vehiculos-detalle">${ele.modelo}</span>
-          
-          <div class="cli-vehiculos-titulo">KM    : </div>
-          <span class="cli-vehiculos-detalle">${ele.km} </span>
-          
-          <div class="cli-vehiculos-titulo">Tanque  : </div>
-          <span class="cli-vehiculos-detalle">${ele.tanque} </span>
-          
-          <div class="cli-vehiculos-titulo">Detalles : </div>
-          <span class="cli-vehiculos-detalle"> ${ele.detalle}</span>
-          
+
+          <div class="cli-vehiculos-linea">
+          <div class="cli-vehiculos-titulo">Patentes:</div>
+          <div class="cli-vehiculos-detalle">${ele.patente}</div>
+          </div>
+
+          <div class="cli-vehiculos-linea">
+          <div class="cli-vehiculos-titulo">Marca:</div>
+          <div class="cli-vehiculos-detalle">${ele.marca}</div>
+          </div>
+
+          <div class="cli-vehiculos-linea">
+          <div class="cli-vehiculos-titulo">Modelo:</div>
+          <div class="cli-vehiculos-detalle">${ele.modelo}</div>
+          </div>
+
+          <div class="cli-vehiculos-linea">
+          <div class="cli-vehiculos-titulo">KM:</div>
+          <div class="cli-vehiculos-detalle">${ele.km} km</div>
+          </div>
+
+          <div class="cli-vehiculos-linea">
+          <div class="cli-vehiculos-titulo">Tanque:</div>
+          <div class="cli-vehiculos-detalle">${ele.tanque}</div>
+          </div>
+
+          <div class="cli-vehiculos-linea">
+          <div class="cli-vehiculos-titulo">Detalles: </div>
+          <div class="cli-vehiculos-detalle">${ele.detalle}</div>
+          </div>
+
           </div>`;
         });
       }
