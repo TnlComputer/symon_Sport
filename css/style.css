@@ -1,13 +1,19 @@
 :root {
-  --bg-primary: #444;
+  --bg-primary: #222;
   --bg-secondary: rgb(184, 182, 182);
-  --menu-primary: rgb(10, 10, 122);
+  --menu-primary: #004970;
+  /* rgb(10, 10, 122); */
   --color-primary: #fff;
-  --color-secondary: rgb(199, 20, 20);
+  --color-secondary: rgb(134, 82, 47);
   --color-terciary: rgb(104, 101, 101);
-  --text-primary: #fff;
-  --text-secondary: #999;
+  --text-primary: rgb(255, 255, 255);
+  --text-secondary: rgb(153, 153, 153);
   --text-terciary: rgb(235, 155, 27);
+  --text-danger: rgb(146, 43, 43);
+
+  --text-success: rgb(18, 97, 48);
+  --text-negro: rgb(0, 0, 0);
+  --text-ssp: rgb(236, 31, 36);
 }
 
 body {
@@ -27,7 +33,13 @@ h1 {
 }
 
 span {
-  color: var(--color-secondary);
+  /* font-family: 'Rubik+Mono+One',
+    Courier,
+    monospace; */
+  /* font-family: "Bowlby+One+SC"; */
+  color: var(--text-ssp);
+  /* font-style: italic; */
+  font-weight: 600;
 }
 
 .toggle-menu {
@@ -37,7 +49,9 @@ span {
   left: 1.5rem;
   filter: invert(1);
   cursor: pointer;
-  z-index: 1;
+  z-index: 99;
+  /* background-color: white;
+  border-radius: 5px; */
 }
 
 .main-menu {
@@ -61,14 +75,6 @@ span {
 .main-menu--show {
   transform: translateY(0);
 }
-
-/* .toggle-menu__checkbox {
-  display: none;
-}
-
-.toggle-menu__checkbox:checked+.main-menu {
-  transform: translateY(0);
-} */
 
 .main-menu__item {
   padding: 1em;
@@ -121,6 +127,7 @@ span {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
+  height: auto;
   text-align: center;
 }
 
@@ -130,6 +137,93 @@ span {
   margin-right: auto;
   width: 80%;
   color: var(--color-primary);
+}
+
+.main-descripcion {
+  text-align: left;
+}
+
+/* Servicios y Consejos del automotor */
+.row {
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.seccion {
+  width: 100%;
+  background-color: var(--color-terciary);
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.center-grap {
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tit {
+  padding-top: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+/* servicios */
+.modbox,
+.consejos-col {
+  background-color: #fff;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px solid #222;
+  margin-top: 10px;
+}
+
+.modbox {
+  max-width: 280px;
+  min-width: 280px;
+  height: 340px;
+  max-height: 340px;
+  min-height: 340px;
+}
+
+
+.modulo {
+  text-align: center;
+  font-size: 18px;
+}
+
+.img-wrap {
+  width: 100%;
+  text-align: center;
+}
+
+.vcenter li {
+  text-align: left;
+  font-size: 14px;
+}
+
+/* Consejos */
+.consejos-col {
+  width: 100%;
+  max-width: 280px;
+  background-color: var(--bg-terciary);
+  border: none;
+}
+
+.marcador {
+  max-width: 280px;
+  list-style: square;
+  padding-right: 15px;
+  text-align: left;
+}
+
+.consejos-col i {
+  font-weight: bold;
 }
 
 /* LOGIN */
@@ -233,7 +327,6 @@ legend {
   font-weight: 600;
 }
 
-/*alta clientes*/
 .form__clientes {
   width: 100%;
 }
@@ -247,7 +340,6 @@ legend {
   align-content: center;
   max-width: 320px;
   margin: 10px auto;
-  /* padding-bottom: 10px; */
 }
 
 .cli-vehiculos-main {
@@ -258,22 +350,18 @@ legend {
   display: inline-flex;
   flex-direction: row;
   width: 100%;
-  /* display: inline-block; */
   text-align: left;
   padding: 20px auto;
 }
 
 .cli-vehiculos-titulo {
-  /* position: relative; */
   width: 80px;
   color: var(--text-secondary);
 }
 
 .cli-vehiculos-detalle {
-  /* position: relative; */
   width: 210px;
   color: var(--color-primary);
-  /* text-align: left; */
   font-size: 18px;
   font-weight: 600;
   font-style: oblique;
@@ -292,20 +380,84 @@ legend {
 
 }
 
+.footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: fixed;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background-color: var(--menu-primary);
+  font-size: 10px;
+}
+
+.origen {
+  text-align: center;
+  text-decoration: none;
+}
+
 /* @MEDIA*/
 
 @media (hover:hover) {
   .main-menu__link:hover {
-    color: var(--color-terciary);
+    color: var(--text-negro);
   }
 
-  .seccion.proyecto .modulo.paso {
-    width: 100%;
+  .social__link:hover {
+    color: var(--text-negro);
   }
+}
+
+@media screen and (min-width: 600px) {
+  .main-nav {
+    z-index: 10;
+  }
+
+  .main-section {
+    height: auto;
+    padding-bottom: 30px;
+  }
+
+  .main-descripcion {
+    width: 600px;
+    padding-bottom: 20px;
+  }
+
+  .img-index {
+    width: 200px;
+  }
+
+  .row {
+    width: 100%;
+    max-width: 1440px;
+    text-align: center;
+  }
+
+  .modbox {
+    display: inline-block;
+  }
+
+  .consejos-col {
+    width: 100%;
+    max-width: 540px;
+  }
+
+  .marcador {
+    max-width: 540px;
+  }
+
 }
 
 /* TABLET */
 @media screen and (min-width: 768px) {
+  .main {
+    padding-bottom: 60px;
+  }
+
   .toggle-menu {
     display: none;
   }
@@ -327,18 +479,11 @@ legend {
     width: 100%;
     height: 40px;
     flex-direction: row;
-    /* justify-content: space-center; */
     align-content: center;
     align-items: center;
     transform: translateY(0);
     font-size: 12px;
-    /* padding: 0; */
     font-weight: 600;
-    /* margin: 0;
-    margin-left: auto;
-    margin-right: auto; */
-    /* text-align: center; */
-
   }
 
   .main-menu__link {
@@ -355,15 +500,6 @@ legend {
     margin-top: 10px;
   }
 
-  /* .social__link {
-    width: auto;
-    height: auto;
-    margin: auto;
-  } */
-
-  /*  fin menu*/
-
-
   .main-section {
     position: relative;
     top: 40px;
@@ -372,12 +508,6 @@ legend {
     margin-left: auto;
     margin-right: auto;
   }
-
-
-  /* .sec-clientes {
-    position: relative;
-    left: 200px;
-  } */
 
   .div__clientes {
     width: 80%;
@@ -395,11 +525,6 @@ legend {
   .cli-vehiculos {
     max-width: 1240px;
     display: flex;
-    /* flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    align-content: center; */
-    /* margin-left: 30px; */
   }
 
   .cli-vehiculos-main {
@@ -407,237 +532,12 @@ legend {
     min-height: 300px;
   }
 
-  /* agregados en index.html*/
-  .row {
+  .consejos-col {
     width: 100%;
-    max-width: 1440px;
-    margin-left: auto;
-    margin-right: auto;
-
-    display: flex;
-    align-content: center;
-    align-items: center;
+    max-width: 740px;
   }
 
-  .seccion .proyecto {
-    background-color: #fff;
-    text-align: center
+  .marcador {
+    max-width: 640px;
   }
-
-  .seccion.proyecto h2 {
-    color: #4A4A4E;
-    text-align: center
-  }
-
-  .seccion .proyecto .sub .sub-proyecto {
-    background-color: #004970;
-  }
-
-  .seccion .proyecto p {
-    font-size: 15px;
-    line-height: 25px;
-    color: #4A4A4E;
-    font-weight: 100;
-    padding: 0px 215px;
-  }
-
-  .seccion .proyecto p:nth-of-type(1) {
-    font-family: 'Georgia', sans-serif;
-    font-size: 20px;
-    line-height: 29px;
-    font-style: italic;
-    margin: 15px 0;
-    /*padding: 0px 300px;*/
-  }
-
-  .seccion .proyecto .sub .sub-proyecto.sub-p {
-    background-color: #ABA5A5;
-    display: inline-block;
-  }
-
-  .seccion .proyecto .modulo .pasos {
-    padding: 30px 0px;
-  }
-
-  .seccion .proyecto .modulo.paso {
-    width: 100%;
-    border: 1px solid #d8d8d8;
-  }
-
-  .seccion .proyecto .modulo .paso:last-child {
-    margin-right: 0;
-  }
-
-  .seccion .proyecto .modulo .paso h3 {
-    font-size: 14px;
-    line-height: 15px;
-    font-weight: 600;
-    text-transform: uppercase;
-    min-height: 45px;
-    padding: 10px 5px 0;
-  }
-
-  .seccion .proyecto .modulo .paso h3:after {
-    display: block;
-    content: '';
-    background-color: #004970;
-    height: 4px;
-    width: 56px;
-    margin: 6px auto;
-  }
-
-
-  .seccion .proyecto .modulo .paso .img-wrap {
-    min-height: 150px;
-  }
-
-  .seccion .proyecto .modulo .paso .img-wrap img {
-    width: 150px;
-    align-content: center;
-    margin: 0 auto;
-  }
-
-  .seccion .proyecto .modulo .paso ul {
-    font-size: 14px;
-    line-height: 15px;
-    padding: 10px;
-    border-top: 1px solid #d8d8d8;
-    min-height: 60px;
-    text-align: left;
-    max-width: 81%;
-    margin: 0 auto;
-  }
-
-  .seccion .proyecto .modulo .paso ul li,
-  .seccion .proyecto .modulo .paso ul p {
-    font-family: 'Georgia', sans-serif;
-    font-style: italic;
-    line-height: 17px;
-    padding-left: 20px;
-    margin: 0;
-  }
-
-  .seccion .proyecto .modulo .paso ul li:before {
-    display: inline-block;
-    content: 'â€¢';
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-
-  .seccion .servicios {
-    background-color: #E2E1D4;
-  }
-
-  .seccion .servicios h2 {
-    color: #4A4A4E;
-    text-align: center
-  }
-
-  .seccion .servicios .sub .sub-servicios {
-    background-color: #004970;
-  }
-
-  .seccion .servicios .col {
-    padding: 0px 119px 0 12px;
-  }
-
-  .seccion .servicios .col.col-1 {
-    width: 70%;
-    margin: 0 0 0 20%;
-  }
-
-  .seccion .servicios ul {
-    list-style: none;
-  }
-
-  .seccion .servicios ul li ul {
-    left: 28px;
-  }
-
-  .seccion .servicios ul li span {
-    background-image: url("../assets/img/servicios/sprite-2.png");
-    top: 4px;
-    left: -8px;
-  }
-
-  .seccion .servicios ul li ul li span {
-    background-image: url("../assets/img/servicios/sprite-2.png");
-    top: 4px;
-    left: -8px;
-    background-position: 0px -16px;
-  }
-
-  .seccion .servicios ul li p {
-    color: #4A4A4E;
-    font-size: 15px;
-    line-height: 25px;
-    font-weight: 100;
-    display: inline;
-  }
-
-  .seccion .servicios ul li ul li p {
-    font-style: italic
-  }
-
-  /* =========================== Helper classes ================================= */
-
-  .ir {
-    background-color: transparent;
-    border: 0;
-    overflow: hidden;
-    *text-indent: -9999px;
-  }
-
-  .ir:before {
-    content: " ";
-    display: block;
-    width: 0;
-    height: 150%;
-  }
-
-  .hidden {
-    display: none !important;
-    visibility: hidden;
-  }
-
-  .visuallyhidden {
-    border: 0;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-  }
-
-  .visuallyhidden .focusable:active,
-  .visuallyhidden .focusable:focus {
-    clip: auto;
-    height: auto;
-    margin: 0;
-    overflow: visible;
-    position: static;
-    width: auto;
-  }
-
-  .invisible {
-    visibility: hidden;
-  }
-
-  .clearfix:before,
-  .clearfix:after {
-    content: " ";
-    display: table;
-  }
-
-  .clearfix:after {
-    clear: both;
-  }
-
-  .clearfix {
-    *zoom: 1;
-  }
-
 }
