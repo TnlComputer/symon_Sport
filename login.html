@@ -97,20 +97,21 @@
     <section class="main-section">
       <h1><span>S</span>YMON <span>S</span>PORT</h1>
       <div class="div__main-login">
-        <form class="form__login" action="ingresar.php" method="post">
+        <form id="form__login" class="form__login" action="" method="post">
           <fieldset>
             <legend>Login</legend>
             <div class="div__login">
               <label for="user_txt">Usuario </label>
-              <input type="text" name="user_txt" placeholder="Ingrese su usuario">
+              <input type="text" name="user_txt" placeholder="Ingrese su usuario" required>
             </div>
             <div class="div__pass">
               <label for="pass_txt">Contraseña </label>
-              <input type="password" name="pass_txt" placeholder="Ingrese su contraseña">
+              <input type="password" name="pass_txt" placeholder="Ingrese su contraseña" required>
             </div>
             <input type="submit" value="INGRESAR" class="div__button">
           </fieldset>
         </form>
+        <div id="respuesta" class="respuesta"></div>
       </div>
     </section>
   </main>
@@ -119,7 +120,8 @@
       Diseñado por <a href="http://tnlcomputer.com.ar"> @TNLCOMPUTER</a>
     </p>
   </footer>
-  <script src="js/scripts.js"></script>
+  <script src="js/login.js" defer></script>
+  <script src="js/scripts.js" defer></script>
 </body>
 
 </html>

@@ -1,19 +1,23 @@
 :root {
-  --bg-primary: #222;
+  --bg-primary: rgb(34, 34, 34);
   --bg-secondary: rgb(184, 182, 182);
-  --menu-primary: #004970;
-  /* rgb(10, 10, 122); */
-  --color-primary: #fff;
+  --bg-ssp: rgb(0, 73, 112);
+  --bg-alert: rgb(96, 207, 211);
+  --menu-primary: rgb(0, 73, 112);
+
+  --color-primary: rgb(255, 255, 255);
   --color-secondary: rgb(134, 82, 47);
   --color-terciary: rgb(104, 101, 101);
+
   --text-primary: rgb(255, 255, 255);
   --text-secondary: rgb(153, 153, 153);
   --text-terciary: rgb(235, 155, 27);
-  --text-danger: rgb(146, 43, 43);
-
-  --text-success: rgb(18, 97, 48);
   --text-negro: rgb(0, 0, 0);
   --text-ssp: rgb(236, 31, 36);
+
+  --alert-danger: rgb(248, 153, 0);
+  --alert-success: rgb(46, 199, 105);
+  --text-error: rgb(236, 31, 36);
 }
 
 body {
@@ -33,12 +37,7 @@ h1 {
 }
 
 span {
-  /* font-family: 'Rubik+Mono+One',
-    Courier,
-    monospace; */
-  /* font-family: "Bowlby+One+SC"; */
   color: var(--text-ssp);
-  /* font-style: italic; */
   font-weight: 600;
 }
 
@@ -143,6 +142,11 @@ span {
   text-align: left;
 }
 
+.img-index {
+  width: 40%;
+  margin: 20px auto;
+}
+
 /* Servicios y Consejos del automotor */
 .row {
   max-width: 100%;
@@ -229,8 +233,11 @@ span {
 /* LOGIN */
 fieldset {
   max-width: 320px;
-  margin: 100px auto;
-  /* padding: 10px; */
+  margin-top: 100px;
+  margin-bottom: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
   background-color: var(--bg-primary);
   color: var(--color-primary);
   border: 2px solid var(--menu-primary);
@@ -249,12 +256,8 @@ legend {
 }
 
 .form__login input[type="text"] {
-  text-transform: uppercase;
-}
-
-.form__login input[type="text"] {
   margin-left: 40px;
-
+  /* text-transform: uppercase; */
 }
 
 .form__login input[type="password"] {
@@ -288,9 +291,25 @@ legend {
   border: 2px solid var(--color-secondary);
 }
 
-.img-index {
-  width: 40%;
-  margin: 20px auto;
+.div__button {
+  cursor: pointer;
+}
+
+.alert {
+  width: 320px;
+  margin: 30px auto;
+  padding: 10px;
+  background-color: var(--bg-ssp);
+  border-radius: 10PX;
+  -align: center;
+}
+
+.alert-primary {
+  color: var(--alert-success);
+}
+
+.alert-danger {
+  color: var(--alert-danger);
 }
 
 /* CLIENTES*/
