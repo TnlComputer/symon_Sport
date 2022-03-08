@@ -11,16 +11,15 @@
 
     $cons=$conexionApi->query("SELECT * FROM usuarios WHERE nombre='".$usuario."' || clave='".$clave."' ");
     $cantR = mysqli_num_rows($cons);
+    // $datos = mysqli_fetch_all($cons);
     $datos = mysqli_fetch_array($cons);
 
-    // $resultado = mysqli_query($conexionApi,$cons);
-    // echo $datos.'<br>';
-    // echo $cantR.'<br>';
+    if (!isset($_SESSION)) { session_start(); }
+      $_SESSION['datos']=$datos;
+
     if ($cantR > 0) {
       echo json_encode($datos);
-      // echo json_encode('existe');
-    }else{
+        }else{
       echo json_encode('inexistente');
     }   
-  // }
 ?>

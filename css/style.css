@@ -370,7 +370,7 @@ legend {
   flex-direction: row;
   width: 100%;
   text-align: left;
-  padding: 20px auto;
+  /* padding: 20px auto; */
 }
 
 .cli-vehiculos-titulo {
