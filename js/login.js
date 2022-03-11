@@ -1,10 +1,12 @@
-const d = document;
-const w = window;
-const formLogin = d.getElementById("form__login");
-const respuesta = d.getElementById("respuesta");
+const formLogin = document.getElementById("form__login");
+const respuesta = document.getElementById("respuesta");
+const ell = document.querySelector(".login");
+const elo = document.querySelector(".logout");
+const elu = document.querySelectorAll(".user");
+const ela = document.querySelectorAll(".adm");
 
-const pathname = w.location.pathname;
-if (pathname === "/ssp/index.html") {
+const pathname = window.location.hostname;
+if (pathname === "tnlcomputer.com.ar") {
   // alert(pathname);
 
   fetch("./php/valido.php")
@@ -14,53 +16,72 @@ if (pathname === "/ssp/index.html") {
         // El usuario no existe
       } else {
         if (data.nivel === "99") {
-          acceso = "Administrador";
+          // acceso = "Administrador";
+          for (let i = 0; i < ela.length; i++) {
+            ela[i].classList.remove("none");
+            // console.log(ela[i]);
+          }
+          ell.classList.add("none");
+          elo.classList.remove("none");
         } else {
-          acceso = "Usuario";
+          // acceso = "Usuario";
+          for (let i = 0; i < elu.length; i++) {
+            elu[i].classList.remove("none");
+          }
+          ell.classList.add("none");
+          elo.classList.remove("none");
         }
-        // console.log(acceso);
       }
     });
+
+  elo.addEventListener("click", (e) => {
+    e.preventDefault();
+    fetch("./php/desconecto.php")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data === "inexistente") {
+          // El usuario no existe
+          for (let i = 0; i < ela.length; i++) {
+            ela[i].classList.add("none");
+          }
+          ell.classList.remove("none");
+          elo.classList.add("none");
+          for (let i = 0; i < elu.length; i++) {
+            elu[i].classList.add("none");
+          }
+        }
+        document.location.href = "login.html";
+      });
+  });
 }
 if (formLogin) {
-  formLogin.addEventListener("submit", function (e) {
+  formLogin.addEventListener("submit", async function (e) {
     e.preventDefault();
-    // console.log("click");
 
     var datos = new FormData(formLogin);
 
-    // var datosCrip = sha256(datos);
-
-    // console.log(datos);
-    // console.log(datos.get("user_txt"));
-    // console.log(datos.get("pass_txt"));
-
-    fetch("./php/enviar.php", {
+    await fetch("./php/enviar.php", {
       method: "Post",
       body: datos,
     })
       .then((res) => res.json())
       .then((data) => {
-        // console.log(data);
         if (data === "inexistente") {
           respuesta.innerHTML = `
-          <div class="alert alert-danger" role="alert">
-            El usuario no existe
-          </div>`;
+        <div class="alert alert-danger" role="alert">
+          El usuario o contraseña es erroneo
+        </div>`;
+          setTimeout(() => {
+            respuesta.innerHTML = ``;
+          }, 3000);
         } else {
           if (data.nivel === "99") {
             acceso = "Administrador";
+            document.location.href = "index.html";
           } else {
             acceso = "Usuario";
+            document.location.href = "consultas.html";
           }
-          d.location.href = "index.html";
-          // console.log(data.id_cliente);
-          // respuesta.innerHTML = `
-          //   <div class="alert alert-primary" role="alert">
-          //     <p> Bienvenido ${data.nombre}, cuenta: ${acceso}
-          //  </p>
-          //   </div>`;
-          // aca tendriamos que hacer que el login desaparezca y aparezca Logout regresando al inicio y mostrando los menues que tienen que ver segun el usuario
         }
       });
   });

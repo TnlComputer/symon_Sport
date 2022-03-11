@@ -41,8 +41,14 @@
   <title>Symon Sport</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&mostrar=intercambiar" rel="hoja de estilo">
-  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.15.4/css/all.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&mostrar=intercambiar" rel="stylesheet">
+
+  <!-- <link
+    href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bowlby+One+SC&family=Rubik+Mono+One&display=swap"
+    rel="stylesheet"> -->
+
+  <!-- <link rel="stylesheet" href="css/fontawesome5154.css"> -->
+  <link rel="stylesheet" href="https://free.fontawesome.com/releases/v5.15.4/css/all.css">
 
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -55,6 +61,7 @@
       </label>
     </div>
     <nav class="main-nav">
+      <!-- <img class="main-logo" src="assets/img/logo symon sport-150.png" alt="SYMON SPORT"> -->
       <!-- <input type="checkbox" class="toggle-menu__checkbox" id="toggle-menu-checkbox" /> -->
       <ul id="main-menu" class="main-menu">
         <img class="main-logo" src="assets/img/logo symon sport-150.png" alt="SYMON SPORT">
@@ -62,25 +69,31 @@
         <li class="main-menu__item">
           <a href="index.html" class="main-menu__link"><i class="nav__item fas fa-home"></i>Home</a>
         </li>
-        <li class="main-menu__item">
+        <li class="main-menu__item adm none">
 
           <a href="clientes.html" class="main-menu__link"><i class="nav__item fas fa-file-user"></i>Clientes</a>
         </li>
-        <li class="main-menu__item">
+        <li class="main-menu__item adm none">
+
           <a href="trabajos.html" class="main-menu__link"><i class="nav__item fas fa-car-mechanic"></i>Trabajos</a>
         </li>
-        <li class="main-menu__item">
+        <li class="main-menu__item adm none">
 
           <a href="presupuestos.html" class="main-menu__link"><i class="nav__item fas fa-file-alt"></i>Presupuestos</a>
         </li>
-        <li class="main-menu__item">
+        <li class="main-menu__item adm user none">
 
           <a href="consultas.html" class="main-menu__link"><i class="nav__item fas fa-file-search"></i>Consultas</a>
         </li>
         <hr class="linea">
-        <li class="main-menu__item">
+        <li class="main-menu__item login">
           <a href="login.html" class="main-menu__link"><i class="nav__item fas fa-user"></i>Login</a>
         </li>
+        <li class="main-menu__item logout none">
+          <a href="desconectar.html" class="main-menu__link"><i class="nav__item fas fa-user"></i>Logout</a>
+        </li>
+
+        <!-- Menu Social -->
         <hr class="linea">
         <li class="social">
           <a href="http://" target="_blank" rel="noopener noreferrer" class="social__link"><i
@@ -98,8 +111,33 @@
       <h1><span>S</span>YMON <span>S</span>PORT</h1>
       <article class="sec-clientes">
         <h2>CONSULTAS</h2>
-        <div class="div__clientes">Aca listado de consultas</div>
+
+        <form id="form_cPat" action="">
+          <label for="patente">Patente
+            <input type="text" name="patente_txt" placeholder="ABC-1234" required>
+            <!-- <input type="hidden" name="id_cliente" value="1"> -->
+          </label>
+          <input type="submit" value="Aceptar">
+        </form>
+        <div id="respuesta" class="respuesta"></div>
+
       </article>
+      <template>
+        <label for="ret">Paterrrnte</label>
+        <input type="text" name="ret" value="">
+
+        <label for="ret">Patenet</label>
+        <input type="text" name="ret" value="">
+
+        <label for="ret">Patenet</label>
+        <input type="text" name="ret" value="">
+
+        <label for="ret">Patenet</label>
+        <input type="text" name="ret" value="">
+
+        <label for="ret">Patenet</label>
+        <input type="text" name="ret" value="">
+      </template>
     </section>
   </main>
   <footer class="footer">
@@ -107,7 +145,9 @@
       Diseñado por <a href="http://tnlcomputer.com.ar"> @TNLCOMPUTER</a>
     </p>
   </footer>
-  <script src="js/scripts.js"></script>
+  <!-- <script src="js/login.js" defer></script>
+  <script src="js/consulta.js" defer></script> -->
+  <script src="js/scripts.js" defer></script>
 </body>
 
 </html>

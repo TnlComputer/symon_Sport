@@ -41,6 +41,10 @@ span {
   font-weight: 600;
 }
 
+.none {
+  display: none;
+}
+
 .toggle-menu {
   position: fixed;
   width: 40px;

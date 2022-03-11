@@ -1,7 +1,7 @@
 const d = document;
-const $clientes = d.getElementById("id_cliente");
-const $form = d.getElementById("cli-formulario");
-const $vehiculos = d.getElementById("cli-vehiculos");
+const $clientes = document.getElementById("id_cliente");
+const $form = document.getElementById("cli-formulario");
+const $vehiculos = document.getElementById("cli-vehiculos");
 
 async function loadClientes() {
   // const opciones = {
