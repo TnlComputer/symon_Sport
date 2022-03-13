@@ -11,7 +11,7 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
    $datos = array();
      
   $consUsr=$conexionApi->query("SELECT * FROM trabajos WHERE patente='".$patente."' ");
- $datos= mysqli_fetch_object($consUsr);
+
   $cant_trb=mysqli_num_rows($consUsr);
   for($ia=0; $ia<$cant_trb; $ia++) { 
     $filap=mysqli_fetch_array($consUsr);
