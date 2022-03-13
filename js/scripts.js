@@ -13,6 +13,9 @@ const cPatente = document.getElementById("form_cPat");
 const $clientes = document.getElementById("id_cliente");
 const $form = document.getElementById("cli-formulario");
 const $vehiculos = document.getElementById("cli-vehiculos");
+const datosPatente = document.querySelectorAll("temp__datos-patentes");
+const $trabajos = document.getElementById("trabajos");
+const $presupuestos = document.getElementById("presupuestos");
 
 /************* MENU oculto o muestro en Moviles ***************/
 
@@ -238,4 +241,117 @@ if ($clientes) {
         $vehiculos.innerHTML = $options;
       });
   }
+}
+
+/************* Trabajos *****************/
+
+if ($trabajos) {
+  async function loadTrabajos() {
+    await fetch("php/trabajos.php")
+      .then((respuestas) => respuestas.json())
+      .then((resultado) => {
+        console.log("resultado =>", resultado);
+        if (resultado === "inexistente") {
+          respuesta.innerHTML = `
+        <div class="alert alert-danger" role="alert">
+          No hay trabajos Cargados
+          </div>`;
+          // setTimeout(() => {
+          //   $trabajos.innerHTML = ``;
+          // }, 3000);
+        } else {
+          let $options = ``;
+          resultado.forEach((el) => {
+            $options += `<div>${el.id_trabajo} - ${el.id_cliente} - ${el.vehiculo} - ${el.fecha_trab} - ${el.patente} - ${el.observaciones} - ${el.presupuesto} - ${el.factura} - ${el.contacto} - ${el.email}</div>
+          `;
+          });
+          $trabajos.innerHTML = $options;
+        }
+      });
+  }
+  loadTrabajos();
+
+  // $clientes.addEventListener("change", (e) => loadVehiculos(e.target.value));
+
+  // // console.log("datos ===>", datos);
+  // async function loadVehiculos(datos) {
+  //   const opciones = {
+  //     method: "POST",
+  //     body: datos,
+  //   };
+  //   resp = await fetch("php/vehiculos.php", opciones)
+  //     .then((resp) => resp.json())
+  //     .then((data) => {
+  //       let $options = "";
+  //       if (data === "error") {
+  //         $options += `<p class="error__vehiculo">El Cliente no tiene Vehiculos asociados</p>`;
+  //       } else {
+  //         data.forEach((ele) => {
+  //           $options += `<div class="cli-vehiculos-main">
+
+  //         <div class="cli-vehiculos-linea">
+  //         <div class="cli-vehiculos-titulo">Patentes:</div>
+  //         <div class="cli-vehiculos-detalle">${ele.patente}</div>
+  //         </div>
+
+  //         <div class="cli-vehiculos-linea">
+  //         <div class="cli-vehiculos-titulo">Marca:</div>
+  //         <div class="cli-vehiculos-detalle">${ele.marca}</div>
+  //         </div>
+
+  //         <div class="cli-vehiculos-linea">
+  //         <div class="cli-vehiculos-titulo">Modelo:</div>
+  //         <div class="cli-vehiculos-detalle">${ele.modelo}</div>
+  //         </div>
+
+  //         <div class="cli-vehiculos-linea">
+  //         <div class="cli-vehiculos-titulo">KM:</div>
+  //         <div class="cli-vehiculos-detalle">${ele.km} km</div>
+  //         </div>
+
+  //         <div class="cli-vehiculos-linea">
+  //         <div class="cli-vehiculos-titulo">Tanque:</div>
+  //         <div class="cli-vehiculos-detalle">${ele.tanque}</div>
+  //         </div>
+
+  //         <div class="cli-vehiculos-linea">
+  //         <div class="cli-vehiculos-titulo">Detalles: </div>
+  //         <div class="cli-vehiculos-detalle">${ele.detalle}</div>
+  //         </div>
+
+  //         </div>`;
+  //         });
+  //       }
+  //       $vehiculos.innerHTML = $options;
+  //    });
+  // }
+}
+
+/************* Prespuestos *****************/
+
+if ($presupuestos) {
+  async function loadTrabajos() {
+    await fetch("php/presupuestos.php")
+      .then((respuestas) => respuestas.json())
+      .then((resultado) => {
+        console.log("resultado =>", resultado);
+        if (resultado === "inexistente") {
+          $presupuestos.innerHTML = `
+        <div class="alert alert-danger" role="alert">
+          No hay presupuestos emitidos
+          </div>`;
+          // setTimeout(() => {
+          //   $presupuestos.innerHTML = ``;
+          // }, 3000);
+        } else {
+          let $options = ``;
+          resultado.forEach((el) => {
+            $options += `<div>${el.id_trabajo} - ${el.id_cliente} - ${el.vehiculo} - ${el.fecha_trab} - ${el.patente} - ${el.observaciones} - ${el.presupuesto} - ${el.factura} - ${el.contacto} - ${el.email}</div>
+          `;
+          });
+          $presupuestos.innerHTML = $options;
+        }
+      });
+  }
+  loadTrabajos();
 }
