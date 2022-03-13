@@ -81,7 +81,7 @@ if (formLogin) {
     var datos = new FormData(formLogin);
 
     await fetch("./php/enviar.php", {
-      method: "Post",
+      method: "POST",
       body: datos,
     })
       .then((res) => res.json())
@@ -114,13 +114,17 @@ if (cPatente) {
 
     var datos = new FormData(cPatente);
 
-    await fetch("./php/consultas.php", {
-      method: "Post",
+    // console.log(datos);
+
+    const opciones = {
+      method: "POST",
       body: datos,
-    })
-      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+    };
+
+    await fetch("./php/consultas.php", opciones)
+      .then((resp) => resp.json())
       .then((dataP) => {
-        console.log(dataP);
+        let $options = "";
         if (dataP === "inexistente") {
           respuesta.innerHTML = `
         <div class="alert alert-danger" role="alert">
@@ -130,38 +134,33 @@ if (cPatente) {
             respuesta.innerHTML = ``;
           }, 3000);
         } else {
-          console.log(dataP.id_cliente);
-          respuesta.innerHTML = `
-        <div class="consTrab">
-        <table>
-        <th> Patente: ${dataP.patente} </th>
-        <td>
-        <tr>Trabajo</tr>
-        <tr>Fecha Trabajo</tr>
-        <tr>Presupuesto</tr>
-        <tr>Factura</tr>
-        <tr>Fecha Entrega</tr>
+          // console.log(dataP[0].id_trabajo);
+          // templateRespuesta = ``;
+          dataP.forEach((ele) => {
+            $options += `
+        <p>
+        <tr> ${ele.patente} </tr>
+        <tr> ${ele.nro_trabajo} </tr>
+        <tr> ${ele.fecha_trab}</tr>
+        <tr> ${ele.presupuesto} </td>
+        <tr> ${ele.factura} </tr>
+        <tr> ${ele.fecha_entrega} </tr>
+        <tr>${ele.observaciones}</tr>
         </td>
-        <td>
-        <tr> ${dataP.id_trabajo} </tr>
-        <tr> ${dataP.fecha_trab}</tr>
-        <tr> ${dataP.presupuesto} </td>
-        <tr> ${dataP.factura} </tr>
-        <tr> ${dataP.fecha_entrega} </tr>
-        <tr>${dataP.observaciones}</tr>
-        </td>
-        </table>
+        </p>
         </div>`;
+          });
         }
-      })
-      .catch((err) => {
-        let message = err.statusText || "Ocurrio un error";
-        respuesta.innerHTML = `
-          <div class="alert alert-primary" role="alert">
-          <p> Error de Datos enviados </p>
-          <p> ${err.status}:${message}</p>
-          </div>`;
+        respuesta.innerHTML = $options;
       });
+    // .catch((err) => {
+    //   let message = err.statusText || "Ocurrio un error";
+    //   respuesta.innerHTML = `
+    //     <div class="alert alert-primary" role="alert">
+    //     <p> Error de Datos enviados </p>
+    //     <p> ${err.status}:${message}</p>
+    //     </div>`;
+    // });
   });
 }
 
