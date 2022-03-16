@@ -99,6 +99,7 @@
         <li class="main-menu__item logout none">
           <a href="desconectar.html" class="main-menu__link"><i class="nav__item fas fa-user"></i>Logout</a>
         </li>
+
         <!-- Menu Social -->
         <hr class="linea">
         <li class="social">
@@ -115,54 +116,35 @@
     </nav>
     <section class="main-section">
       <h1><span>S</span>YMON <span>S</span>PORT</h1>
-      <article class="sec-clientes">
-        <h2>CONSULTAS</h2>
 
-        <form id="form_cPat" action="">
-          <label for="patente">Patente
-            <input type="text" name="patente_txt" placeholder="ABC-1234" required>
-          </label>
-          <input type="submit" value="Aceptar">
-        </form>
-        <div id="respuesta" class="respuesta"></div>
-
-      </article>
-      <template id="temp__patentes" class="temp__patentes">
-        <table>
-          <td>
-            <tr>Patente </tr>
-            <tr>Trabajo</tr>
-            <tr>Fecha Trabajo</tr>
-            <tr>Presupuesto</tr>
-            <tr>Factura</tr>
-            <tr>Fecha Entrega</tr>
-            <tr>Observaciones</tr>
-          </td>
-        </table>
-      </template>
-      <template id="temp__datos-patentes" class="temp__datos-patentes">
-        <table>
-          <td>
-            <tr class="item__patente"></tr>
-            <tr class="item__patente"></tr>
-            <tr class="item__patente"></tr>
-            <tr class="item__patente"></tr>
-            <tr class="item__patente"></tr>
-            <tr class="item__patente"></tr>
-            <tr class="item__patente"></tr>
-            <tr class="item__patente"></tr>
-            <tr class="item__patente"></tr>
-          </td>
-      </template>
+      <p class="main-descripcion">CONTACTO </p>
+      <form action="" class="contact-form">
+        <legend>Envianos tus comentarios</legend>
+        <input type="text" name="name" placeholder="Escribe tu nombre"
+          title="Nombre solo acepta letras y espacios en blanco" pattern="^[A-Za-zÑñÁáÉéÍíÓóÚúÜü\s]+$" required>
+        <input type="email" name="email" placeholder="Escribe tu Email " title="Email incorrecto"
+          pattern="^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$" required>
+        <input type="text" name="subject" placeholder="Asunto a tratar" title="El asunto es requerido" required>
+        <textarea name="comments" cols="50" rows="10" placeholder="Escribe tus Comentarios"
+          title="Tu Comentario no debe exceder los 255 caracteres" data-pattern="^.{1,255}$" required></textarea>
+        <input type="submit" value="Enviar">
+        <div class="contact-form-loader none">
+          <img src="assets/img/svg/oval.svg" alt="Cargando">
+        </div>
+        <div class="contact-form-response none">
+          <p>Los datos han sido enviados</p>
+        </div>
+      </form>
+      <img class="img-index" src="assets/img/logo symon sport-512.png" alt="foto local">
     </section>
+
   </main>
   <footer class="footer">
     <p class="origen">
       Diseñado por <a href="http://tnlcomputer.com.ar"> @TNLCOMPUTER</a>
     </p>
   </footer>
-  <!-- <script src="js/login.js" defer></script>
-  <script src="js/consulta.js" defer></script> -->
+  <!-- <script src="js/login.js" defer></script> -->
   <script src="js/scripts.js" defer></script>
 </body>
 

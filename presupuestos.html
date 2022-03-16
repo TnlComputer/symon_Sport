@@ -49,6 +49,7 @@
 
 
   <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.15.4/css/all.css">
+  <!-- <link rel="stylesheet" href="css/all.css"> -->
 
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -66,25 +67,31 @@
       <ul id="main-menu" class="main-menu">
         <img class="main-logo" src="assets/img/logo symon sport-150.png" alt="SYMON SPORT">
         <hr class="linea">
+
         <li class="main-menu__item">
           <a href="index.html" class="main-menu__link"><i class="nav__item fas fa-home"></i>Home</a>
         </li>
-        <li class="main-menu__item adm none">
 
+        <li class="main-menu__item adm none">
           <a href="clientes.html" class="main-menu__link"><i class="nav__item fas fa-file-user"></i>Clientes</a>
         </li>
-        <li class="main-menu__item adm none">
 
+        <li class="main-menu__item adm none">
           <a href="trabajos.html" class="main-menu__link"><i class="nav__item fas fa-car-mechanic"></i>Trabajos</a>
         </li>
-        <li class="main-menu__item adm none">
 
+        <li class="main-menu__item adm none">
           <a href="presupuestos.html" class="main-menu__link"><i class="nav__item fas fa-file-alt"></i>Presupuestos</a>
         </li>
-        <li class="main-menu__item adm user none">
 
+        <li class="main-menu__item adm user none">
           <a href="consultas.html" class="main-menu__link"><i class="nav__item fas fa-file-search"></i>Consultas</a>
         </li>
+
+        <li class="main-menu__item">
+          <a href="contacto.html" class="main-menu__link"><i class="nav__item fas fa-mailbox"></i>Contacto</a>
+        </li>
+
         <hr class="linea">
         <li class="main-menu__item login">
           <a href="login.html" class="main-menu__link"><i class="nav__item fas fa-user"></i>Login</a>
@@ -92,17 +99,16 @@
         <li class="main-menu__item logout none">
           <a href="desconectar.html" class="main-menu__link"><i class="nav__item fas fa-user"></i>Logout</a>
         </li>
-
         <!-- Menu Social -->
         <hr class="linea">
         <li class="social">
-          <a href="http://" target="_blank" rel="noopener noreferrer" class="social__link"><i
-              class="fab fa-instagram"></i></a>
+          <a href="https://www.instagram.com/?hl=es-la" target="_blank" rel="noopener noreferrer"
+            class="social__link"><i class="fab fa-instagram"></i></a>
 
-          <a href="http://" target="_blank" rel="noopener noreferrer" class="social__link"><i
-              class="fab fa-facebook"></i></a>
+          <a href="https://www.facebook.com/Symon-Sport-308309696321701" target="_blank" rel="noopener noreferrer"
+            class="social__link"><i class="fab fa-facebook"></i></a>
 
-          <a href="http://" target="_blank" rel="noopener noreferrer" class="social__link"><i
+          <a href="https://twitter.com/home?lang=es" target="_blank" rel="noopener noreferrer" class="social__link"><i
               class="fab fa-twitter"></i></a>
         </li>
       </ul>
@@ -111,7 +117,49 @@
       <h1><span>S</span>YMON <span>S</span>PORT</h1>
       <article class="sec-clientes">
         <h2>PRESUPUESTOS</h2>
-        <div id="presupuestos" class="div__clientes">Aca listado de Presupuestos</div>
+        <div id="presupuestos" class="div__clientes">
+          <table class="tabla__tabla">
+            <tr class="tit__tabla">
+              <td class="edit">
+                <form class="form__add" action="" method="post">
+                  <buttom type="submit">
+                    <img src="./assets/img/acciones/action_add.png" alt="Editar Trabajo">
+                  </buttom>
+                </form>
+              </td>
+              <td class="fecha">Fecha</td>
+              <td class="presu">Presupuesto</td>
+              <td class="client">Cliente</td>
+              <td class="vehic">Vehiculo</td>
+              <td class="monto">Importe</td>
+              <td class="descript">Descripción</td>
+              <td class="delete"></td>
+            </tr>
+            <template id="template__Presupuestos">
+              <tr class="line__tabla">
+                <td class="edit">
+                  <form class="form__edit" action="" method="post">
+                    <img src="./assets/img/acciones/reply.gif" alt="Editar Trabajo">
+                    <input type="hidden" value="">
+                  </form>
+                </td>
+                <td class="fecha"></td>
+                <td class="presu"></td>
+                <td class="client"></td>
+                <td class="vehic"></td>
+                <td class="monto"></td>
+                <td class="descript"></td>
+                <td class="delete">
+                  <form class="form__del" action="" method="post">
+                    <img src="./assets/img/acciones/action_delete.png" alt="Eliminar Trabajo">
+                    <input type="hidden" value="">
+                  </form>
+                </td>
+              </tr>
+            </template>
+          </table>
+          <div id="respuesta" class="respuesta"></div>
+        </div>
       </article>
     </section>
   </main>
@@ -120,8 +168,6 @@
       Diseñado por <a href="http://tnlcomputer.com.ar"> @TNLCOMPUTER</a>
     </p>
   </footer>
-  <!-- <script src="js/login.js" defer></script> -->
-
   <script src="js/scripts.js"></script>
 </body>
 
