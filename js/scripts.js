@@ -10,11 +10,11 @@ const ela = document.querySelectorAll(".adm");
 const $clientes = document.getElementById("id_cliente");
 const $form = document.getElementById("cli-formulario");
 
-/* Trabajos */
-const $trabajos = document.getElementById("trabajos");
+// /* Trabajos */
+// const $trabajos = document.getElementById("trabajos");
 
 /* Presupuestos */
-const $presupuestos = document.getElementById("presupuestos");
+// const $presupuestos = document.getElementById("presupuestos");
 
 /* Consultas */
 const cPatente = document.getElementById("form_cPat");
@@ -262,37 +262,37 @@ if ($clientes) {
 
 /************* Trabajos *****************/
 
-if ($trabajos) {
-  const template = document.getElementById("template__Trabajos").content;
-  const fragment = document.createDocumentFragment();
+// if ($trabajos) {
+//   const template = document.getElementById("template__Trabajos").content;
+//   const fragment = document.createDocumentFragment();
 
-  async function loadTrabajos() {
-    await fetch("php/trabajos.php")
-      .then((respuestas) => respuestas.json())
-      .then((resultado) => {
-        if (resultado === "inexistente") {
-          respuesta.innerHTML = `
-        <div class="alert alert-danger" role="alert">
-          No hay trabajos Cargados
-          </div>`;
-        } else {
-          resultado.forEach((el) => {
-            template.querySelector(".client").textContent = el.id_cliente;
-            template.querySelector(".vehic").textContent = el.id_vehiculo;
-            template.querySelector(".fecha").textContent = el.fecha_trab;
-            template.querySelector(".patente").textContent = el.patente;
-            template.querySelector(".descript").textContent = el.observaciones;
-            template.querySelector(".presu").textContent = el.presupuesto;
-            template.querySelector(".factu").textContent = el.factura;
-            const clone = template.cloneNode(true);
-            fragment.appendChild(clone);
-          });
-          $trabajos.appendChild(fragment);
-        }
-      });
-  }
-  loadTrabajos();
-}
+//   async function loadTrabajos() {
+//     await fetch("php/trabajos.php")
+//       .then((respuestas) => respuestas.json())
+//       .then((resultado) => {
+//         if (resultado === "inexistente") {
+//           respuesta.innerHTML = `
+//         <div class="alert alert-danger" role="alert">
+//           No hay trabajos Cargados
+//           </div>`;
+//         } else {
+//           resultado.forEach((el) => {
+//             template.querySelector(".client").textContent = el.id_cliente;
+//             template.querySelector(".vehic").textContent = el.id_vehiculo;
+//             template.querySelector(".fecha").textContent = el.fecha_trab;
+//             template.querySelector(".patente").textContent = el.patente;
+//             template.querySelector(".descript").textContent = el.observaciones;
+//             template.querySelector(".presu").textContent = el.presupuesto;
+//             template.querySelector(".factu").textContent = el.factura;
+//             const clone = template.cloneNode(true);
+//             fragment.appendChild(clone);
+//           });
+//           $trabajos.appendChild(fragment);
+//         }
+//       });
+//   }
+//   loadTrabajos();
+// }
 
 // if ($trabajos) {
 //   async function loadTrabajos() {
@@ -323,35 +323,35 @@ if ($trabajos) {
 
 /************* Prespuestos *****************/
 
-if ($presupuestos) {
-  const template = document.getElementById("template__Presupuestos").content;
-  const fragment = document.createDocumentFragment();
-  // let $options = ``;
+// if ($presupuestos) {
+//   const template = document.getElementById("template__Presupuestos").content;
+//   const fragment = document.createDocumentFragment();
+//   // let $options = ``;
 
-  async function loadPresupuestos() {
-    await fetch("php/presupuestos.php")
-      .then((respuestas) => respuestas.json())
-      .then((resultado) => {
-        if (resultado === "inexistente") {
-          respuesta.innerHTML = `
-        <div class="alert alert-danger" role="alert">
-          No hay presupuestos emitidos
-          </div>`;
-        } else {
-          resultado.forEach((el) => {
-            template.querySelector(".presu").textContent = el.id_presu;
-            template.querySelector(".client").textContent = el.id_cliente;
-            template.querySelector(".vehic").textContent = el.id_vehiculo;
-            template.querySelector(".fecha").textContent = el.fecha_presu;
-            template.querySelector(".monto").textContent = el.monto_presu;
-            template.querySelector(".descript").textContent =
-              el.descripcion_presu;
-            const clone = template.cloneNode(true);
-            fragment.appendChild(clone);
-          });
-          $presupuestos.appendChild(fragment);
-        }
-      });
-  }
-  loadPresupuestos();
-}
+//   async function loadPresupuestos() {
+//     await fetch("php/presupuestos.php")
+//       .then((respuestas) => respuestas.json())
+//       .then((resultado) => {
+//         if (resultado === "inexistente") {
+//           respuesta.innerHTML = `
+//         <div class="alert alert-danger" role="alert">
+//           No hay presupuestos emitidos
+//           </div>`;
+//         } else {
+//           resultado.forEach((el) => {
+//             template.querySelector(".presu").textContent = el.id_presu;
+//             template.querySelector(".client").textContent = el.id_cliente;
+//             template.querySelector(".vehic").textContent = el.id_vehiculo;
+//             template.querySelector(".fecha").textContent = el.fecha_presu;
+//             template.querySelector(".monto").textContent = el.monto_presu;
+//             template.querySelector(".descript").textContent =
+//               el.descripcion_presu;
+//             const clone = template.cloneNode(true);
+//             fragment.appendChild(clone);
+//           });
+//           $presupuestos.appendChild(fragment);
+//         }
+//       });
+//   }
+//   loadPresupuestos();
+// }
