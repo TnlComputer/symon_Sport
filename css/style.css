@@ -18,6 +18,8 @@
   --alert-danger: rgb(248, 153, 0);
   --alert-success: rgb(46, 199, 105);
   --text-error: rgb(236, 31, 36);
+  --black: #111111bd;
+  --white: #fff;
 }
 
 body {
@@ -92,8 +94,10 @@ span {
 
 .social {
   width: 100%;
-  margin: 20px 20px;
+  margin: 20px 40px;
   margin-top: 20px;
+  /* margin-left: auto; */
+  /* margin-right: auto; */
 }
 
 .social__link {
@@ -301,12 +305,12 @@ legend {
 }
 
 .alert {
-  width: 320px;
-  margin: 30px auto;
+  width: 300px;
+  margin: 20px auto;
   padding: 10px;
   background-color: var(--bg-ssp);
   border-radius: 10PX;
-  -align: center;
+  text-align: center;
 }
 
 .alert-primary {
@@ -419,6 +423,212 @@ legend {
   font-size: 10px;
 }
 
+.consultas__patentes {
+  width: 1400px;
+  max-width: 1400px;
+  min-width: 1400px;
+  margin-top: 30px;
+}
+
+.div__trabajos,
+.div__presupuestos,
+.consultas__patentes {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* .div__trabajos,
+.div__presupuestos {
+  width: 1440px;
+  max-width: 1440px;
+  min-width: 1440px;
+
+} */
+
+.tablagen {
+  width: 1440px;
+  max-width: 1440px;
+  min-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+
+  /* margin-top: 10px; */
+  /* display: table; */
+}
+
+
+.fila {
+  display: table-row;
+  color: #ffffff;
+  /* width: 1400px;
+  max-width: 1400px;
+  min-width: 1400px; */
+}
+
+.col {
+  display: table-cell;
+  padding: 12px;
+  /* background: #ddd; */
+}
+
+.tit__tabla {
+  width: 1400px;
+  background-color: var(--bg-ssp);
+}
+
+.presu {
+  width: 150px;
+  text-align: center;
+}
+
+.marca,
+.modelo {
+  width: 100px;
+  text-align: center;
+}
+
+.client {
+  width: 150px;
+  text-align: center;
+}
+
+.fecha {
+  width: 100px;
+  text-align: center;
+}
+
+.descript {
+  width: 300px;
+  text-align: left;
+}
+
+.monto {
+  width: 100px;
+  text-align: center;
+}
+
+.factu {
+  width: 80px;
+  text-align: center;
+}
+
+.patente {
+  width: 100px;
+  text-align: center;
+}
+
+.accion {
+  width: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* tablas */
+
+/* MODAL */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #111111bd;
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .6s .9s;
+  --transform: translateY(-100vh);
+  --transition: transform .8s;
+}
+
+.modal--show {
+  opacity: 1;
+  pointer-events: unset;
+  transition: opacity .6s;
+  --transform: translateY(0);
+  --transition: transform .8s .8s;
+}
+
+.modal__container {
+  margin: auto;
+  width: 90%;
+  max-width: 320px;
+  max-height: 80%;
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 1em;
+  /* display: grid;
+  gap: .3em; */
+  /* place-items: center; */
+  /* grid-auto-columns: 100%; */
+  transform: var(--transform);
+  transition: var(--transition);
+}
+
+.modal__title {
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.modal__items {
+  width: 100%;
+  display: block;
+}
+
+.modal__item {
+  display: inline-block;
+  width: 35%;
+  margin-bottom: 10px;
+  /* margin: auto; */
+}
+
+.modal__input {
+  width: 58%;
+  margin-bottom: 10px;
+}
+
+.modal__textarea-item {
+  width: 100%;
+}
+
+.modal__textarea-input {
+  width: 100%;
+}
+
+/* .modal__paragraph {
+  margin-bottom: 10px;
+} */
+
+/* .modal__img {
+  width: 90%;
+  max-width: 300px;
+} */
+
+.modal__close,
+.modal__cancel {
+  margin: 10px 10px 10px 15px;
+  /* margin: 10px auto; */
+  text-decoration: none;
+  color: #fff;
+  padding: 1em 3em;
+  border: 1px solid;
+  border-radius: 6px;
+  display: inline;
+  font-weight: 300;
+  transition: background-color .3s;
+}
+
+.modal__close {
+  background-color: #F26250;
+}
+
+.modal__cancel {
+  background-color: #14125ace;
+}
+
+/* FIN MODAL */
+
 .origen {
   text-align: center;
   text-decoration: none;
@@ -527,6 +737,12 @@ legend {
   .social__link:hover {
     color: var(--text-negro);
   }
+
+  .moda__close:hover {
+    color: orangered;
+    background-color: #fff;
+  }
+
 }
 
 @media screen and (min-width: 600px) {
@@ -565,102 +781,6 @@ legend {
 
   .marcador {
     max-width: 540px;
-  }
-
-  /* .tit__trab1 {
-    width: 50px;
-    text-align: center;
-  }
-
-  .tit__trab2 {
-    width: 50px;
-    text-align: center;
-  }
-
-  .tit__trab3 {
-    width: 200px;
-    text-align: center;
-  }
-
-  .tit__trab4 {
-    width: 200px;
-    text-align: center;
-  }
-
-  .tit__trab5 {
-    width: 600px;
-    text-align: center;
-  }
-
-  .tit__trab6 {
-    width: 50px;
-    text-align: center;
-  }
-
-  .tit__trab7 {
-    width: 50px;
-    text-align: center;
-  }  */
-  .tabla__tabla,
-  .line__tabla {
-    width: 100%;
-    min-width: 360px;
-    max-width: 1440px;
-    overflow: scroll;
-  }
-
-  .tit__tabla {
-    background-color: var(--bg-ssp);
-  }
-
-  .client,
-  .presu,
-  .vehic {
-    width: 100px;
-    min-width: 50px;
-    text-align: center;
-  }
-
-  .fecha {
-    width: 200px;
-    min-width: 100px;
-    text-align: center;
-  }
-
-  .descript {
-    width: 600px;
-    min-width: 200px;
-
-    text-align: left;
-  }
-
-  .monto {
-    width: 100px;
-    min-width: 50px;
-
-    text-align: center;
-  }
-
-  .factu {
-    width: 100px;
-    min-width: 50px;
-
-    text-align: center;
-  }
-
-  .patente {
-    width: 100px;
-    min-width: 100px;
-
-    text-align: center;
-  }
-
-  .edit,
-  .delete {
-    width: 20px;
-    min-width: 20px;
-    max-width: 20px;
-    text-align: center;
   }
 
 }
@@ -714,12 +834,13 @@ legend {
   }
 
   .main-section {
-    position: relative;
-    top: 40px;
+    /* position: relative; */
+    /* top: 40px; */
     width: 100%;
     text-align: center;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 40px;
   }
 
   .div__clientes {

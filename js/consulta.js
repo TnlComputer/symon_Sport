@@ -4,7 +4,7 @@ const patente = document.getElementById("cons-formulario");
 patente.addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  var datosp = new FormData(patente);
+  let datosp = new FormData(patente);
 
   // console.log(datosp.get("patente"));
 

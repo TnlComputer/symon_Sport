@@ -113,49 +113,27 @@
     <section class="main-section">
       <h1><span>S</span>YMON <span>S</span>PORT</h1>
       <article class="sec-clientes">
-        <!-- <div class="div__clientes"> -->
-        <h2>CLIENTES</h2>
-        <form id="cli-formulario" action="">
-          <select class="slc-clientes" name="id_cliente" id="id_cliente">
-          </select>
-        </form>
-        <!-- </div> -->
+        <h2>REPARACIONES</h2>
       </article>
-      <article id="cli-vehiculos" class="cli-vehiculos">
-        <template>
-          <div class="cli-vehiculos-main">
+    </section>
 
-            <div class="cli-vehiculos-linea">
-              <div class="cli-vehiculos-titulo">Patente : </div>
-              <div><input class="cli-vehiculos-detalle" type="text"></div>
-            </div>
-
-            <div class="cli-vehiculos-linea">
-              <div class="cli-vehiculos-titulo">Marca : </div>
-              <div><input class="cli-vehiculos-detalle" type="text" t></div>
-            </div>
-
-            <div class="cli-vehiculos-linea">
-              <div class="cli-vehiculos-titulo">Modelo : </div>
-              <div> <input class="cli-vehiculos-detalle" type="text"></div>
-            </div>
-
-            <div class="cli-vehiculos-linea">
-              <div class="cli-vehiculos-titulo">KM : </div>
-              <div> <input class="cli-vehiculos-detalle" type="text"></div>
-            </div>
-
-            <div class="cli-vehiculos-linea">
-              <div class="cli-vehiculos-titulo">Tanque : </div>
-              <div> <input class="cli-vehiculos-detalle" type="text"></div>
-            </div>
-
-            <div class="cli-vehiculos-linea">
-              <div class="cli-vehiculos-titulo">Detalles :</div>
-              <div> <input class="cli-vehiculos-detalle" type="text"></div>
-            </div>
-        </template>
+    <section class="tablagen">
+      <article class="fila tit__tabla">
+        <div class="col accion">
+          <input type="image" class="add__form" src="./assets/img/acciones/action_add.png" alt="Nuevo Presupuesto">
+        </div>
+        <div class="col fecha">Ingreso</div>
+        <div class="col fecha">Entrega</div>
+        <div class="col patente">Patente</div>
+        <div class="col marca">Marca</div>
+        <div class="col modelo">Modelo</div>
+        <div class="col descript">Observaciones</div>
+        <div class="col presu">Presupuesto</div>
+        <div class="col factu">Factura</div>
+        <div class="col client">Cliente</div>
+        <div class="col accion"></div>
       </article>
+      <article class="line__tabla"></article>
     </section>
   </main>
   <footer class="footer">
@@ -163,9 +141,62 @@
       Diseñado por <a href="http://tnlcomputer.com.ar"> @TNLCOMPUTER</a>
     </p>
   </footer>
-  <!-- <script src="js/login.js" defer></script>
-  <script src="js/clientes.js" defer></script> -->
-  <script src="js/scripts.js" defer></script>
+
+  <template id="template__Trabajos">
+    <article class="fila ">
+      <div class="col accion">
+        <input type="image" class="edit__form" src="./assets/img/acciones/reply.gif" alt="Edit Presupuesto">
+      </div>
+      <div class="col fecha fecha__t"></div>
+      <div class="col fecha fecha__e"></div>
+      <div class="col patente patente__t"></div>
+      <div class="col marca marca__t"></div>
+      <div class="col modelo modelo__t"></div>
+      <div class="col descript descript__t"></div>
+      <div class="col presu presu__t"></div>
+      <div class="col factu factu__t"></div>
+      <div class="col client client__t"></div>
+      <div class="col accion">
+        <input type="image" class="del__form" src="./assets/img/acciones/action_delete.png" alt="Eliminar Presupuesto">
+      </div>
+    </article>
+  </template>
+
+  <section class="modal">
+    <div class="modal__container">
+      <h2 class="modal__title">Reparación</h2>
+
+      <form id="form__ARep" class="modal__items">
+
+        <label class=" modal__item" for="fecha_txt">Ingreso</label>
+        <input class="modal__input" type="date" name="fecha_txt" required>
+
+        <label class="modal__item" for="patente_slc">Patente</label>
+        <select class="modal__input slc-patente" name="patente_slc" id="patente_slc" required>
+        </select>
+
+        <label class="modal__item" for="km_txt">Kilometraje</label>
+        <input class="modal__input" type="text" name="km_txt" required>
+
+        <label class="modal__item" for="presu_txt">presupuesto</label>
+        <input class="modal__input" type="text" name="presu_txt" required>
+
+        <label class="modal__item modal__textareaI-item" for=" obs_txt">Observaciones</label>
+        <textarea class="modal__input modal__textarea-input" name="obs_txt" cols="30" rows="5" required></textarea>
+
+        <input class="modal__close" type="submit" value="Aceptar">
+        <input class="modal__cancel" type="reset" value="Cancelar">
+        <div id="modal__alert"></div>
+      </form>
+
+    </div>
+  </section>
+
+  <footer class=" modal-footer">...</footer>
+  </div>
+  </div>
+  <script src="js/scripts.js"></script>
+  <script src="js/reparaciones.js"></script>
 </body>
 
 </html>

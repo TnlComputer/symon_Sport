@@ -58,7 +58,7 @@ if (formLogin) {
   formLogin.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    var datos = new FormData(formLogin);
+    const datos = new FormData(formLogin);
 
     await fetch("./php/enviar.php", {
       method: "Post",

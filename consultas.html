@@ -62,8 +62,6 @@
       </label>
     </div>
     <nav class="main-nav">
-      <!-- <img class="main-logo" src="assets/img/logo symon sport-150.png" alt="SYMON SPORT"> -->
-      <!-- <input type="checkbox" class="toggle-menu__checkbox" id="toggle-menu-checkbox" /> -->
       <ul id="main-menu" class="main-menu">
         <img class="main-logo" src="assets/img/logo symon sport-150.png" alt="SYMON SPORT">
         <hr class="linea">
@@ -77,7 +75,8 @@
         </li>
 
         <li class="main-menu__item adm none">
-          <a href="trabajos.html" class="main-menu__link"><i class="nav__item fas fa-car-mechanic"></i>Trabajos</a>
+          <a href="reparaciones.html" class="main-menu__link"><i
+              class="nav__item fas fa-car-mechanic"></i>Reparaciones</a>
         </li>
 
         <li class="main-menu__item adm none">
@@ -99,17 +98,15 @@
         <li class="main-menu__item logout none">
           <a href="desconectar.html" class="main-menu__link"><i class="nav__item fas fa-user"></i>Logout</a>
         </li>
-        <!-- Menu Social -->
+
         <hr class="linea">
         <li class="social">
-          <a href="https://www.instagram.com/?hl=es-la" target="_blank" rel="noopener noreferrer"
-            class="social__link"><i class="fab fa-instagram"></i></a>
 
           <a href="https://www.facebook.com/Symon-Sport-308309696321701" target="_blank" rel="noopener noreferrer"
             class="social__link"><i class="fab fa-facebook"></i></a>
 
-          <a href="https://twitter.com/home?lang=es" target="_blank" rel="noopener noreferrer" class="social__link"><i
-              class="fab fa-twitter"></i></a>
+          <a href="https://api.whatsapp.com/send?phone=541167993863&app=facebook&entry_point=page_cta&fbclid=IwAR15Rerqvh_Srlw7PNjopti51MWggmeeyyFRHkni8euy_Q76AiepM-JSKvM"
+            target="_blank" rel="noopener noreferrer" class="social__link"><i class="fab fa-whatsapp"></i></a>
         </li>
       </ul>
     </nav>
@@ -117,43 +114,48 @@
       <h1><span>S</span>YMON <span>S</span>PORT</h1>
       <article class="sec-clientes">
         <h2>CONSULTAS</h2>
-
         <form id="form_cPat" action="">
           <label for="patente">Patente
-            <input type="text" name="patente_txt" placeholder="ABC-1234" required>
+            <input type="text" name="patente_txt" placeholder="ABC1234" required>
           </label>
           <input type="submit" value="Aceptar">
         </form>
         <div id="respuesta" class="respuesta"></div>
-
       </article>
-      <template id="temp__patentes" class="temp__patentes">
-        <table>
-          <td>
-            <tr>Patente </tr>
-            <tr>Trabajo</tr>
-            <tr>Fecha Trabajo</tr>
-            <tr>Presupuesto</tr>
-            <tr>Factura</tr>
-            <tr>Fecha Entrega</tr>
-            <tr>Observaciones</tr>
-          </td>
-        </table>
-      </template>
-      <template id="temp__datos-patentes" class="temp__datos-patentes">
-        <table>
-          <td>
-            <tr class="item__patente"></tr>
-            <tr class="item__patente"></tr>
-            <tr class="item__patente"></tr>
-            <tr class="item__patente"></tr>
-            <tr class="item__patente"></tr>
-            <tr class="item__patente"></tr>
-            <tr class="item__patente"></tr>
-            <tr class="item__patente"></tr>
-            <tr class="item__patente"></tr>
-          </td>
-      </template>
+    </section>
+    <section>
+      <article class="consultas__patentes ">
+        <section class="tablegen">
+          <article class="fila tit__tabla none">
+            <div class="col patente">Patente</div>
+            <div class="col fecha">Ingreso</div>
+            <div class="col fecha">Entrega</div>
+            <div class="col client">Cliente</div>
+            <div class="col marca">Marca</div>
+            <div class="col modelo">Modelo</div>
+            <div class="col descript">Observaciones</div>
+            <div class="col factu">Factura</div>
+            <div class="col presu">Presupuesto</div>
+          </article>
+          <article class="line__tabla"></article>
+        </section>
+        <template id="temp__datos-patentes" class="temp__datos-patentes">
+          <article class="fila ">
+            <div class="col patente patente__t"></div>
+            <div class="col fecha fecha__t"></div>
+            <div class="col fecha fecha__e"></div>
+            <div class="col client client__t"></div>
+            <div class="col marca marca__t"></div>
+            <div class="col modelo modelo__t"></div>
+            <div class="col descript descript__t"></div>
+            <div class="col factu factu__t"></div>
+            <div class="col presu presu__t"></div>
+          </article>
+        </template>
+        <!-- </tabla> -->
+        <!-- </div> -->
+        <!-- <div id="respuesta" class="respuesta"></div> -->
+      </article>
     </section>
   </main>
   <footer class="footer">

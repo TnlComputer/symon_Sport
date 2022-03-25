@@ -62,8 +62,6 @@
       </label>
     </div>
     <nav class="main-nav">
-      <!-- <img class="main-logo" src="assets/img/logo symon sport-150.png" alt="SYMON SPORT"> -->
-      <!-- <input type="checkbox" class="toggle-menu__checkbox" id="toggle-menu-checkbox" /> -->
       <ul id="main-menu" class="main-menu">
         <img class="main-logo" src="assets/img/logo symon sport-150.png" alt="SYMON SPORT">
         <hr class="linea">
@@ -77,7 +75,8 @@
         </li>
 
         <li class="main-menu__item adm none">
-          <a href="trabajos.html" class="main-menu__link"><i class="nav__item fas fa-car-mechanic"></i>Trabajos</a>
+          <a href="reparaciones.html" class="main-menu__link"><i
+              class="nav__item fas fa-car-mechanic"></i>Reparaciones</a>
         </li>
 
         <li class="main-menu__item adm none">
@@ -100,73 +99,41 @@
           <a href="desconectar.html" class="main-menu__link"><i class="nav__item fas fa-user"></i>Logout</a>
         </li>
 
-        <!-- Menu Social -->
         <hr class="linea">
         <li class="social">
-          <a href="https://www.instagram.com/?hl=es-la" target="_blank" rel="noopener noreferrer"
-            class="social__link"><i class="fab fa-instagram"></i></a>
 
           <a href="https://www.facebook.com/Symon-Sport-308309696321701" target="_blank" rel="noopener noreferrer"
             class="social__link"><i class="fab fa-facebook"></i></a>
 
-          <a href="https://twitter.com/home?lang=es" target="_blank" rel="noopener noreferrer" class="social__link"><i
-              class="fab fa-twitter"></i></a>
+          <a href="https://api.whatsapp.com/send?phone=541167993863&app=facebook&entry_point=page_cta&fbclid=IwAR15Rerqvh_Srlw7PNjopti51MWggmeeyyFRHkni8euy_Q76AiepM-JSKvM"
+            target="_blank" rel="noopener noreferrer" class="social__link"><i class="fab fa-whatsapp"></i></a>
         </li>
       </ul>
     </nav>
     <section class="main-section">
       <h1><span>S</span>YMON <span>S</span>PORT</h1>
       <article class="sec-clientes">
-        <h2>TRABAJOS</h2>
-        <!-- <div class="nuevo">
-
-        </div> -->
-        <div id="trabajos" class="div__trabajos">
-          <table class="tabla__tabla">
-            <tr class="tit__tabla">
-              <td class="edit">
-                <form class="form__add" action="" method="post">
-                  <buttom type="submit">
-                    <img src="./assets/img/acciones/action_add.png" alt="Editar Trabajo">
-                  </buttom>
-                </form>
-              </td>
-              <td class="client">Cliente</td>
-              <td class="vehic">Vehiculo</td>
-              <td class="fecha">Fecha Trabajo</td>
-              <td class="patente">Patente</td>
-              <td class="descript">Observaciones</td>
-              <td class="presu">Presupuesto</td>
-              <td class="factu">Factura</td>
-              <td class="delete"></td>
-            </tr>
-            <template id="template__Trabajos">
-              <tr class="line__tabla">
-                <td class="edit">
-                  <form class="form__edit" action="" method="post">
-                    <img src="./assets/img/acciones/reply.gif" alt="Editar Trabajo">
-                    <input type="hidden" value="">
-                  </form>
-                </td>
-                <td class="client"></td>
-                <td class="vehic"></td>
-                <td class="fecha"></td>
-                <td class="patente"></td>
-                <td class="descript"></td>
-                <td class="presu"></td>
-                <td class="factu"></td>
-                <td class="delete">
-                  <form class="form__del" action="" method="post">
-                    <img src="./assets/img/acciones/action_delete.png" alt="Eliminar Trabajo">
-                    <input type="hidden" value="">
-                  </form>
-                </td>
-              </tr>
-            </template>
-          </table>
-          <div id="respuesta" class="respuesta"></div>
-        </div>
+        <h2>REPARACIONES</h2>
       </article>
+    </section>
+
+    <section class="tablagen">
+      <article class="fila tit__tabla">
+        <div class="col accion">
+          <input type="image" class="add__form" src="./assets/img/acciones/action_add.png" alt="Nuevo Presupuesto">
+        </div>
+        <div class="col fecha">Ingreso</div>
+        <div class="col fecha">Entrega</div>
+        <div class="col patente">Patente</div>
+        <div class="col marca">Marca</div>
+        <div class="col modelo">Modelo</div>
+        <div class="col descript">Observaciones</div>
+        <div class="col presu">Presupuesto</div>
+        <div class="col factu">Factura</div>
+        <div class="col client">Cliente</div>
+        <div class="col accion"></div>
+      </article>
+      <article class="line__tabla"></article>
     </section>
   </main>
   <footer class="footer">
@@ -174,8 +141,62 @@
       Diseñado por <a href="http://tnlcomputer.com.ar"> @TNLCOMPUTER</a>
     </p>
   </footer>
+
+  <template id="template__Trabajos">
+    <article class="fila ">
+      <div class="col accion">
+        <input type="image" class="edit__form" src="./assets/img/acciones/reply.gif" alt="Edit Presupuesto">
+      </div>
+      <div class="col fecha fecha__t"></div>
+      <div class="col fecha fecha__e"></div>
+      <div class="col patente patente__t"></div>
+      <div class="col marca marca__t"></div>
+      <div class="col modelo modelo__t"></div>
+      <div class="col descript descript__t"></div>
+      <div class="col presu presu__t"></div>
+      <div class="col factu factu__t"></div>
+      <div class="col client client__t"></div>
+      <div class="col accion">
+        <input type="image" class="del__form" src="./assets/img/acciones/action_delete.png" alt="Eliminar Presupuesto">
+      </div>
+    </article>
+  </template>
+
+  <section class="modal">
+    <div class="modal__container">
+      <h2 class="modal__title">Reparación</h2>
+
+      <form id="form__ARep" class="modal__items">
+
+        <label class=" modal__item" for="fecha_txt">Ingreso</label>
+        <input class="modal__input" type="date" name="fecha_txt" required>
+
+        <label class="modal__item" for="patente_slc">Patente</label>
+        <select class="modal__input slc-patente" name="patente_slc" id="patente_slc" required>
+        </select>
+
+        <label class="modal__item" for="km_txt">Kilometraje</label>
+        <input class="modal__input" type="text" name="km_txt" required>
+
+        <label class="modal__item" for="presu_txt">presupuesto</label>
+        <input class="modal__input" type="text" name="presu_txt" required>
+
+        <label class="modal__item modal__textareaI-item" for=" obs_txt">Observaciones</label>
+        <textarea class="modal__input modal__textarea-input" name="obs_txt" cols="30" rows="5" required></textarea>
+
+        <input class="modal__close" type="submit" value="Aceptar">
+        <input class="modal__cancel" type="reset" value="Cancelar">
+        <div id="modal__alert"></div>
+      </form>
+
+    </div>
+  </section>
+
+  <footer class=" modal-footer">...</footer>
+  </div>
+  </div>
   <script src="js/scripts.js"></script>
-  <script src="js/trabajos.js"></script>
+  <script src="js/reparaciones.js"></script>
 </body>
 
 </html>

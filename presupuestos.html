@@ -62,8 +62,6 @@
       </label>
     </div>
     <nav class="main-nav">
-      <!-- <img class="main-logo" src="assets/img/logo symon sport-150.png" alt="SYMON SPORT"> -->
-      <!-- <input type="checkbox" class="toggle-menu__checkbox" id="toggle-menu-checkbox" /> -->
       <ul id="main-menu" class="main-menu">
         <img class="main-logo" src="assets/img/logo symon sport-150.png" alt="SYMON SPORT">
         <hr class="linea">
@@ -77,7 +75,8 @@
         </li>
 
         <li class="main-menu__item adm none">
-          <a href="trabajos.html" class="main-menu__link"><i class="nav__item fas fa-car-mechanic"></i>Trabajos</a>
+          <a href="reparaciones.html" class="main-menu__link"><i
+              class="nav__item fas fa-car-mechanic"></i>Reparaciones</a>
         </li>
 
         <li class="main-menu__item adm none">
@@ -99,17 +98,15 @@
         <li class="main-menu__item logout none">
           <a href="desconectar.html" class="main-menu__link"><i class="nav__item fas fa-user"></i>Logout</a>
         </li>
-        <!-- Menu Social -->
+
         <hr class="linea">
         <li class="social">
-          <a href="https://www.instagram.com/?hl=es-la" target="_blank" rel="noopener noreferrer"
-            class="social__link"><i class="fab fa-instagram"></i></a>
 
           <a href="https://www.facebook.com/Symon-Sport-308309696321701" target="_blank" rel="noopener noreferrer"
             class="social__link"><i class="fab fa-facebook"></i></a>
 
-          <a href="https://twitter.com/home?lang=es" target="_blank" rel="noopener noreferrer" class="social__link"><i
-              class="fab fa-twitter"></i></a>
+          <a href="https://api.whatsapp.com/send?phone=541167993863&app=facebook&entry_point=page_cta&fbclid=IwAR15Rerqvh_Srlw7PNjopti51MWggmeeyyFRHkni8euy_Q76AiepM-JSKvM"
+            target="_blank" rel="noopener noreferrer" class="social__link"><i class="fab fa-whatsapp"></i></a>
         </li>
       </ul>
     </nav>
@@ -117,50 +114,30 @@
       <h1><span>S</span>YMON <span>S</span>PORT</h1>
       <article class="sec-clientes">
         <h2>PRESUPUESTOS</h2>
-        <div id="presupuestos" class="div__clientes">
-          <table class="tabla__tabla">
-            <tr class="tit__tabla">
-              <td class="edit">
-                <form class="form__add" action="" method="post">
-                  <buttom type="submit">
-                    <img src="./assets/img/acciones/action_add.png" alt="Editar Trabajo">
-                  </buttom>
-                </form>
-              </td>
-              <td class="fecha">Fecha</td>
-              <td class="presu">Presupuesto</td>
-              <td class="client">Cliente</td>
-              <td class="vehic">Vehiculo</td>
-              <td class="monto">Importe</td>
-              <td class="descript">Descripción</td>
-              <td class="delete"></td>
-            </tr>
-            <template id="template__Presupuestos">
-              <tr class="line__tabla">
-                <td class="edit">
-                  <form class="form__edit" action="" method="post">
-                    <img src="./assets/img/acciones/reply.gif" alt="Editar Trabajo">
-                    <input type="hidden" value="">
-                  </form>
-                </td>
-                <td class="fecha"></td>
-                <td class="presu"></td>
-                <td class="client"></td>
-                <td class="vehic"></td>
-                <td class="monto"></td>
-                <td class="descript"></td>
-                <td class="delete">
-                  <form class="form__del" action="" method="post">
-                    <img src="./assets/img/acciones/action_delete.png" alt="Eliminar Trabajo">
-                    <input type="hidden" value="">
-                  </form>
-                </td>
-              </tr>
-            </template>
-          </table>
-          <div id="respuesta" class="respuesta"></div>
-        </div>
       </article>
+    </section>
+
+    <section class="tablagen div__presupuestos">
+      <!-- <button class="add__form" type="button">
+        <img src="./assets/img/acciones/action_add.png" alt="Nuevo Presupuesto">
+        </buttom> -->
+      <!-- <button type="button" class="add__form"><img src="./assets/img/acciones/action_add.png"
+          alt="Nuevo Presupuesto"></button> -->
+      <article class="fila tit__tabla">
+        <div class="col accion">
+          <input type="image" class="add__form" src="./assets/img/acciones/action_add.png" alt="Nuevo Presupuesto">
+        </div>
+        <div class="col fecha">Ingreso</div>
+        <div class="col presu">Presupuesto</div>
+        <div class="col client">Cliente</div>
+        <div class="col patente">Patente</div>
+        <div class="col marca">Marca</div>
+        <div class="col modelo">Modelo</div>
+        <div class="col monto">importe</div>
+        <div class="col descript">Descripción</div>
+        <div class="col accion"></div>
+      </article>
+      <article class="line__tabla"></article>
     </section>
   </main>
   <footer class="footer">
@@ -168,6 +145,36 @@
       Diseñado por <a href="http://tnlcomputer.com.ar"> @TNLCOMPUTER</a>
     </p>
   </footer>
+  <template id="template__Presupuestos">
+    <article class="fila ">
+      <div class="col accion">
+        <input type="image" class="edit__form" src="./assets/img/acciones/reply.gif" alt="Edit Presupuesto">
+        <!-- <form class="form__edit" action="" method="post"> -->
+        <!-- <buttom class="edit__form" type="button" title="Editar Presupuesto">
+          <img src="./assets/img/acciones/reply.gif" alt="Editar Presupuesto">
+        </buttom> -->
+        <!-- </form> -->
+      </div>
+      <div class="col fecha fecha__p"></div>
+      <div class="col client client__p"></div>
+      <div class="col presu presu__p"></div>
+      <div class="col patente patente__p"></div>
+      <div class="col marca marca__p"></div>
+      <div class="col modelo modelo__p"></div>
+      <div class="col monto monto__p"></div>
+      <div class="col descript descript__p"></div>
+      <div class="col accion">
+        <input type="image" class="del__form" src="./assets/img/acciones/action_delete.png" alt="Eliminar Presupuesto">
+
+        <!-- <form class="form__del" action="" method="post"> -->
+        <!-- <buttom class="del__form" type="button" title="Eliminar Presupuesto">
+          <img src="./assets/img/acciones/action_delete.png" alt="Eliminar Presupuesto">
+        </buttom> -->
+        <!-- </form> -->
+      </div>
+    </article>
+  </template>
+
   <script src="js/scripts.js"></script>
   <script src="js/presupuestos.js"></script>
 </body>
