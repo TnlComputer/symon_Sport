@@ -115,92 +115,57 @@
       <article class="sec-clientes">
         <!-- <div class="div__clientes"> -->
         <h2>CLIENTES</h2>
-        <!-- <form id="cli-formulario" action="">
+        <form id="cli-formulario" action="">
           <select class="slc-clientes" name="id_cliente" id="id_cliente">
           </select>
-        </form> -->
+        </form>
         <!-- </div> -->
       </article>
-      <article id="list__clie" class="fila tit__tabla">
-        <div class="col accion">
-          <input type="image" class="add__form" src="./assets/img/acciones/action_add.png" alt="Nuevo Cliente">
-        </div>
-        <div class="col cuit">CUIT</div>
-        <div class="col cliente">Cliente</div>
-        <div class="col direccion">Dirección</div>
-        <div class="col localiad">Localidad</div>
-        <div class="col provincia">Provincia</div>
-        <div class="col codpost">Cod.Post.</div>
-        <div class="col contacto">Contacto</div>
-        <div class="col telefono">telefono</div>
-        <div class="col celular">Celular</div>
-        <div class="col mail">Mail</div>
+      <article id="cli-vehiculos" class="cli-vehiculos">
+        <template>
+          <div class="cli-vehiculos-main">
+
+            <div class="cli-vehiculos-linea">
+              <div class="cli-vehiculos-titulo">Patente : </div>
+              <div><input class="cli-vehiculos-detalle" type="text"></div>
+            </div>
+
+            <div class="cli-vehiculos-linea">
+              <div class="cli-vehiculos-titulo">Marca : </div>
+              <div><input class="cli-vehiculos-detalle" type="text" t></div>
+            </div>
+
+            <div class="cli-vehiculos-linea">
+              <div class="cli-vehiculos-titulo">Modelo : </div>
+              <div> <input class="cli-vehiculos-detalle" type="text"></div>
+            </div>
+
+            <div class="cli-vehiculos-linea">
+              <div class="cli-vehiculos-titulo">KM : </div>
+              <div> <input class="cli-vehiculos-detalle" type="text"></div>
+            </div>
+
+            <div class="cli-vehiculos-linea">
+              <div class="cli-vehiculos-titulo">Tanque : </div>
+              <div> <input class="cli-vehiculos-detalle" type="text"></div>
+            </div>
+
+            <div class="cli-vehiculos-linea">
+              <div class="cli-vehiculos-titulo">Detalles :</div>
+              <div> <input class="cli-vehiculos-detalle" type="text"></div>
+            </div>
+        </template>
       </article>
-      <article class="col datosClientes"></article>
     </section>
   </main>
-
-  <template id="template__clientes">
-    <article class="fila">
-      <div class="col accion">
-        <input type="image" class="edit__form" src="./assets/img/acciones/reply.gif" alt="Edit Cliente">
-      </div>
-      <div class="col cuit cuit__c"></div>
-      <div class="col cliente cliente__c"></div>
-      <div class="col direccion direccion__c"></div>
-      <div class="col localidad localidad__c"></div>
-      <div class="col provincia provincia__c"></div>
-      <div class="col cpost cpost__c"></div>
-      <div class="col contacto contacto__c"></div>
-      <div class="col telefono telefono__c"></div>
-      <div class="col celular celular__c"></div>
-      <div class="col mail mail__c"></div>
-    </article>
-  </template>
-
-  <!-- 
-
-  <template>
-    <div class="cli-vehiculos-main">
-
-      <div class="cli-vehiculos-linea">
-        <div class="cli-vehiculos-titulo">Patente : </div>
-        <div><input class="cli-vehiculos-detalle" type="text"></div>
-      </div>
-
-      <div class="cli-vehiculos-linea">
-        <div class="cli-vehiculos-titulo">Marca : </div>
-        <div><input class="cli-vehiculos-detalle" type="text" t></div>
-      </div>
-
-      <div class="cli-vehiculos-linea">
-        <div class="cli-vehiculos-titulo">Modelo : </div>
-        <div> <input class="cli-vehiculos-detalle" type="text"></div>
-      </div>
-
-      <div class="cli-vehiculos-linea">
-        <div class="cli-vehiculos-titulo">KM : </div>
-        <div> <input class="cli-vehiculos-detalle" type="text"></div>
-      </div>
-
-      <div class="cli-vehiculos-linea">
-        <div class="cli-vehiculos-titulo">Tanque : </div>
-        <div> <input class="cli-vehiculos-detalle" type="text"></div>
-      </div>
-
-      <div class="cli-vehiculos-linea">
-        <div class="cli-vehiculos-titulo">Detalles :</div>
-        <div> <input class="cli-vehiculos-detalle" type="text"></div>
-      </div>
-  </template> -->
   <footer class="footer">
     <p class="origen">
       Diseñado por <a href="http://tnlcomputer.com.ar"> @TNLCOMPUTER</a>
     </p>
   </footer>
-  <!-- <script src="js/login.js" defer></script> -->
+  <!-- <script src="js/login.js" defer></script>
+  <script src="js/clientes.js" defer></script> -->
   <script src="js/scripts.js" defer></script>
-  <script src="js/clientes.js" defer></script>
 </body>
 
 </html>

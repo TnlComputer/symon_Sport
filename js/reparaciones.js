@@ -6,13 +6,23 @@ const addTrabajo = document.querySelector(".form__add");
 const editTrabajo = document.querySelector(".form__edit");
 const delTrabajo = document.querySelector(".form__del");
 
+/** MODAL REPARACIONES **/
 const modal = document.querySelector(".modal");
 const closeModal = document.querySelector(".modal__close");
+/** ALTA REPARACIONES **/
 const cancelModal = document.querySelector(".modal__cancel");
-const patenteSlc = document.getElementById("patente_slc");
+const presuARSlc = document.getElementById("presuAR_slc");
 const formARep = document.getElementById("form__ARep");
+
+/** ERROR **/
 const alertas = document.getElementById("modal__alert");
 
+/** PATENTE, MARCA Y MODELO **/
+const mPatente = document.querySelector(".mPatente");
+const mMarca = document.querySelector(".mMarca");
+const mModelo = document.querySelector(".mModelo");
+
+/** MUESTRO REPARACIONES REALIZADAS O EN CURSO **/
 async function loadTrabajos() {
   const respuestas = await fetch("php/reparaciones.php");
   const resultados = await respuestas.json();
@@ -30,7 +40,7 @@ async function loadTrabajos() {
       templateTrab.querySelector(".presu__t").textContent = el.presupuesto;
       templateTrab.querySelector(".factu__t").textContent = el.factura;
       templateTrab.querySelector(".client__t").textContent = el.empresa_nyp;
-      templateTrab.querySelector(".del__form").dataset.delid = el.id_trabajo;
+      // templateTrab.querySelector(".del__form").dataset.delid = el.id_trabajo;
       const clone = templateTrab.cloneNode(true);
       fragmentTrab.appendChild(clone);
     });
@@ -40,28 +50,92 @@ async function loadTrabajos() {
 
 loadTrabajos();
 
-//agrego un listener unico al contenedor en donde se encuentra el boton de agregar reparación y toda la tabla de los productos
+/** CONTROLO SI HAY PRESUPUESTOS SIN LA REPARACION **/
+
 tablaGenerator.addEventListener("click", async (event) => {
   // console.log(event.target);
 
-  // chequeo si se presiono el boton de agregar tarea
   if (event.target.closest(".add__form")) {
     //ejecutar funcion de agregar tarea
-    // alert("quiere agregar una nueva reparación");
-    event.preventDefault();
-    modal.classList.add("modal--show");
+    const respPsu = await fetch("php/psu.php");
+    const resultPsu = await respPsu.json();
+    if (resultPsu === "sinPresu") {
+      alert(
+        "No hay presupuestos disponibles!!!, Será redirigido a Presupuestos para que ingrese uno nuevo"
+      );
+      // setTimeout(() => {
+      //   alertas.innerHTML = ``;
+      // }, 6000);
+      document.location.href = "presupuestos.html";
+    } else {
+      event.preventDefault();
+      modal.classList.add("modal--show");
+      // consTrabDatos.innerHTML = ``;
+      let $options = `<option value="">Elige un Presupuesto</option>`;
 
-    const respPat = await fetch("php/patentes.php");
-    const resultPat = await respPat.json();
-
-    let $options = `<option value="">Elige un Cliente</option>`;
-
-    resultPat.forEach((elPat) => {
-      $options += `<option value = "${elPat.id_vehiculo}">${elPat.patente}</option>`;
-    });
-
-    patenteSlc.innerHTML = $options;
+      resultPsu.forEach((elPus) => {
+        $options += `<option value = "${elPus.id_presu}">${elPus.id_presu} - ${elPus.patente}</option>`;
+      });
+      presuARSlc.innerHTML = $options;
+    }
   }
+
+  /** relleno los campos de Patente, Marca y Modelo * */
+  presuARSlc.addEventListener("change", (eAR) =>
+    loadPresupuestos(eAR.target.value)
+  );
+  // console.log(presuARSlc);
+  // console.log(loadPresupuestos(eAR.target.value));
+  async function loadPresupuestos(datos) {
+    const opciones = {
+      method: "POST",
+      body: datos,
+    };
+    console.log(datos);
+    await fetch("php/psv.php", opciones)
+      .then((resARep) => resARep.json())
+      .then((dataAR) => {
+        if (dataAR === "error") {
+          console.log(dataAR);
+        } else {
+          mPatente.innerHTML = `${dataAR.patente}`;
+          mMarca.innerHTML = `${dataAR.marca}`;
+          mModelo.innerHTML = `${dataAR.modelo}`;
+        }
+      });
+  }
+
+  /** Formulario datos para agregar**/
+  formARep.addEventListener("submit", async function (efr) {
+    efr.preventDefault();
+
+    const datosARep = new FormData(formARep);
+
+    await fetch("./php/addRep.php", {
+      method: "Post",
+      body: datosARep,
+    })
+      .then((resARep) => resARep.json())
+      .then((dataAR) => {
+        if (dataAR === "400") {
+          alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos de las reparación</div>`;
+          setTimeout(() => {
+            alertas.innerHTML = ``;
+          }, 3000);
+        } else {
+          modal.classList.remove("modal--show");
+          // agrego registro a la lista de reparaciones
+          consTrabDatos.innerHTML = ``;
+          loadTrabajos();
+        }
+      });
+  });
+
+  formARep.addEventListener("reset", (ecam) => {
+    // console.log(cancelModal);
+    ecam.preventDefault();
+    modal.classList.remove("modal--show");
+  });
 
   //chequeo si se presiono algun boton de eliminar tarea
   if (event.target.closest(".del__form")) {
@@ -78,52 +152,9 @@ tablaGenerator.addEventListener("click", async (event) => {
       // llamar al back para eliminar de la base de datos la reparacion
     }
   }
-
   //chequeo si se presiono algun boton de editar tarea
   if (event.target.closest(".edit__form")) {
     //ejecutar la funcion de editar tarea
     alert("esta seguro que quiere editar la tarea");
   }
-});
-
-formARep.addEventListener("reset", (ecam) => {
-  // console.log(cancelModal);
-  // ecam.preventDefault();
-  modal.classList.remove("modal--show");
-});
-
-/** Formulario datos para agregar**/
-formARep.addEventListener("submit", async function (efr) {
-  efr.preventDefault();
-
-  const datosARep = new FormData(formARep);
-
-  await fetch("./php/addRep.php", {
-    method: "Post",
-    body: datosARep,
-  })
-    .then((resARep) => resARep.json())
-    .then((dataAR) => {
-      if (dataAR === "error") {
-        alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos de las reparación</div>`;
-        setTimeout(() => {
-          alertas.innerHTML = ``;
-        }, 3000);
-      } else if (dataAR === "presu") {
-        alertas.innerHTML = `<div class="alert alert-danger" role="alert"> El presupuesto no existe</div>`;
-        setTimeout(() => {
-          alertas.innerHTML = ``;
-        }, 3000);
-      } else if (dataAR === "usado") {
-        alertas.innerHTML = `<div class="alert alert-danger" role="alert"> El presupuesto ya está asociado al vehiculo anteriormemte, ingrese el presupuesto correcto</div>`;
-        setTimeout(() => {
-          alertas.innerHTML = ``;
-        }, 5000);
-      } else if (dataAR === "correcto") {
-        // console.log(dataAR);
-        modal.classList.remove("modal--show");
-        // agrego registro a la lista de reparaciones
-        loadTrabajos();
-      }
-    });
 });

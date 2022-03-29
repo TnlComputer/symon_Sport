@@ -240,7 +240,7 @@ span {
 }
 
 /* LOGIN */
-fieldset {
+.login__fieldset {
   max-width: 320px;
   margin-top: 100px;
   margin-bottom: 10px;
@@ -550,10 +550,10 @@ legend {
   --transition: transform .8s .8s;
 }
 
-.modal__container {
+.modal__container,
+.modal__container-presu {
   margin: auto;
   width: 90%;
-  max-width: 320px;
   max-height: 80%;
   background-color: #fff;
   border-radius: 6px;
@@ -564,6 +564,17 @@ legend {
   /* grid-auto-columns: 100%; */
   transform: var(--transform);
   transition: var(--transition);
+}
+
+.modal__container {
+  max-width: 320px;
+}
+
+.modal__container-presu {
+  width: 100%;
+  max-width: 700px;
+  background-color: rgb(196, 240, 196);
+  height: auto;
 }
 
 .modal__title {
@@ -580,7 +591,6 @@ legend {
   display: inline-block;
   width: 35%;
   margin-bottom: 10px;
-  /* margin: auto; */
 }
 
 .modal__input {
@@ -596,26 +606,15 @@ legend {
   width: 100%;
 }
 
-/* .modal__paragraph {
-  margin-bottom: 10px;
-} */
-
-/* .modal__img {
-  width: 90%;
-  max-width: 300px;
-} */
-
 .modal__close,
 .modal__cancel {
-  margin: 10px 10px 10px 15px;
-  /* margin: 10px auto; */
+  margin: 10px;
   text-decoration: none;
   color: #fff;
   padding: 1em 3em;
   border: 1px solid;
   border-radius: 6px;
-  display: inline;
-  font-weight: 300;
+  font-weight: 500;
   transition: background-color .3s;
 }
 
@@ -625,6 +624,85 @@ legend {
 
 .modal__cancel {
   background-color: #14125ace;
+}
+
+/*modal presupuesto*/
+
+.modal__form-Presu {
+  width: 100%;
+  height: auto;
+}
+
+.model__presu-fieldset {
+  margin: 10px auto;
+  /* margin-left: auto;
+  margin-right: auto; */
+  padding: 10px;
+  background-color: var(--bg-primary);
+  color: var(--color-primary);
+  border: 2px solid var(--menu-primary);
+  border-radius: 10px;
+}
+
+.modal__input-fec,
+.modal__input-pat,
+.modal__cliente-presu,
+.modal__marca-presu,
+.modal__modelo-presu {
+  margin-right: 20px;
+}
+
+.modal_empresa {
+  display: inline-block;
+  gap: .5em;
+  place-items: center;
+  width: 100%;
+  text-align: center;
+  padding: 20px 30px;
+}
+
+.modal__cliente-presu,
+.modal__marca-presu,
+.modal__modelo-presu {
+  color: #fff;
+}
+
+.modal__item-fec,
+.modal__item-pat {
+  margin-left: 20px;
+}
+
+.modal__item-desc,
+.modal__input-desc,
+.modal__item-imp,
+.modal__input-imp,
+.modal__btn-agregar {
+  display: inline-block;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+
+.modal__item-presu,
+.modal__input-presu {
+  width: 90px;
+}
+
+.modal__item-desc,
+.modal__input-desc {
+  width: 90px;
+}
+
+.modal__item-imp,
+.modal__input-imp {
+  width: 100px;
+}
+
+.modal__btn-agregar {
+  width: 100px;
+}
+
+.modal__item-tot {
+  text-align: right;
 }
 
 /* FIN MODAL */

@@ -118,11 +118,6 @@
     </section>
 
     <section class="tablagen div__presupuestos">
-      <!-- <button class="add__form" type="button">
-        <img src="./assets/img/acciones/action_add.png" alt="Nuevo Presupuesto">
-        </buttom> -->
-      <!-- <button type="button" class="add__form"><img src="./assets/img/acciones/action_add.png"
-          alt="Nuevo Presupuesto"></button> -->
       <article class="fila tit__tabla">
         <div class="col accion">
           <input type="image" class="add__form" src="./assets/img/acciones/action_add.png" alt="Nuevo Presupuesto">
@@ -135,7 +130,7 @@
         <div class="col modelo">Modelo</div>
         <div class="col monto">importe</div>
         <div class="col descript">Descripción</div>
-        <div class="col accion"></div>
+        <!-- <div class="col accion"></div> -->
       </article>
       <article class="line__tabla"></article>
     </section>
@@ -149,31 +144,88 @@
     <article class="fila ">
       <div class="col accion">
         <input type="image" class="edit__form" src="./assets/img/acciones/reply.gif" alt="Edit Presupuesto">
-        <!-- <form class="form__edit" action="" method="post"> -->
-        <!-- <buttom class="edit__form" type="button" title="Editar Presupuesto">
-          <img src="./assets/img/acciones/reply.gif" alt="Editar Presupuesto">
-        </buttom> -->
-        <!-- </form> -->
       </div>
       <div class="col fecha fecha__p"></div>
-      <div class="col client client__p"></div>
       <div class="col presu presu__p"></div>
+      <div class="col client client__p"></div>
       <div class="col patente patente__p"></div>
       <div class="col marca marca__p"></div>
       <div class="col modelo modelo__p"></div>
       <div class="col monto monto__p"></div>
       <div class="col descript descript__p"></div>
-      <div class="col accion">
+      <!-- <div class="col accion">
         <input type="image" class="del__form" src="./assets/img/acciones/action_delete.png" alt="Eliminar Presupuesto">
-
-        <!-- <form class="form__del" action="" method="post"> -->
-        <!-- <buttom class="del__form" type="button" title="Eliminar Presupuesto">
-          <img src="./assets/img/acciones/action_delete.png" alt="Eliminar Presupuesto">
-        </buttom> -->
-        <!-- </form> -->
-      </div>
+      </div> -->
     </article>
   </template>
+
+  <section class="modal">
+    <div class="modal__container-presu">
+      <h2 class="modal__title">Presupuesto</h2>
+
+      <form class="alp__form">
+        <fieldset class="model__presu-fieldset">
+
+          <label class="modal__item-fec" for="fecha_txt">Fecha</label>
+          <input class="modal__input-fec" type="date" name="fecha_txt" required>
+          <label class="modal__item-pat" for="patente_slc">Patente</label>
+          <select class="modal__input-pat slc-patente" name="patente_slc" id="patente_slc" required>
+          </select>
+          <div class="modal_empresa">
+            <span class="modal__marca-presu"></span>
+            <span class="modal__modelo-presu"></span>
+            <span class="modal__cliente-presu"></span>
+          </div>
+
+          <div class=".modal__textarea-item"> Detalle </div>
+          <div class=".modal__textarea-item">
+            <textarea name="desc_txt" id="" cols="80" rows="10" required></textarea>
+          </div>
+
+          <table>
+            <tr>
+              <td class="modal__item-presu">Repuestos</td>
+              <td><input class="modal__input-imp" type="text" name="repuestos_txt"></td>
+              <td class="modal__item-presu">Mano de Obra</td>
+              <td><input class="modal__input-imp" type="text" name="mobra_txt" required></td>
+              <td class="modal__item-presu">Total</td>
+              <td class="modal__input-presu">
+                <input class="modal__input-imp" type="text" name="total_txt" required>
+              </td>
+            </tr>
+            <tr>
+              <td class="modal__item-presu">Validor por:</td>
+              <td class="modal__input-presu">
+                <input class="modal__input-imp" type="text" name="dias_txt" required>
+              </td>
+              <td colspan="2">días</td>
+              <td class="modal__item-presu">Seña</td>
+              <td><input class="modal__input-imp" type="text" name="senia_txt"></td>
+
+            </tr>
+            <tr>
+              <td class="modal__item-presu">Fecha Inicio:</td>
+              <td class="modal__item-presu">
+                <input class="modal__input-imp" type="date" name="fecIni_txt">
+              </td>
+              <td class="modal__item-presu">Fecha Retiro:</td>
+              <td class="modal__item-presu">
+                <input class="modal__input-imp" type="date" name="fecRet_txt">
+              </td>
+
+              <td class="modal__item-imp">Abonado</td>
+              <td class="modal__item-presu"><input class="modal__input-imp" type="text" name="abonado_txt"></td>
+
+            </tr>
+          </table>
+          <div class="modal_empresa">
+            <input class="modal__cancel" type="reset" value="Cerrar">
+            <input class="modal__close" type="submit" value="Aceptar">
+          </div>
+      </form>
+      </fieldset>
+    </div>
+  </section>
 
   <script src="js/scripts.js"></script>
   <script src="js/presupuestos.js"></script>

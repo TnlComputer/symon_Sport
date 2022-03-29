@@ -131,7 +131,7 @@
         <div class="col presu">Presupuesto</div>
         <div class="col factu">Factura</div>
         <div class="col client">Cliente</div>
-        <div class="col accion"></div>
+        <!-- <div class="col accion"></div> -->
       </article>
       <article class="line__tabla"></article>
     </section>
@@ -156,9 +156,9 @@
       <div class="col presu presu__t"></div>
       <div class="col factu factu__t"></div>
       <div class="col client client__t"></div>
-      <div class="col accion">
+      <!-- <div class="col accion">
         <input type="image" class="del__form" src="./assets/img/acciones/action_delete.png" alt="Eliminar Presupuesto">
-      </div>
+      </div> -->
     </article>
   </template>
 
@@ -166,22 +166,32 @@
     <div class="modal__container">
       <h2 class="modal__title">Reparación</h2>
 
-      <form id="form__ARep" class="modal__items">
+      <!-- <form id="form__ARep" class="modal__items"> -->
+      <form id="form__ARep">
 
+        <label class="modal__item" for="presuAR_slc">Presupuesto</label>
+        <select class="modal__input slc-ARpresu" name="presuAR_slc" id="presuAR_slc" required>
+        </select>
+
+        <label class="modal__item" for="patente_txt">Patente</label>
+        <span class="modal__input mPatente"></span>
+        <br>
+        <label class="modal__item" for="marca_txt">Marca</label>
+        <span class="modal__input mMarca"></span>
+        <br>
+        <label class="modal__item" for="modelo_txt">Modelo</label>
+        <span class="modal__input mModelo"></span>
+        <br>
         <label class=" modal__item" for="fecha_txt">Ingreso</label>
         <input class="modal__input" type="date" name="fecha_txt" required>
-
-        <label class="modal__item" for="patente_slc">Patente</label>
-        <select class="modal__input slc-patente" name="patente_slc" id="patente_slc" required>
-        </select>
 
         <label class="modal__item" for="km_txt">Kilometraje</label>
         <input class="modal__input" type="text" name="km_txt" required>
 
-        <label class="modal__item" for="presu_txt">presupuesto</label>
+        <!-- <label class="modal__item" for="presu_txt">presupuesto</label>
         <input class="modal__input" type="text" name="presu_txt" required>
-
-        <label class="modal__item modal__textareaI-item" for=" obs_txt">Observaciones</label>
+ -->
+        <label class="modal__item modal__textareaI-item" for=" obs_txt">Observaciones del Vehiculo</label>
         <textarea class="modal__input modal__textarea-input" name="obs_txt" cols="30" rows="5" required></textarea>
 
         <input class="modal__close" type="submit" value="Aceptar">

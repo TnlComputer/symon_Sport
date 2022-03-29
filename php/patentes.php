@@ -5,7 +5,7 @@ error_reporting(E_ALL ^ E_NOTICE);
 $metodo= $_SERVER['REQUEST_METHOD'];
 $resultado = array();
 
-$cons="SELECT patente, id_vehiculo FROM vehiculos ORDER BY id_vehiculo ASC";
+$cons="SELECT id_vehiculo, patente FROM vehiculos ORDER BY id_vehiculo ASC";
   $resultado = mysqli_query($conexionApi,$cons);
   $datos = mysqli_fetch_all($resultado,MYSQLI_ASSOC);
      
