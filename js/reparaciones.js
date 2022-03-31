@@ -13,6 +13,7 @@ const closeModal = document.querySelector(".modal__close");
 const cancelModal = document.querySelector(".modal__cancel");
 const presuARSlc = document.getElementById("presuAR_slc");
 const formARep = document.getElementById("form__ARep");
+let inputs = document.querySelectorAll("input");
 
 /** ERROR **/
 const alertas = document.getElementById("modal__alert");
@@ -21,9 +22,9 @@ const alertas = document.getElementById("modal__alert");
 const mPatente = document.querySelector(".mPatente");
 const mMarca = document.querySelector(".mMarca");
 const mModelo = document.querySelector(".mModelo");
-
 /** MUESTRO REPARACIONES REALIZADAS O EN CURSO **/
 async function loadTrabajos() {
+  consTrabDatos.innerHTML = ``;
   const respuestas = await fetch("php/reparaciones.php");
   const resultados = await respuestas.json();
   if (resultados === "inexistente") {
@@ -123,9 +124,10 @@ tablaGenerator.addEventListener("click", async (event) => {
             alertas.innerHTML = ``;
           }, 3000);
         } else {
+          addlinePresu.reset();
+          // inputs.forEach((input) => (input.value = ""));
           modal.classList.remove("modal--show");
           // agrego registro a la lista de reparaciones
-          consTrabDatos.innerHTML = ``;
           loadTrabajos();
         }
       });
@@ -133,7 +135,9 @@ tablaGenerator.addEventListener("click", async (event) => {
 
   formARep.addEventListener("reset", (ecam) => {
     // console.log(cancelModal);
-    ecam.preventDefault();
+    // ecam.preventDefault();
+    // inputs.forEach((input) => (input.value = ""));
+    addlinePresu.reset();
     modal.classList.remove("modal--show");
   });
 

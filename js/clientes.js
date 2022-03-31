@@ -15,6 +15,7 @@ const closeModal = document.querySelector(".modal__close");
 const cancelModal = document.querySelector(".modal__cancel");
 const agregoCliente = document.getElementById("form__alt-clie");
 const alertas = document.getElementById("modal__alert");
+let inputs = document.querySelectorAll("input");
 
 async function loadClientes() {
   datosClie.innerHTML = ``;
@@ -109,7 +110,7 @@ agregoCliente.addEventListener("submit", async function (ac) {
     .then((respLP) => respLP.json())
     .then((dataadLP) => {
       if (dataadLP === "400") {
-        alertas.innerHTML = `<div class="alert alert-danger" role="alert">El CUIT ya está registrado</div>`;
+        alertas.innerHTML = `<div class="alert alert-danger" role="alert">El CUIT/CUIL/DNI ya está registrado</div>`;
         setTimeout(() => {
           alertas.innerHTML = ``;
         }, 3000);
@@ -118,6 +119,8 @@ agregoCliente.addEventListener("submit", async function (ac) {
         setTimeout(() => {
           alertas.innerHTML = ``;
         }, 3000);
+        agregoCliente.reset();
+        // inputs.forEach((input) => (input.value = ""));
         modal.classList.remove("modal--show");
         loadClientes();
       }
@@ -126,7 +129,9 @@ agregoCliente.addEventListener("submit", async function (ac) {
 
 agregoCliente.addEventListener("reset", (cac) => {
   // console.log(cancelModal);
-  cac.preventDefault();
+  // cac.preventDefault();
+  // inputs.forEach((input) => (input.value = ""));
+  agregoCliente.reset();
   modal.classList.remove("modal--show");
 });
 
@@ -241,3 +246,32 @@ agregoCliente.addEventListener("reset", (cac) => {
 //       }
 //       $vehiculos.innerHTML = $options;
 //     });
+
+async function loadVC() {
+  const respuestas = await fetch("php/vehiclie.php");
+  const resultados = await respuestas.json();
+  if (resultados === "400") {
+    consPresuDatos.innerHTML = `
+        <div class="alert alert-danger" role="alert">
+          No hay presupuestos emitidos
+          </div>`;
+  } else {
+    resultados.forEach((el) => {
+      templatePresu.querySelector(".presu__p").textContent = el.id_presu;
+      templatePresu.querySelector(".client__p").textContent = el.empresa_nyp;
+      templatePresu.querySelector(".patente__p").textContent = el.patente;
+      templatePresu.querySelector(".marca__p").textContent = el.marca;
+      templatePresu.querySelector(".modelo__p").textContent = el.modelo;
+      templatePresu.querySelector(".fecha__p").textContent = el.fecha_presu;
+      templatePresu.querySelector(
+        ".monto__p"
+      ).textContent = `$ ${el.total_presu}`;
+      templatePresu.querySelector(".descript__p").textContent =
+        el.descripcion_presu;
+      const clone = templatePresu.cloneNode(true);
+      fragmentPresu.appendChild(clone);
+    });
+    consPresuDatos.appendChild(fragmentPresu);
+  }
+}
+loadVC();

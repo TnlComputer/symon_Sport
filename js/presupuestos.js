@@ -19,6 +19,7 @@ const presuMarca = document.querySelector(".modal__marca-presu");
 const presuModelo = document.querySelector(".modal__modelo-presu");
 
 const addlinePresu = document.querySelector(".alp__form");
+let inputs = document.querySelectorAll("input");
 
 async function loadPresupuestos() {
   consPresuDatos.innerHTML = ``;
@@ -114,6 +115,8 @@ tablaGenerator.addEventListener("click", async (event) => {
         if (dataadLP === "400") {
           alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos del Presupuesto</div>`;
         } else {
+          // inputs.forEach((input) => (input.value = ""));
+          addlinePresu.reset();
           modal.classList.remove("modal--show");
           loadPresupuestos();
         }
@@ -146,7 +149,9 @@ tablaGenerator.addEventListener("click", async (event) => {
 
 addlinePresu.addEventListener("reset", (ecam) => {
   // console.log(cancelModal);
-  ecam.preventDefault();
+  // ecam.preventDefault();
+  // inputs.forEach((input) => (input.value = ""));
+  addlinePresu.reset();
   modal.classList.remove("modal--show");
 });
 
