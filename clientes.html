@@ -180,8 +180,9 @@
 
       <form id="form__alt-clie">
 
-        <label class="modal__item" for="cuit_txt">Cuit/Cuil</label>
-        <input class="modal__input" type="text" name="cuit_txt" required>
+        <label class="modal__item" for="cuit_txt">Cuit/Cuil/DNI</label>
+        <input class="modal__input" type="text" name="cuit_txt" maxlength="11"
+          placeholder="Ingrese Cuit o Cuil sin guiones" required>
 
         <label class="modal__item" for="empers_txt">Empresa/Persona</label>
         <input class="modal__input" type="text" name="empers_txt" required>
@@ -211,8 +212,11 @@
         <input class="modal__input" type="text" name="mail_txt" id="mail_txt">
 
         <div class="btn__center">
-          <input class="modal__cancel izquierda" type="reset" value="Cancelar">
-          <input class="modal__close derecha" type="submit" value="Aceptar">
+          <button class="modal__cancel izquierda" type="reset">Cancelar</button>
+          <!-- <input class="modal__cancel izquierda" type="reset" value="Cancelar"> -->
+          <button class="modal__close derecha" type="submit">Aceptar</button>
+
+          <!-- <input class="modal__close derecha" type="submit" value="Aceptar"> -->
         </div>
         <div id="modal__alert"></div>
 
