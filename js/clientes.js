@@ -1,17 +1,47 @@
 const $clientes = document.getElementById("list__clie");
 const $formClie = document.getElementById("cli-formulario");
-
-const datosClie = document.querySelector(".datosClientes");
+const datosClie = document.querySelector(".line__tabla");
 const templateClie = document.getElementById("template__clientes").content;
 const fragmentClie = document.createDocumentFragment();
+const tablaGenerator = document.querySelector(".tablagen");
+const addClie = document.querySelector(".form__add");
+const editClie = document.querySelector(".form__edit");
+// const delClie = document.querySelector(".form__del");
+// const vPreClie = document.querySelector(".form__vPre");
+// const vRepClie = document.querySelector(".form__vRep");
+
+const modal = document.querySelector(".modal");
+const closeModal = document.querySelector(".modal__close");
+const cancelModal = document.querySelector(".modal__cancel");
+const agregoCliente = document.getElementById("form__alt-clie");
+const alertas = document.getElementById("modal__alert");
 
 async function loadClientes() {
+  datosClie.innerHTML = ``;
   await fetch("php/clientes.php")
     .then((respuestas) => respuestas.json())
     .then((resultado) => {
       // let $options = `<option value="">Elige un Cliente</option>`;
       resultado.forEach((el) => {
-        templateClie.querySelector(".edit__form").dataset.editid =
+        templateClie.querySelector(".edit__form").dataset.id_cliente =
+          el.id_cliente;
+        templateClie.querySelector(".edit__form").dataset.cuit = el.cuit;
+        templateClie.querySelector(".edit__form").dataset.empresa_nyp =
+          el.empresa_nyp;
+        templateClie.querySelector(".edit__form").dataset.direccion =
+          el.direccion;
+        templateClie.querySelector(".edit__form").dataset.localidad =
+          el.localidad;
+        templateClie.querySelector(".edit__form").dataset.provincia =
+          el.provincia;
+        templateClie.querySelector(".edit__form").dataset.cpost = el.cpost;
+        templateClie.querySelector(".edit__form").dataset.contacto =
+          el.contacto;
+        templateClie.querySelector(".edit__form").dataset.telefono =
+          el.telefono;
+        templateClie.querySelector(".edit__form").dataset.celular = el.celular;
+        templateClie.querySelector(".edit__form").dataset.mail = el.mail;
+        templateClie.querySelector(".vVeh__form").dataset.id_cliente =
           el.id_cliente;
         templateClie.querySelector(".cuit__c").textContent = el.cuit;
         templateClie.querySelector(".cliente__c").textContent = el.empresa_nyp;
@@ -31,6 +61,74 @@ async function loadClientes() {
     });
 }
 loadClientes();
+
+tablaGenerator.addEventListener("click", async (event) => {
+  // console.log(event.target);
+
+  if (event.target.closest(".add__form")) {
+    //ejecutar funcion de agregar tarea
+    // alert("ADD Cliente");
+    modal.classList.add("modal--show");
+  }
+
+  if (event.target.closest(".edit__form")) {
+    //ejecutar funcion de agregar tarea
+    alert("modificacion Cliente");
+  }
+
+  if (event.target.closest(".del__form")) {
+    //ejecutar funcion de agregar tarea
+    alert("borrar Cliente");
+  }
+  if (event.target.closest(".vVeh__form")) {
+    //ejecutar funcion de agregar tarea
+    // console.log(event.target, dataset(key, value));
+    alert("Ver Vehiculos del Cliente");
+  }
+  // if (event.target.closest(".vPre__form")) {
+  //   //ejecutar funcion de agregar tarea
+  //   alert("Ver Presupuestos del Cliente");
+  // }
+  // if (event.target.closest(".vRep__form")) {
+  //   //ejecutar funcion de agregar tarea
+  //   alert("Ver Reparaciones del Cliente");
+  // }
+});
+
+agregoCliente.addEventListener("submit", async function (ac) {
+  ac.preventDefault();
+  // alert("agergo linea al prespuesto");
+  const datosAC = new FormData(agregoCliente);
+  // console.log(addlinePresu);
+  // console.log(datosALP);
+  const opciones = {
+    method: "POST",
+    body: datosAC,
+  };
+  fetch("php/addclt.php", opciones)
+    .then((respLP) => respLP.json())
+    .then((dataadLP) => {
+      if (dataadLP === "400") {
+        alertas.innerHTML = `<div class="alert alert-danger" role="alert">El CUIT ya está registrado</div>`;
+        setTimeout(() => {
+          alertas.innerHTML = ``;
+        }, 3000);
+      } else {
+        alertas.innerHTML = `<div class="alert alert-danger" role="alert">Cliente Registrado</div>`;
+        setTimeout(() => {
+          alertas.innerHTML = ``;
+        }, 3000);
+        modal.classList.remove("modal--show");
+        loadClientes();
+      }
+    });
+});
+
+agregoCliente.addEventListener("reset", (cac) => {
+  // console.log(cancelModal);
+  cac.preventDefault();
+  modal.classList.remove("modal--show");
+});
 
 //   $clientes.addEventListener("change", (e) => loadVehiculos(e.target.value));
 

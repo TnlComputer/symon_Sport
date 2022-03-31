@@ -135,11 +135,13 @@
       <article class="line__tabla"></article>
     </section>
   </main>
+
   <footer class="footer">
     <p class="origen">
       Diseñado por <a href="http://tnlcomputer.com.ar"> @TNLCOMPUTER</a>
     </p>
   </footer>
+
   <template id="template__Presupuestos">
     <article class="fila ">
       <div class="col accion">
@@ -153,9 +155,6 @@
       <div class="col modelo modelo__p"></div>
       <div class="col monto monto__p"></div>
       <div class="col descript descript__p"></div>
-      <!-- <div class="col accion">
-        <input type="image" class="del__form" src="./assets/img/acciones/action_delete.png" alt="Eliminar Presupuesto">
-      </div> -->
     </article>
   </template>
 
@@ -219,9 +218,11 @@
             </tr>
           </table>
           <div class="modal_empresa">
-            <input class="modal__cancel" type="reset" value="Cerrar">
+            <input class="modal__cancel" type="reset" value="Cancelar">
             <input class="modal__close" type="submit" value="Aceptar">
           </div>
+          <div id="modal__alert"></div>
+
       </form>
       </fieldset>
     </div>

@@ -113,43 +113,58 @@
     <section class="main-section">
       <h1><span>S</span>YMON <span>S</span>PORT</h1>
       <article class="sec-clientes">
-        <!-- <div class="div__clientes"> -->
         <h2>CLIENTES</h2>
-        <!-- <form id="cli-formulario" action="">
-          <select class="slc-clientes" name="id_cliente" id="id_cliente">
-          </select>
-        </form> -->
-        <!-- </div> -->
       </article>
-      <article id="list__clie" class="fila tit__tabla">
+    </section>
+
+    <section class="tablagen div__clientes">
+      <article class="fila tit__tabla">
         <div class="col accion">
-          <input type="image" class="add__form" src="./assets/img/acciones/action_add.png" alt="Nuevo Cliente">
+          <input type="image" class="add__form" src="./assets/img/acciones/action_add.png" alt="Nuevo Cliente"
+            title="Nuevo Cliente">
         </div>
-        <div class="col cuit">CUIT</div>
-        <div class="col cliente">Cliente</div>
-        <div class="col direccion">Dirección</div>
-        <div class="col localiad">Localidad</div>
-        <div class="col provincia">Provincia</div>
-        <div class="col codpost">Cod.Post.</div>
-        <div class="col contacto">Contacto</div>
-        <div class="col telefono">telefono</div>
-        <div class="col celular">Celular</div>
-        <div class="col mail">Mail</div>
+        <div class="col accion  accNo">
+          <img src="./assets/img/acciones/car-16.png" alt="Vehícilos" title="Ver Vehícilos">
+        </div>
+        <!-- <div class="col accion  accNo">
+          <img src="./assets/img/acciones/file.png" alt="Reparaciones" title="Ver Reparaciones">
+        </div> -->
+        <div class="col cuit"> CUIT/CUIL </div>
+        <div class="col client"> Cliente </div>
+        <div class="col direccion"> Dirección </div>
+        <div class="col loc"> Localidad </div>
+        <div class="col pro"> Provincia </div>
+        <div class="col cpost"> Cod.Post. </div>
+        <div class="col contacto"> Contacto </div>
+        <div class="col telefono"> telefono </div>
+        <div class="col celular"> Celular </div>
+        <div class="col mail"> Mail </div>
       </article>
-      <article class="col datosClientes"></article>
+      <article class="line__tabla"></article>
     </section>
   </main>
+
+  <footer class="footer">
+    <p class="origen">
+      Diseñado por <a href="http://tnlcomputer.com.ar"> @TNLCOMPUTER</a>
+    </p>
+  </footer>
 
   <template id="template__clientes">
     <article class="fila">
       <div class="col accion">
-        <input type="image" class="edit__form" src="./assets/img/acciones/reply.gif" alt="Edit Cliente">
+        <input type="image" class="edit__form" src="./assets/img/acciones/reply.gif" alt="Edit Cliente"
+          title="Edit Cliente">
+      </div>
+      <div class="col accion">
+        <input type="image" class="vVeh__form" src="./assets/img/acciones/car-16.png" alt="Ver Vehículos"
+          title="Ver Vehículos">
       </div>
       <div class="col cuit cuit__c"></div>
-      <div class="col cliente cliente__c"></div>
+      <div class="col client cliente__c"></div>
       <div class="col direccion direccion__c"></div>
-      <div class="col localidad localidad__c"></div>
-      <div class="col provincia provincia__c"></div>
+      <div class="col loc localidad__c"></div>
+      <div class="col pro provincia__c"></div>
       <div class="col cpost cpost__c"></div>
       <div class="col contacto contacto__c"></div>
       <div class="col telefono telefono__c"></div>
@@ -158,47 +173,54 @@
     </article>
   </template>
 
-  <!-- 
+  <!-- <template id="template__Aclientes"> -->
+  <section class="modal">
+    <div class="modal__container-clie">
+      <h2 class="modal__title">Clientes</h2>
 
-  <template>
-    <div class="cli-vehiculos-main">
+      <form id="form__alt-clie">
 
-      <div class="cli-vehiculos-linea">
-        <div class="cli-vehiculos-titulo">Patente : </div>
-        <div><input class="cli-vehiculos-detalle" type="text"></div>
-      </div>
+        <label class="modal__item" for="cuit_txt">Cuit/Cuil</label>
+        <input class="modal__input" type="text" name="cuit_txt" required>
 
-      <div class="cli-vehiculos-linea">
-        <div class="cli-vehiculos-titulo">Marca : </div>
-        <div><input class="cli-vehiculos-detalle" type="text" t></div>
-      </div>
+        <label class="modal__item" for="empers_txt">Empresa/Persona</label>
+        <input class="modal__input" type="text" name="empers_txt" required>
 
-      <div class="cli-vehiculos-linea">
-        <div class="cli-vehiculos-titulo">Modelo : </div>
-        <div> <input class="cli-vehiculos-detalle" type="text"></div>
-      </div>
+        <label class="modal__item" for="direccion">Dirección</label>
+        <input class="modal__input" type="text" name="dire_txt">
 
-      <div class="cli-vehiculos-linea">
-        <div class="cli-vehiculos-titulo">KM : </div>
-        <div> <input class="cli-vehiculos-detalle" type="text"></div>
-      </div>
+        <label class="modal__item" for="loc_txt">Localidad</label>
+        <input class="modal__input" type="text" name="loc_txt" id="loc_txt">
 
-      <div class="cli-vehiculos-linea">
-        <div class="cli-vehiculos-titulo">Tanque : </div>
-        <div> <input class="cli-vehiculos-detalle" type="text"></div>
-      </div>
+        <label class="modal__item" for="pcia_txt">Provoncia</label>
+        <input class="modal__input" type="text" name="pcia_txt" id="tel_txt">
 
-      <div class="cli-vehiculos-linea">
-        <div class="cli-vehiculos-titulo">Detalles :</div>
-        <div> <input class="cli-vehiculos-detalle" type="text"></div>
-      </div>
-  </template> -->
-  <footer class="footer">
-    <p class="origen">
-      Diseñado por <a href="http://tnlcomputer.com.ar"> @TNLCOMPUTER</a>
-    </p>
-  </footer>
-  <!-- <script src="js/login.js" defer></script> -->
+        <label class="modal__item" for="cp_txt">Cod.Postal</label>
+        <input class="modal__input" type="text" name="cp_txt" id="cp_txt">
+
+        <label class="modal__item" for="contacto_txt">Contacto</label>
+        <input class="modal__input" type="text" name="contacto_txt" id="contacto_txt" required>
+
+        <label class="modal__item" for="tel_txt">Teléfono</label>
+        <input class="modal__input" type="tel" name="tel_txt" id="tel_txt">
+
+        <label class="modal__item" for="cel_txt">Celular</label>
+        <input class="modal__input" type="tel" name="cel_txt" id="tel_txt" required>
+
+        <label class="modal__item" for="mail_txt">Mail</label>
+        <input class="modal__input" type="text" name="mail_txt" id="mail_txt">
+
+        <div class="btn__center">
+          <input class="modal__cancel izquierda" type="reset" value="Cancelar">
+          <input class="modal__close derecha" type="submit" value="Aceptar">
+        </div>
+        <div id="modal__alert"></div>
+
+      </form>
+    </div>
+  </section>
+  <!-- </template> -->
+
   <script src="js/scripts.js" defer></script>
   <script src="js/clientes.js" defer></script>
 </body>
