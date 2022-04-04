@@ -90,6 +90,7 @@ tablaGenerator.addEventListener("click", async (event) => {
   if (event.target.closest(".add__form")) {
     //ejecutar funcion de agregar tarea
     // alert("ADD Cliente");
+
     modal.classList.add("modal--show");
   }
 
@@ -155,27 +156,21 @@ tablaGenerator.addEventListener("click", async (event) => {
 
 agregoCliente.addEventListener("submit", async function (ac) {
   ac.preventDefault();
-  // alert("agergo linea al prespuesto");
-  // const datosAC = new FormData(agregoCliente);
-  // console.log(addlinePresu);
-  // console.log(datosALP);
 
-  // console.log(ac.target.id_cliente_txt.value);
   if (!ac.target.id_cliente_txt.value) {
     const datosAC = new FormData(agregoCliente);
-
     let opciones = {
       method: "POST",
       body: datosAC,
     };
     respLP = await fetch("php/addclt.php", opciones);
   } else {
-    const datosEC = new FormData(agregoCliente);
+    // const datosEC = new FormData(agregoCliente);
     let opciones = {
-      method: "POST",
-      body: datosEC,
+      method: "PUT",
+      body: datosAC,
     };
-    respLP = await fetch("php/actclt.php", opciones);
+    respLP = await fetch("php/addclt.php", opciones);
     ac.target.id_cliente_txt.value = "";
   }
   // fetch("php/addclt.php", opciones)
@@ -186,16 +181,14 @@ agregoCliente.addEventListener("submit", async function (ac) {
     setTimeout(() => {
       alertas.innerHTML = ``;
     }, 3000);
+  } else {
+    // alertas.innerHTML = `<div class="alert alert-danger" role="alert">Grabado</div>`;
+    // setTimeout(() => {
+    //   alertas.innerHTML = ``;
+    // }, 3000);
+    // modal.classList.remove("modal--show");
+    // loadClientes();
   }
-  // else {
-  //   alertas.innerHTML = `<div class="alert alert-danger" role="alert">Grabado</div>`;
-  //   setTimeout(() => {
-  //     alertas.innerHTML = ``;
-  //   }, 3000);
-  agregoCliente.reset();
-  modal.classList.remove("modal--show");
-  loadClientes();
-  // }
   // });
 });
 

@@ -2,10 +2,15 @@
 require_once "connections/conexion.php";
 error_reporting(E_ALL ^ E_NOTICE);
 
+   $metodo= $_SERVER['REQUEST_METHOD'];
+
+$reparacion = $_POST["id_txt"];
 $fecIni = $_POST["fecha_txt"];
 $presu = $_POST['presuAR_slc'];
 $obs = $_POST['obs_txt'];
 $km = $_POST['km_txt'];
+
+    if ($metodo==='POST') {
 
 // validando datos
 
@@ -29,7 +34,14 @@ $km = $_POST['km_txt'];
               VALUES ('$Id_cliente', '$id_vehiculo', '$patenteVeh', '$obs', '$fecIni', '$presu', '$km' )";
 
           $conexionApi->query($datos); 
+    }
 
+        if ($metodo==='PUT') {
+        $datos=" UPDATE reparaciones SET id_cliente='$id_cliente', id_vehiculo='$id_vehiculo', patente='$patenteVeh', observaciones='$obs',  fecha_trab='$fecIni', presupuesto='$presu', km='$km'  WHERE  id_trabajo='$reparacion' ";
+        
+        $conexionApi->query($datos);
+        }
+        
         if(!empty($datos)){
         echo json_encode("200");
         }else{

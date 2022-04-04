@@ -32,6 +32,19 @@ async function loadTrabajos() {
   } else {
     resultados.forEach((el) => {
       templateTrab.querySelector(".edit__form").dataset.editid = el.id_trabajo;
+      templateTrab.querySelector(".edit__form").dataset.presupuesto =
+        el.presupuesto;
+
+      templateTrab.querySelector(".edit__form").dataset.patente = el.patente;
+      templateTrab.querySelector(".edit__form").dataset.marca = el.marca;
+      templateTrab.querySelector(".edit__form").dataset.modelo = el.modelo;
+
+      templateTrab.querySelector(".edit__form").dataset.fecha_trab =
+        el.fecha_trab;
+      templateTrab.querySelector(".edit__form").dataset.km = el.km;
+      templateTrab.querySelector(".edit__form").dataset.observaciones =
+        el.observaciones;
+
       templateTrab.querySelector(".fecha__t").textContent = el.fecha_trab;
       templateTrab.querySelector(".fecha__e").textContent = el.fecha_entrega;
       templateTrab.querySelector(".patente__t").textContent = el.patente;
@@ -124,7 +137,7 @@ tablaGenerator.addEventListener("click", async (event) => {
             alertas.innerHTML = ``;
           }, 3000);
         } else {
-          addlinePresu.reset();
+          formARep.reset();
           // inputs.forEach((input) => (input.value = ""));
           modal.classList.remove("modal--show");
           // agrego registro a la lista de reparaciones
@@ -137,7 +150,7 @@ tablaGenerator.addEventListener("click", async (event) => {
     // console.log(cancelModal);
     // ecam.preventDefault();
     // inputs.forEach((input) => (input.value = ""));
-    addlinePresu.reset();
+    formARep.reset();
     modal.classList.remove("modal--show");
   });
 
@@ -159,6 +172,12 @@ tablaGenerator.addEventListener("click", async (event) => {
   //chequeo si se presiono algun boton de editar tarea
   if (event.target.closest(".edit__form")) {
     //ejecutar la funcion de editar tarea
-    alert("esta seguro que quiere editar la tarea");
+    // alert("esta seguro que quiere editar la tarea");
+    modal.classList.add("modal--show");
+    formARep.presuAR_slc.value = event.target.dataset.presupuesto;
+    formARep.fecha_txt.value = event.target.dataset.fecha_trab;
+    formARep.km_txt.value = event.target.dataset.km;
+    formARep.obs_txt.value = event.target.dataset.observaciones;
+    formARep.repId_txt.value = event.target.dataset.id_trabajo;
   }
 });

@@ -9,7 +9,7 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 $metodo= $_SERVER['REQUEST_METHOD'];
 $resultado = array();
 
-if ($metodo==='POST') {
+if ($metodo==='GET') {
       $datos = json_decode(file_get_contents("php://input"), true);
       $resultado['datos'] = json_encode($datos);
 
@@ -17,6 +17,25 @@ if ($metodo==='POST') {
         $resultado = mysqli_query($conexionApi,$cons);
         $datos = mysqli_fetch_all($resultado,MYSQLI_ASSOC);
      }
+     
+if ($metodo==='PUT') {
+      $datos = json_decode(file_get_contents("php://input"), true);
+      $resultado['datos'] = json_encode($datos);
+
+      $cons="SELECT * FROM vehiculos where id_cliente='".$resultado['datos']."' ORDER BY id_vehiculo ASC";
+        $resultado = mysqli_query($conexionApi,$cons);
+        $datos = mysqli_fetch_all($resultado,MYSQLI_ASSOC);
+     }
+
+if ($metodo==='POST') {
+      $resultado = file_get_contents("php://input");
+      // $resultado['datos'] = json_encode($datos);
+
+      $cons="SELECT * FROM vehiculos where id_cliente='".$resultado."' ORDER BY id_vehiculo ASC";
+        $resultado = mysqli_query($conexionApi,$cons);
+        $datos = mysqli_fetch_all($resultado,MYSQLI_ASSOC);
+     }
+     
       if(!empty($datos)){
         echo json_encode($datos);
       }else{
