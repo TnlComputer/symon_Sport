@@ -592,6 +592,7 @@ legend {
 
 /* MODAL */
 
+.modal__edit,
 .nuevoVehiculoClientes,
 .vehTit__clientes,
 .modal {

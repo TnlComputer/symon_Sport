@@ -8,20 +8,24 @@ const delTrabajo = document.querySelector(".form__del");
 
 /** MODAL REPARACIONES **/
 const modal = document.querySelector(".modal");
+const modalE = document.querySelector(".modal__edit");
 const closeModal = document.querySelector(".modal__close");
 /** ALTA REPARACIONES **/
 const cancelModal = document.querySelector(".modal__cancel");
 const presuARSlc = document.getElementById("presuAR_slc");
 const formARep = document.getElementById("form__ARep");
-let inputs = document.querySelectorAll("input");
+const formERep = document.getElementById("form__ERep");
+// let inputs = document.querySelectorAll("input");
 
 /** ERROR **/
 const alertas = document.getElementById("modal__alert");
 
 /** PATENTE, MARCA Y MODELO **/
+// const mPresu = document.querySelector(".presuER_slc");
 const mPatente = document.querySelector(".mPatente");
 const mMarca = document.querySelector(".mMarca");
 const mModelo = document.querySelector(".mModelo");
+
 /** MUESTRO REPARACIONES REALIZADAS O EN CURSO **/
 async function loadTrabajos() {
   consTrabDatos.innerHTML = ``;
@@ -88,6 +92,9 @@ tablaGenerator.addEventListener("click", async (event) => {
       let $options = `<option value="">Elige un Presupuesto</option>`;
 
       resultPsu.forEach((elPus) => {
+        //  con estas instrucciones me posiciono en el select que habia elegido
+        // const miSelect = document.getElementById("idSelect");
+        // const seleecionado = miSelect.options[miSelect.selectedIndex].value;
         $options += `<option value = "${elPus.id_presu}">${elPus.id_presu} - ${elPus.patente}</option>`;
       });
       presuARSlc.innerHTML = $options;
@@ -98,14 +105,13 @@ tablaGenerator.addEventListener("click", async (event) => {
   presuARSlc.addEventListener("change", (eAR) =>
     loadPresupuestos(eAR.target.value)
   );
-  // console.log(presuARSlc);
-  // console.log(loadPresupuestos(eAR.target.value));
+
   async function loadPresupuestos(datos) {
     const opciones = {
       method: "POST",
       body: datos,
     };
-    console.log(datos);
+    // console.log(datos);
     await fetch("php/psv.php", opciones)
       .then((resARep) => resARep.json())
       .then((dataAR) => {
@@ -154,30 +160,68 @@ tablaGenerator.addEventListener("click", async (event) => {
     modal.classList.remove("modal--show");
   });
 
-  //chequeo si se presiono algun boton de eliminar tarea
-  if (event.target.closest(".del__form")) {
-    // console.log(event.target.closest(".del__form").parentElement.parentElement);
-    const elementToDelete =
-      event.target.closest(".del__form").parentElement.parentElement; // aca uso dos parentElement, porque el boton (o tu formulario) estaba dentro de un div, y luego dentro de un article
-
-    if (confirm("esta seguro que quiere borrar la tarea")) {
-      // la siguiente linea solo borra el item del DOM
-      // console.log(
-      event.target.closest(".del__form").parentElement.parentElement;
-      // );
-      consTrabDatos.removeChild(elementToDelete);
-      // llamar al back para eliminar de la base de datos la reparacion
-    }
-  }
   //chequeo si se presiono algun boton de editar tarea
   if (event.target.closest(".edit__form")) {
-    //ejecutar la funcion de editar tarea
-    // alert("esta seguro que quiere editar la tarea");
-    modal.classList.add("modal--show");
-    formARep.presuAR_slc.value = event.target.dataset.presupuesto;
-    formARep.fecha_txt.value = event.target.dataset.fecha_trab;
-    formARep.km_txt.value = event.target.dataset.km;
-    formARep.obs_txt.value = event.target.dataset.observaciones;
-    formARep.repId_txt.value = event.target.dataset.id_trabajo;
+    event.preventDefault();
+    data = event.target.dataset.presupuesto;
+    console.log(data);
+    // const opciones = {
+    //   method: "POST",
+    //   body: data,
+    // };
+
+    // const resERep = await fetch("php/psv.php", opciones);
+    // const dataER = await resERep.json();
+    // if (dataER === "error") {
+    //   console.log(dataER);
+    // } else {
+    modalE.classList.add("modal--show");
+    // mPresu.innerHTML = `${dataER.id_presu}`;
+    // mPatente.innerHTML = `${dataER.patente}`;
+    // mMarca.innerHTML = `${dataER.marca}`;
+    // mModelo.innerHTML = `${dataER.modelo}`;
+    formERep.presuER_slc.value = event.target.dataset.presupuesto;
+    formERep.patente_txt.value = event.target.dataset.patente;
+    formERep.marca_txt.value = event.target.dataset.marca;
+    formERep.modelo_txt.value = event.target.dataset.modelo;
+    formERep.fecha_txt.value = event.target.dataset.fecha_trab;
+    formERep.km_txt.value = event.target.dataset.km;
+    formERep.obs_txt.value = event.target.dataset.observaciones;
+    formERep.repId_txt.value = event.target.dataset.id_trabajo;
+    // }
   }
+});
+
+formERep.addEventListener("submit", async function (efer) {
+  efer.preventDefault();
+
+  const datosERep = new FormData(formERep);
+
+  await fetch("./php/actrep.php", {
+    method: "Post",
+    body: datosERep,
+  })
+    .then((resERep) => resERep.json())
+    .then((dataER) => {
+      if (dataER === "400") {
+        alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos de las reparación</div>`;
+        setTimeout(() => {
+          alertas.innerHTML = ``;
+        }, 3000);
+      } else {
+        // formERep.reset();
+        // inputs.forEach((input) => (input.value = ""));
+        // modalE.classList.remove("modal--show");
+        // agrego registro a la lista de reparaciones
+        // loadTrabajos();
+      }
+    });
+
+  formERep.addEventListener("reset", (ecame) => {
+    console.log("cancel");
+    // inputs.forEach((input) => (input.value = ""));
+    ecame.preventDefault();
+    // formERep.reset();
+    modalE.classList.remove("modal--show");
+  });
 });

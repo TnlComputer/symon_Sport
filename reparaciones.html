@@ -174,18 +174,18 @@
         </select>
 
         <label class="modal__item" for="patente_txt">Patente</label>
-        <input class="modal__input mPatente" type="text" name="patente_txt">
+        <!-- <input class="modal__input mPatente" type="text" name="patente_txt"> -->
 
-        <!-- <span class="modal__input mPatente"></span> -->
-        <!-- <br> -->
+        <span class="modal__input mPatente"></span>
+        <br>
         <label class="modal__item" for="marca_txt">Marca</label>
-        <input class="modal__input mMarca" type="text" name="marca_txt">
+        <!-- <input class="modal__input mMarca" type="text" name="marca_txt"> -->
         <span class="modal__input mMarca"></span>
-        <!-- <br> -->
+        <br>
         <label class="modal__item" for="modelo_txt">Modelo</label>
-        <input class="modal__input mModelo" type="text" name="modelo_txt">
-        <!-- <span class="modal__input mModelo"></span> -->
-        <!-- <br> -->
+        <!-- <input class="modal__input mModelo" type="text" name="modelo_txt"> -->
+        <span class="modal__input mModelo"></span>
+        <br>
         <label class=" modal__item" for="fecha_txt">Ingreso</label>
         <input class="modal__input" type="date" name="fecha_txt" required>
         <label class="modal__item" for="km_txt">Kilometraje</label>
@@ -199,6 +199,39 @@
           <input class="modal__close" type="submit" value="Aceptar"> -->
         <button class="modal__cancel izquierda" type="reset">Cancelar</button>
         <!-- <input class="modal__cancel izquierda" type="reset" value="Cancelar"> -->
+        <button class="modal__close derecha" type="submit">Aceptar</button>
+
+        <div id="modal__alert"></div>
+      </form>
+
+    </div>
+  </section>
+
+  <!-- EDITAR REPARACIONES -->
+  <section class="modal__edit">
+    <div class="modal__container">
+      <h2 class="modal__title">Reparación</h2>
+      <form id="form__ERep">
+
+        <label class="modal__item" for="presuER_slc">Presupuesto</label>
+        <input class="modal__input" type="text" name="presuER_slc" readonly>
+        <label class="modal__item" for="patente_txt">Patente</label>
+        <input class="modal__input" type="text" name="patente_txt" readonly>
+        <label class="modal__item" for="marca_txt">Marca</label>
+        <input class="modal__input" type="text" name="marca_txt" readonly>
+        <label class="modal__item" for="modelo_txt">Modelo</label>
+        <input class="modal__input" type="text" name="modelo_txt" readonly>
+        <label class=" modal__item" for="fecha_txt">Ingreso</label>
+        <input class="modal__input" type="date" name="fecha_txt" required>
+        <label class="modal__item" for="km_txt">Kilometraje</label>
+        <input class="modal__input" type="text" name="km_txt" required>
+        <input class="repId_txt" type="hidden" name="repId_txt">
+
+        <label class="modal__item modal__textareaI-item" for=" obs_txt">Observaciones del Vehiculo</label>
+        <textarea class="modal__input modal__textarea-input" name="obs_txt" cols="30" rows="5" required></textarea>
+
+        <button class="modal__cancel izquierda" type="reset">Cancelar</button>
+
         <button class="modal__close derecha" type="submit">Aceptar</button>
 
         <div id="modal__alert"></div>
