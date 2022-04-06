@@ -592,6 +592,8 @@ legend {
 
 /* MODAL */
 
+.nuevoVehiculoClientes,
+.vehTit__clientes,
 .modal {
   position: fixed;
   top: 0;
@@ -658,6 +660,21 @@ legend {
   max-width: 500px;
   background-color: rgb(183, 209, 224);
   height: auto;
+}
+
+.modal__container-clienV {
+  margin: 50px auto;
+  width: 90%;
+  /* max-width: 1200px; */
+  height: auto;
+  max-height: 90%;
+  background-color: rgb(57, 68, 74);
+  padding: 1em;
+  border-radius: 6px;
+  transform: var(--transform);
+  transition: var(--transition);
+  /* margin-left: auto;
+  margin-right: auto; */
 }
 
 .modal__title {

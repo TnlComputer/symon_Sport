@@ -11,22 +11,20 @@ const vehClie = document.querySelector(".form__veh");
 // const vRepClie = document.querySelector(".form__vRep");
 
 const modal = document.querySelector(".modal");
+const nuevoVehClie = document.querySelector(".nuevoVehiculoClientes");
 const closeModal = document.querySelector(".modal__close");
 const cancelModal = document.querySelector(".modal__cancel");
+const agregoVehiculo = document.getElementById("form__Altavehiculo");
+
 const agregoCliente = document.getElementById("form__alt-clie");
-const alertas = document.querySelector("modal__alert");
-let inputs = document.querySelectorAll("input");
 
-// const vehtitclientes = document.getElementById("vehTit__clientes").content;
-// const fragVehTClie = document.createDocumentFragment();
-
+const fragVehTClie = document.createDocumentFragment();
 const lvtclie = document.querySelector(".vehTit__clientes");
-
 const vehdatclientes = document.getElementById("vehDatos__clientes").content;
 const fragVehDClie = document.createDocumentFragment();
-
-// const vehDatos__cliente = document.querySelector(".vehDatos__clientes");
 const lvdclie = document.querySelector(".line__VCDtabla");
+
+const clienteTit = document.querySelector(".clienteTit");
 
 const rvdclientes = document.getElementById("RVDatos__clientes").content;
 const fragRVDClie = document.createDocumentFragment();
@@ -37,6 +35,8 @@ const prvdclientes = document.getElementById("PRVDatos__clientes").content;
 const fragPRVDClie = document.createDocumentFragment();
 const lprvtclie = document.querySelector(".PRepTit__clientes");
 const lprvdclie = document.querySelector(".line__PRVCDtabla");
+const alertas = document.querySelector("modal__alert");
+const alertasV = document.getElementById("modal__alertV");
 
 async function loadClientes() {
   datosClie.innerHTML = ``;
@@ -88,8 +88,6 @@ tablaGenerator.addEventListener("click", async (event) => {
   // console.log(event.target);
 
   if (event.target.closest(".add__form")) {
-    //ejecutar funcion de agregar tarea
-    // alert("ADD Cliente");
     modal.classList.add("modal--show");
   }
 
@@ -112,44 +110,13 @@ tablaGenerator.addEventListener("click", async (event) => {
 
   if (event.target.matches(".veh__form")) {
     id = event.target.dataset.id_cliente;
-    lvtclie.classList.remove("show");
+    lvtclie.classList.add("modal--show");
     lvdclie.innerHTML = ``;
     lrvtclie.classList.remove("show");
     lrvdclie.innerHTML = ``;
     lprvtclie.classList.remove("show");
     lprvdclie.innerHTML = ``;
     loadVC(id);
-  }
-
-  if (event.target.matches(".cerrar__VC")) {
-    lvtclie.classList.remove("show");
-    lvdclie.innerHTML = ``;
-    lrvtclie.classList.remove("show");
-    lrvdclie.innerHTML = ``;
-    lprvtclie.classList.remove("show");
-    lprvdclie.innerHTML = ``;
-  }
-
-  if (event.target.matches(".reparaciones__form")) {
-    ptt = event.target.dataset.patente;
-    loadRVC(ptt);
-  }
-
-  if (event.target.matches(".cerrar__RVC")) {
-    lrvtclie.classList.remove("show");
-    lrvdclie.innerHTML = ``;
-    lprvtclie.classList.remove("show");
-    lprvdclie.innerHTML = ``;
-  }
-
-  if (event.target.matches(".presupuesto__form")) {
-    prc = event.target.dataset.presupuesto;
-    loadPRVC(prc);
-  }
-
-  if (event.target.matches(".cerrar__PRVC")) {
-    lprvtclie.classList.remove("show");
-    lprvdclie.innerHTML = ``;
   }
 });
 
@@ -208,6 +175,7 @@ agregoCliente.addEventListener("reset", (cac) => {
 async function loadVC(id) {
   lvdclie.innerHTML = ``;
 
+  // console.log(id);
   let datosAC = id;
   const opciones = {
     method: "POST",
@@ -225,6 +193,17 @@ async function loadVC(id) {
     resultados.forEach((el) => {
       vehdatclientes.querySelector(".reparaciones__form").dataset.patente =
         el.patente;
+      vehdatclientes.querySelector(".editVeh__form").dataset.id_vehiculo =
+        el.id_vehiculo;
+      vehdatclientes.querySelector(".editVeh__form").dataset.id_cliente =
+        el.id_cliente;
+      vehdatclientes.querySelector(".editVeh__form").dataset.patente =
+        el.patente;
+      vehdatclientes.querySelector(".editVeh__form").dataset.marca = el.marca;
+      vehdatclientes.querySelector(".editVeh__form").dataset.modelo = el.modelo;
+      vehdatclientes.querySelector(".editVeh__form").dataset.anio = el.anio;
+
+      lvtclie.querySelector(".add__VC").dataset.id_cliente = el.id_cliente;
       vehdatclientes.querySelector(".patente__c").textContent = el.patente;
       vehdatclientes.querySelector(".marca__c").textContent = el.marca;
       vehdatclientes.querySelector(".modelo__c").textContent = el.modelo;
@@ -232,20 +211,116 @@ async function loadVC(id) {
       const clone = vehdatclientes.cloneNode(true);
       fragVehDClie.appendChild(clone);
     });
-    lvtclie.classList.add("show");
+    // lvtclie.classList.add("show");
     lvdclie.appendChild(fragVehDClie);
     // lvdclie.insertBefore(fragVehDClie);
   }
 }
 
-// TEMPLATE reparaciones del vehiculo del Cliente
-async function loadRVC(ptt) {
-  lrvdclie.innerHTML = ``;
-  lprvtclie.classList.remove("show");
-  lprvdclie.innerHTML = ``;
+lvtclie.addEventListener("click", async function (cclie) {
+  cclie.preventDefault();
+  if (cclie.target.matches(".cerrar__VC")) {
+    lvtclie.classList.remove("modal--show");
+  }
 
-  // console.log(datosRC);
+  if (cclie.target.matches(".add__VC")) {
+    id = cclie.target.dataset.id_cliente;
+    nuevoVehClie.classList.add("modal--show");
+    agregoVehiculo.id_cliente_txt.value = cclie.target.dataset.id_cliente;
+  }
+
+  agregoVehiculo.addEventListener("reset", (avc) => {
+    // sconsole.log("reset");
+    agregoVehiculo.reset();
+    nuevoVehClie.classList.remove("modal--show");
+  });
+
+  agregoVehiculo.addEventListener("submit", async function (vac) {
+    vac.preventDefault();
+    // console.log(vac);
+    id = vac.target.id_cliente_txt.value;
+    idV = vac.target.id_vehiculo_txt.value;
+    // console.log("id cliente ", id);
+    // console.log("id Vehiculo ", idV);
+
+    if (!idV) {
+      const datosVAC = new FormData(agregoVehiculo);
+      let opciones = {
+        method: "POST",
+        body: datosVAC,
+      };
+      respvac = await fetch("php/addvhl.php", opciones);
+    } else {
+      const datosVEC = new FormData(agregoVehiculo);
+      let opciones = {
+        method: "POST",
+        body: datosVEC,
+      };
+      respvac = await fetch("php/actvhl.php", opciones);
+    }
+    datavac = await respvac.json();
+    if (datavac === "error") {
+      alertasV.innerHTML = `<div class="alert alert-danger" role="alert">Error al grabar</div>`;
+      setTimeout(() => {
+        alertasV.innerHTML = ``;
+      }, 3000);
+    }
+    if (datavac === "existe") {
+      alertasV.innerHTML = `<div class="alert alert-danger" role="alert">Patente ya está registrada</div>`;
+      setTimeout(() => {
+        alertasV.innerHTML = ``;
+      }, 3000);
+    }
+    // id =datavac
+    agregoVehiculo.reset();
+    nuevoVehClie.classList.remove("modal--show");
+    // console.log("antes de recargar ", datavac);
+    loadVC(datavac);
+  });
+
+  if (cclie.target.matches(".editVeh__form")) {
+    vec = cclie.target.dataset.id_cliente;
+    nuevoVehClie.classList.add("modal--show");
+    agregoVehiculo.id_vehiculo_txt.value = cclie.target.dataset.id_vehiculo;
+    agregoVehiculo.id_cliente_txt.value = cclie.target.dataset.id_cliente;
+    agregoVehiculo.patente_txt.value = cclie.target.dataset.patente;
+    agregoVehiculo.marca_txt.value = cclie.target.dataset.marca;
+    agregoVehiculo.modelo_txt.value = cclie.target.dataset.modelo;
+    agregoVehiculo.anio_txt.value = cclie.target.dataset.anio;
+  }
+
+  if (cclie.target.matches(".reparaciones__form")) {
+    ptt = cclie.target.dataset.patente;
+    lrvtclie.classList.remove("show");
+    lrvdclie.innerHTML = ``;
+    lprvtclie.classList.remove("show");
+    lprvdclie.innerHTML = ``;
+    // console.log(ptt);
+    loadRVC(ptt);
+  }
+
+  if (cclie.target.matches(".cerrar__RVC")) {
+    lrvtclie.classList.remove("show");
+    lrvdclie.innerHTML = ``;
+    lprvtclie.classList.remove("show");
+    lprvdclie.innerHTML = ``;
+  }
+
+  if (cclie.target.matches(".presupuesto__form")) {
+    prc = cclie.target.dataset.presupuesto;
+    loadPRVC(prc);
+  }
+
+  if (cclie.target.matches(".cerrar__PRVC")) {
+    lprvtclie.classList.remove("show");
+    lprvdclie.innerHTML = ``;
+  }
+});
+
+//  reparaciones del vehiculo del Cliente
+async function loadRVC(ptt) {
   let datosRC = ptt;
+  // console.log(datosRC);
   const opciones = {
     method: "POST",
     body: datosRC,
@@ -254,10 +329,15 @@ async function loadRVC(ptt) {
   const respuestasrv = await fetch("php/repVClie.php", opciones);
   const resultadosrv = await respuestasrv.json();
   if (resultadosrv === "inexistente") {
+    lrvtclie.classList.add("show");
     lrvdclie.innerHTML = `
-        <div class="alert alert-danger" role="alert">
-          No hay reparaciones del vehículo del cliente aun cargados
-          </div>`;
+          <div class="alert alert-danger" role="alert">
+            No hay reparaciones del vehículo del cliente aun cargados
+            </div>`;
+    setTimeout(() => {
+      lrvtclie.classList.remove("show");
+      lrvdclie.innerHTML = ``;
+    }, 3000);
   } else {
     resultadosrv.forEach((el) => {
       rvdclientes.querySelector(".presupuesto__form").dataset.presupuesto =
@@ -277,12 +357,12 @@ async function loadRVC(ptt) {
   }
 }
 
-// TEMPLATE Prespuesto reparaciones del vehiculo del Cliente
+//  Prespuesto reparaciones del vehiculo del Cliente
 async function loadPRVC(prc) {
   lprvdclie.innerHTML = ``;
 
   let datosPRC = prc;
-  console.log(datosPRC);
+  // console.log(datosPRC);
   const opciones = {
     method: "POST",
     body: datosPRC,
@@ -324,3 +404,5 @@ async function loadPRVC(prc) {
     // lvdclie.insertBefore(fragVehDClie);
   }
 }
+
+//
