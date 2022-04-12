@@ -32,6 +32,19 @@ async function loadPresupuestos() {
           </div>`;
   } else {
     resultados.forEach((el) => {
+      templatePresu.querySelector(".edit__form").dataset.id_presu = el.id_presu;
+      templatePresu.querySelector(".edit__form").dataset.empresa_nyp =
+        el.empresa_nyp;
+      templatePresu.querySelector(".edit__form").dataset.patente = el.patente;
+      templatePresu.querySelector(".edit__form").dataset.marca = el.marca;
+      templatePresu.querySelector(".edit__form").dataset.modelo = el.modelo;
+      templatePresu.querySelector(".edit__form").dataset.fecha_presu =
+        el.fecha_presu;
+      templatePresu.querySelector(".edit__form").dataset.total_presu =
+        el.total_presu;
+      templatePresu.querySelector(".edit__form").dataset.descripcion_presu =
+        el.descripcion_presu;
+
       templatePresu.querySelector(".presu__p").textContent = el.id_presu;
       templatePresu.querySelector(".client__p").textContent = el.empresa_nyp;
       templatePresu.querySelector(".patente__p").textContent = el.patente;
@@ -83,6 +96,7 @@ tablaGenerator.addEventListener("click", async (event) => {
   patenteSlc.addEventListener("change", (emm) =>
     loadVehiculos(emm.target.value)
   );
+
   async function loadVehiculos(datos) {
     const opciones = {
       method: "POST",
@@ -95,7 +109,7 @@ tablaGenerator.addEventListener("click", async (event) => {
 
         presuMarca.innerHTML = `${data.marca}`;
         presuModelo.innerHTML = `${data.modelo}`;
-        presuCliente.innerHTML = `${data.empresa_nyp}`;
+        presuCliente.innerHTML = `Cliente: ${data.empresa_nyp}`;
       });
   }
 
@@ -124,34 +138,46 @@ tablaGenerator.addEventListener("click", async (event) => {
   });
 
   //chequeo si se presiono algun boton de eliminar tarea
-  if (event.target.closest(".del__form")) {
-    // console.log(event.target.closest(".del__form").parentElement.parentElement);
-    const elementToDelete =
-      event.target.closest(".del__form").parentElement.parentElement; // aca uso dos parentElement, porque el boton (o tu formulario) estaba dentro de un div, y luego dentro de un article
+  // if (event.target.closest(".del__form")) {
+  //   // console.log(event.target.closest(".del__form").parentElement.parentElement);
+  //   const elementToDelete =
+  //     event.target.closest(".del__form").parentElement.parentElement; // aca uso dos parentElement, porque el boton (o tu formulario) estaba dentro de un div, y luego dentro de un article
 
-    if (confirm("esta seguro que quiere borrar el Presupuesto")) {
-      // la siguiente linea solo borra el item del DOM
-      // console.log(
-      //   event.target.closest(".del__form").parentElement.parentElement
-      // );
-      consPresuDatos.removeChild(elementToDelete);
-      // console.log(consTrabDatos.removeChild(elementToDelete));
-      // llamar al back para eliminar de la base de datos la reparacion
-    }
-  }
+  //   if (confirm("esta seguro que quiere borrar el Presupuesto")) {
+  //     // la siguiente linea solo borra el item del DOM
+  //     // console.log(
+  //     //   event.target.closest(".del__form").parentElement.parentElement
+  //     // );
+  //     consPresuDatos.removeChild(elementToDelete);
+  //     // console.log(consTrabDatos.removeChild(elementToDelete));
+  //     // llamar al back para eliminar de la base de datos la reparacion
+  //   }
+  // }
 
   //chequeo si se presiono algun boton de editar tarea
   if (event.target.closest(".edit__form")) {
     //ejecutar la funcion de editar tarea
-    alert("esta seguro que quiere editar la tarea");
+    // alert("esta seguro que quiere editar la tarea");
+    event.stopPropagation();
+    event.preventDefault();
+    data = event.target.dataset.id_presu;
+
+    console.log(data);
+    modal.classList.add("modal--show");
+    // formAPres.id_presu.value = event.target.dataset.id_presu;
+    addlinePresu.fecha_txt.value = event.target.dataset.fecha_presu;
+    addlinePresu.patente_slc.value = event.target.dataset.patente;
+    // addlinePresu.marca_txt.value = event.target.dataset.marca;
+    // addlinePresu.modelo_txt.value = event.target.dataset.modelo;
+    addlinePresu.total_txt.value = event.target.dataset.total_presu;
+    addlinePresu.desc_txt.value = event.target.dataset.descripcion_presu;
+    // addlinePresu.presuId_txt.value = event.target.dataset.id_presu;
   }
 });
 
 addlinePresu.addEventListener("reset", (ecam) => {
-  // console.log(cancelModal);
-  // ecam.preventDefault();
-  // inputs.forEach((input) => (input.value = ""));
   addlinePresu.reset();
+  ecam.preventDefault();
   modal.classList.remove("modal--show");
 });
 

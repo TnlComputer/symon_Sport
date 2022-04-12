@@ -128,8 +128,8 @@
         <div class="col patente">Patente</div>
         <div class="col marca">Marca</div>
         <div class="col modelo">Modelo</div>
-        <div class="col monto">importe</div>
-        <div class="col descript">Descripción</div>
+        <div class="col monto">Importe</div>
+        <!-- <div class="col descript">Descripción</div> -->
         <!-- <div class="col accion"></div> -->
       </article>
       <article class="line__tabla"></article>
@@ -154,7 +154,14 @@
       <div class="col marca marca__p"></div>
       <div class="col modelo modelo__p"></div>
       <div class="col monto monto__p"></div>
-      <div class="col descript descript__p"></div>
+      <!-- <div class="col descript descript__p"></div> -->
+    </article>
+    <article>
+      <!-- <div class="col accion"></div> -->
+      <div class="col accion"></div>
+      <div class="col descript-t tit__tabla">Descripción</div>
+      <div class="col descript-d descript__p"></div>
+      <br>
     </article>
   </template>
 
@@ -167,18 +174,20 @@
 
           <label class="modal__item-fec" for="fecha_txt">Fecha</label>
           <input class="modal__input-fec" type="date" name="fecha_txt" required>
+          <span class="modal__cliente-presu"></span>
+          <br>
           <label class="modal__item-pat" for="patente_slc">Patente</label>
           <select class="modal__input-pat slc-patente" name="patente_slc" id="patente_slc" required>
           </select>
-          <div class="modal_empresa">
-            <span class="modal__marca-presu"></span>
-            <span class="modal__modelo-presu"></span>
-            <span class="modal__cliente-presu"></span>
-          </div>
+          <!-- <div class="modal_empresa"> -->
+          <span class="modal__marca-presu"></span>
+          <span class="modal__modelo-presu"></span>
+          <!-- </div> -->
 
-          <div class=".modal__textarea-item"> Detalle </div>
-          <div class=".modal__textarea-item">
-            <textarea name="desc_txt" id="" cols="80" rows="10" required></textarea>
+          <div class="modal__textarea-item"> Detalle </div>
+          <div class="modal__textarea-item">
+            <!-- <input type="text" name="desc_txt" rows="5" required></input> -->
+            <textarea name="desc_txt" id="" cols="90" rows="10" required></textarea>
           </div>
 
           <table>
@@ -203,14 +212,18 @@
 
             </tr>
             <tr>
-              <td class="modal__item-presu">Fecha Inicio:</td>
+              <!-- <td class="modal__item-presu">Fecha Inicio:</td>
               <td class="modal__item-presu">
                 <input class="modal__input-imp" type="date" name="fecIni_txt">
               </td>
               <td class="modal__item-presu">Fecha Retiro:</td>
               <td class="modal__item-presu">
                 <input class="modal__input-imp" type="date" name="fecRet_txt">
-              </td>
+              </td> -->
+              <td class="modal__item-presu"></td>
+              <td class="modal__item-presu"></td>
+              <td class="modal__item-presu"></td>
+              <td class="modal__item-presu"></td>
 
               <td class="modal__item-imp">Abonado</td>
               <td class="modal__item-presu"><input class="modal__input-imp" type="text" name="abonado_txt"></td>
@@ -218,15 +231,12 @@
             </tr>
           </table>
           <div class="modal_empresa">
-            <!-- <input class="modal__cancel" type="reset" value="Cancelar">
-            <input class="modal__close" type="submit" value="Aceptar"> -->
-            <button class="modal__cancel izquierda" type="reset">Cancelar</button>
+            <button class="modal__cancel" type="reset">Cancelar</button>
             <!-- <input class="modal__cancel izquierda" type="reset" value="Cancelar"> -->
-            <button class="modal__close derecha" type="submit">Aceptar</button>
+            <button class="modal__close" type="submit">Aceptar</button>
           </div>
-          <div id="modal__alert"></div>
-
       </form>
+      <div id="modal__alert"></div>
       </fieldset>
     </div>
   </section>

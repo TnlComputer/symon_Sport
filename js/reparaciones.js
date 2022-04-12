@@ -8,10 +8,10 @@ const delTrabajo = document.querySelector(".form__del");
 
 /** MODAL REPARACIONES **/
 const modal = document.querySelector(".modal");
-const modalE = document.querySelector(".modal__edit");
+const modalE = document.querySelector(".modal__modificacion");
 const closeModal = document.querySelector(".modal__close");
 /** ALTA REPARACIONES **/
-const cancelModal = document.querySelector(".modal__cancel");
+// const cancelModal = document.querySelector(".modal__cancel");
 const presuARSlc = document.getElementById("presuAR_slc");
 const formARep = document.getElementById("form__ARep");
 const formERep = document.getElementById("form__ERep");
@@ -21,7 +21,6 @@ const formERep = document.getElementById("form__ERep");
 const alertas = document.getElementById("modal__alert");
 
 /** PATENTE, MARCA Y MODELO **/
-// const mPresu = document.querySelector(".presuER_slc");
 const mPatente = document.querySelector(".mPatente");
 const mMarca = document.querySelector(".mMarca");
 const mModelo = document.querySelector(".mModelo");
@@ -35,14 +34,13 @@ async function loadTrabajos() {
     consTrabDatos.innerHTML = `<div class="alert alert-danger" role="alert"> No hay trabajos Cargados </div>`;
   } else {
     resultados.forEach((el) => {
-      templateTrab.querySelector(".edit__form").dataset.editid = el.id_trabajo;
+      templateTrab.querySelector(".edit__form").dataset.id_trabajo =
+        el.id_trabajo;
       templateTrab.querySelector(".edit__form").dataset.presupuesto =
         el.presupuesto;
-
       templateTrab.querySelector(".edit__form").dataset.patente = el.patente;
       templateTrab.querySelector(".edit__form").dataset.marca = el.marca;
       templateTrab.querySelector(".edit__form").dataset.modelo = el.modelo;
-
       templateTrab.querySelector(".edit__form").dataset.fecha_trab =
         el.fecha_trab;
       templateTrab.querySelector(".edit__form").dataset.km = el.km;
@@ -54,6 +52,7 @@ async function loadTrabajos() {
       templateTrab.querySelector(".patente__t").textContent = el.patente;
       templateTrab.querySelector(".marca__t").textContent = el.marca;
       templateTrab.querySelector(".modelo__t").textContent = el.modelo;
+      templateTrab.querySelector(".km__t").textContent = el.km;
       templateTrab.querySelector(".descript__t").textContent = el.observaciones;
       templateTrab.querySelector(".presu__t").textContent = el.presupuesto;
       templateTrab.querySelector(".factu__t").textContent = el.factura;
@@ -65,14 +64,11 @@ async function loadTrabajos() {
     consTrabDatos.appendChild(fragmentTrab);
   }
 }
-
 loadTrabajos();
 
 /** CONTROLO SI HAY PRESUPUESTOS SIN LA REPARACION **/
 
 tablaGenerator.addEventListener("click", async (event) => {
-  // console.log(event.target);
-
   if (event.target.closest(".add__form")) {
     //ejecutar funcion de agregar tarea
     const respPsu = await fetch("php/psu.php");
@@ -101,85 +97,11 @@ tablaGenerator.addEventListener("click", async (event) => {
     }
   }
 
-  /** relleno los campos de Patente, Marca y Modelo * */
-  presuARSlc.addEventListener("change", (eAR) =>
-    loadPresupuestos(eAR.target.value)
-  );
-
-  async function loadPresupuestos(datos) {
-    const opciones = {
-      method: "POST",
-      body: datos,
-    };
-    // console.log(datos);
-    await fetch("php/psv.php", opciones)
-      .then((resARep) => resARep.json())
-      .then((dataAR) => {
-        if (dataAR === "error") {
-          console.log(dataAR);
-        } else {
-          mPatente.innerHTML = `${dataAR.patente}`;
-          mMarca.innerHTML = `${dataAR.marca}`;
-          mModelo.innerHTML = `${dataAR.modelo}`;
-        }
-      });
-  }
-
-  /** Formulario datos para agregar**/
-  formARep.addEventListener("submit", async function (efr) {
-    efr.preventDefault();
-
-    const datosARep = new FormData(formARep);
-
-    await fetch("./php/addRep.php", {
-      method: "Post",
-      body: datosARep,
-    })
-      .then((resARep) => resARep.json())
-      .then((dataAR) => {
-        if (dataAR === "400") {
-          alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos de las reparación</div>`;
-          setTimeout(() => {
-            alertas.innerHTML = ``;
-          }, 3000);
-        } else {
-          formARep.reset();
-          // inputs.forEach((input) => (input.value = ""));
-          modal.classList.remove("modal--show");
-          // agrego registro a la lista de reparaciones
-          loadTrabajos();
-        }
-      });
-  });
-
-  formARep.addEventListener("reset", (ecam) => {
-    // console.log(cancelModal);
-    // ecam.preventDefault();
-    // inputs.forEach((input) => (input.value = ""));
-    formARep.reset();
-    modal.classList.remove("modal--show");
-  });
-
-  //chequeo si se presiono algun boton de editar tarea
   if (event.target.closest(".edit__form")) {
+    event.stopPropagation();
     event.preventDefault();
     data = event.target.dataset.presupuesto;
-    console.log(data);
-    // const opciones = {
-    //   method: "POST",
-    //   body: data,
-    // };
-
-    // const resERep = await fetch("php/psv.php", opciones);
-    // const dataER = await resERep.json();
-    // if (dataER === "error") {
-    //   console.log(dataER);
-    // } else {
     modalE.classList.add("modal--show");
-    // mPresu.innerHTML = `${dataER.id_presu}`;
-    // mPatente.innerHTML = `${dataER.patente}`;
-    // mMarca.innerHTML = `${dataER.marca}`;
-    // mModelo.innerHTML = `${dataER.modelo}`;
     formERep.presuER_slc.value = event.target.dataset.presupuesto;
     formERep.patente_txt.value = event.target.dataset.patente;
     formERep.marca_txt.value = event.target.dataset.marca;
@@ -192,36 +114,93 @@ tablaGenerator.addEventListener("click", async (event) => {
   }
 });
 
-formERep.addEventListener("submit", async function (efer) {
-  efer.preventDefault();
+async function loadPresupuestos(datos) {
+  const opciones = {
+    method: "POST",
+    body: datos,
+  };
+  // console.log(datos);
+  await fetch("php/psv.php", opciones)
+    .then((resARep) => resARep.json())
+    .then((dataAR) => {
+      if (dataAR === "error") {
+        console.log(dataAR);
+      } else {
+        mPatente.innerHTML = `${dataAR.patente}`;
+        mMarca.innerHTML = `${dataAR.marca}`;
+        mModelo.innerHTML = `${dataAR.modelo}`;
+      }
+    });
+}
 
-  const datosERep = new FormData(formERep);
+formARep.addEventListener("submit", async function (efr) {
+  efr.preventDefault();
 
-  await fetch("./php/actrep.php", {
+  const datosARep = new FormData(formARep);
+
+  await fetch("./php/addRep.php", {
     method: "Post",
-    body: datosERep,
+    body: datosARep,
   })
-    .then((resERep) => resERep.json())
-    .then((dataER) => {
-      if (dataER === "400") {
+    .then((resARep) => resARep.json())
+    .then((dataAR) => {
+      if (dataAR === "400") {
         alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos de las reparación</div>`;
         setTimeout(() => {
           alertas.innerHTML = ``;
         }, 3000);
       } else {
-        // formERep.reset();
+        formARep.reset();
         // inputs.forEach((input) => (input.value = ""));
-        // modalE.classList.remove("modal--show");
+        modal.classList.remove("modal--show");
         // agrego registro a la lista de reparaciones
-        // loadTrabajos();
+        loadTrabajos();
       }
     });
+});
 
-  formERep.addEventListener("reset", (ecame) => {
-    console.log("cancel");
-    // inputs.forEach((input) => (input.value = ""));
-    ecame.preventDefault();
-    // formERep.reset();
+/** Limpio campos cargados al oprimir el boton cancelar **/
+formARep.addEventListener("reset", (ecam) => {
+  formARep.reset();
+  ecam.stopPropagation();
+  ecam.preventDefault();
+  modal.classList.remove("modal--show");
+});
+
+/** relleno los campos de Patente, Marca y Modelo * */
+presuARSlc.addEventListener("change", (eAR) =>
+  loadPresupuestos(eAR.target.value)
+);
+
+/** Formulario de datos para agregar**/
+formERep.addEventListener("submit", async function (efer) {
+  efer.preventDefault();
+
+  const datosERep = new FormData(formERep);
+  const opciones = {
+    method: "POST",
+    body: datosERep,
+  };
+  let resERep = await fetch("./php/actrep.php", opciones);
+  let dataER = await resERep.json();
+  if (dataER === "400") {
+    alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos de las reparación</div>`;
+    setTimeout(() => {
+      alertas.innerHTML = ``;
+    }, 3000);
+  } else {
+    formERep.reset();
     modalE.classList.remove("modal--show");
-  });
+    // consTrabDatos.innerHTML = ``;
+  }
+
+  loadTrabajos();
+});
+
+/** Limpio campos cargados al cancelar **/
+formERep.addEventListener("reset", (ecame) => {
+  formERep.reset();
+  ecame.stopPropagation();
+  ecame.preventDefault();
+  modalE.classList.remove("modal--show");
 });

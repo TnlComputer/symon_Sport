@@ -176,71 +176,60 @@
   <section class="modal">
     <div class="modal__container-clie">
       <h2 class="modal__title">Clientes</h2>
-
       <form id="form__alt-clie">
-
-        <label class="modal__item" for="cuit_txt">Cuit/Cuil/DNI</label>
+        <label class="modal__item" for="cuit_txt">Cuit / Cuil / DNI</label>
         <input class="modal__input" type="hidden" name="id_cliente_txt">
         <input class="modal__input" type="text" name="cuit_txt" maxlength="11"
           placeholder="Ingrese Cuit o Cuil sin guiones" required>
-
         <label class="modal__item" for="empers_txt">Empresa/Persona</label>
         <input class="modal__input" type="text" name="empers_txt" required>
-
         <label class="modal__item" for="direccion">Dirección</label>
         <input class="modal__input" type="text" name="dire_txt">
-
         <label class="modal__item" for="loc_txt">Localidad</label>
         <input class="modal__input" type="text" name="loc_txt">
-
         <label class="modal__item" for="pcia_txt">Provoncia</label>
         <input class="modal__input" type="text" name="pcia_txt">
-
         <label class="modal__item" for="cp_txt">Cod.Postal</label>
         <input class="modal__input" type="text" name="cp_txt">
-
         <label class="modal__item" for="contacto_txt">Contacto</label>
         <input class="modal__input" type="text" name="contacto_txt" required>
-
         <label class="modal__item" for="tel_txt">Teléfono</label>
         <input class="modal__input" type="tel" name="tel_txt">
-
         <label class="modal__item" for="cel_txt">Celular</label>
         <input class="modal__input" type="tel" name="cel_txt" required>
         <label class="modal__item" for="mail_txt">Mail</label>
         <input class="modal__input" type="text" name="mail_txt">
-
         <div class="btn__center">
           <button class="modal__cancel izquierda" type="reset">Cancelar</button>
-
           <button class="modal__close derecha" type="submit">Aceptar</button>
-
         </div>
-
         <div id="modal__alert"></div>
       </form>
     </div>
   </section>
 
+  <!--  DATOS VEHICULOS DEL CLIENTE -->
+
   <!-- MODAL  DATOS vehiculos del Cliente -->
   <section class="vehTit__clientes">
     <div class="modal__container-clienV">
-      <div class="col accion">
-        <input type="image" class="cerrar__VC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
-      </div>
+      <section class="V__cliente">
+        <h2 class="modal__title">Vehículos del Cliente <span class="clienteTit"></span></h2>
+        <article class="fila tit__tabla">
+          <div class="col accion">
+            <input type="image" class="cerrar__VC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
+          </div>
 
-      <h2 class="modal__title">Vehículos del Cliente <span class="clienteTit"></span></h2>
-      <article class="fila tit__tabla">
-        <div class="col accion">
-          <input type="image" class="add__VC" src="./assets/img/acciones/action_add.png" title="Nuevo Vehiculo">
-        </div>
-        <div class="col accion"></div>
-        <div class="col patente">Patenge</div>
-        <div class="col marca">Marca</div>
-        <div class="col modelo">Modelo</div>
-        <div class="col anio">Año</div>
-      </article>
-      <article class="line__VCDtabla"></article>
+          <div class="col accion">
+            <input type="image" class="add__VC" src="./assets/img/acciones/action_add.png" title="Nuevo Vehiculo">
+          </div>
+          <div class="col patente">Patente</div>
+          <div class="col marca">Marca</div>
+          <div class="col modelo">Modelo</div>
+          <div class="col anio">Año</div>
+        </article>
+        <article class="line__VCDtabla"></article>
+      </section>
 
       <!-- Titulos Reparaciones CLIENTE -->
       <section class="RepTit__clientes unshow">
@@ -250,9 +239,10 @@
           </div>
           <div class="col fecIng">Fecha Ingreso</div>
           <div class="col fecEnt">Fecha Entrega</div>
+          <!-- <div class="col accion">Obs</div> -->
           <div class="col km">KM</div>
-          <div class="col descript">Observaciones</div>
-          <div class="col npresu">Nro. Presuesto</div>
+          <!-- <div class="col descript">Observaciones</div> -->
+          <div class="col npresu">Presupuesto</div>
           <div class="col factu">Factura</div>
         </article>
         <article class="line__RVCDtabla"></article>
@@ -264,12 +254,12 @@
           <div class="col accion">
             <input type="image" class="cerrar__PRVC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
           </div>
-          <div class="col npresu">Presuesto</div>
-          <div class="col fecIng">Fecha</div>
+          <div class="col npresu">Presupuesto</div>
+          <div class="col fecIng">Fecha Presup.</div>
           <div class="col fecIng">Fecha Ingreso</div>
           <div class="col fecIng">Fecha Entregado</div>
-          <div class="col descript">Descripción</div>
-          <div class="col monto">repuestos</div>
+          <!-- <div class="col descript">Descripción</div> -->
+          <div class="col monto">Repuestos</div>
           <div class="col monto">M. Obra</div>
           <div class="col monto">Total</div>
           <div class="col monto">Seña</div>
@@ -281,9 +271,88 @@
     </div>
   </section>
 
+  <!-- Modal Vehiculos Cliente nuevo -->
+  <section class="newVeh__Clientes">
+    <article class="modal__container">
+      <h2 class="modal__title">Alta Vehículo</h2>
+      <form id="form__Altavehiculo">
 
+        <input class="modal__input idvehiculo_ac" type="hidden" name="id_vehiculo_txt">
+        <input class="modal__input idcliente_ac" type="hidden" name="id_cliente_txt">
 
-  <!--  DATOS VEHICULOS DEL CLIENTE -->
+        <label class="modal__item">Patente</label>
+        <input class="modal__input patente_ac" type="text" name="patente_txt" required>
+
+        <label class="modal__item">Marca</label>
+        <input class="modal__input marca_ac" type="text" name="marca_txt" required>
+
+        <label class="modal__item">Modelo</label>
+        <input class="modal__input modelo_ac" type="text" name="modelo_txt" required>
+
+        <label class="modal__item">Año</label>
+        <input class="modal__input anio_ac" type="text" name="anio_txt" required>
+
+        <button class="modal__cancel cnvc" type="reset">Cancelar</button>
+        <button class="modal__close snvc" type="submit">Aceptar</button>
+
+        <div id="modal__alertV"></div>
+      </form>
+    </article>
+  </section>
+
+  <!--  DATOS reparaciones del vehiculo del Cliente -->
+  <template id="RVDatos__clientes">
+    <article class="fila">
+      <div class="col accion">
+        <input type="image" class="presupuesto__form" src="./assets/img/acciones/icons8-costo-16.png"
+          alt="Ver Presupuesto" name="id_presu" title="Ver Presupuestos">
+      </div>
+      <div class="col fecIng fecIng__rc"></div>
+      <div class="col fecEnt fecEnt__rc"></div>
+      <!-- <div class="col accion">
+          <input type="image" class="muestro__descripcion" src="./assets/img/acciones/icons8-archivo-nuevo-16.png"
+            name="obs_txt" alt="Ver Descripción" title="Ver Descripción">
+        </div> -->
+      <div class="col km km__rc"></div>
+      <!-- <div class="col descript obs__rc"></div> -->
+      <div class="col npresu presu__rc"></div>
+      <div class="col factu fac__rc"></div>
+    </article>
+    <article>
+      <!-- <article class="obs__cvr unshow"> -->
+      <span class="col accion"></span>
+      <span class="col descript-t tit__tabla">Observaciones</span>
+      <span class="col descript-d obs__rc"></sp>
+    </article>
+    <!-- <article class="line__CRDet"></article> -->
+  </template>
+
+  <!-- <template id="RVDet__clientes">
+
+    </template> -->
+
+  <!--  DATOS Presu reparac vehic Cliente -->
+  <template id="PRVDatos__clientes">
+    <article class="fila">
+      <div class="col accion"></div>
+      <div class="col npresu presu__prc"></div>
+      <div class="col fecIng fecpresu__prc"></div>
+      <div class="col fecIng fecIng__prc"></div>
+      <div class="col fecIng fecEnt__prc"></div>
+      <div class="col monto repuestos__prc"></div>
+      <div class="col monto mobra__prc"></div>
+      <div class="col monto total__prc"></div>
+      <div class="col monto senia__prc"></div>
+      <div class="col monto abonado__prc"></div>
+      <div class="col monto saldo__prc"></div>
+    </article>
+    <article class="unshow">
+      <div class="col accion"></div>
+      <div class="col descript-t tit__tabla">Descripción</div>
+      <div class="col descript-d descript__prc"></div>
+    </article>
+  </template>
+
   <template id="vehDatos__clientes">
     <article class="fila">
       <div class="col accion">
@@ -301,80 +370,6 @@
       <div class="col anio anio__c"></div>
     </article>
   </template>
-
-  <!--  DATOS reparaciones del vehiculo del Cliente -->
-  <template id="RVDatos__clientes">
-    <article class="fila">
-      <div class="col accion">
-        <input type="image" class="presupuesto__form" src="./assets/img/acciones/icons8-costo-16.png"
-          alt="Ver Presupuesto" name="id_presu" title="Ver Presupuestos">
-      </div>
-      <div class="col fecIng fecIng__rc"></div>
-      <div class="col fecEnt fecEnt__rc"></div>
-      <div class="col km km__rc"></div>
-      <div class="col descript obs__rc"></div>
-      <div class="col npresu presu__rc"></div>
-      <div class="col factu fac__rc"></div>
-    </article>
-  </template>
-
-
-  <!--  DATOS Presu reparac vehic Cliente -->
-  <template id="PRVDatos__clientes">
-    <article class="fila">
-      <div class="col accion"></div>
-      <div class="col npresu presu__prc"></div>
-      <div class="col fecIng fecpresu__prc"></div>
-      <div class="col fecIng fecIng__prc"></div>
-      <div class="col fecIng fecEnt__prc"></div>
-      <div class="col descript descript__prc"></div>
-      <div class="col monto repuestos__prc"></div>
-      <div class="col monto mobra__prc"></div>
-      <div class="col monto total__prc"></div>
-      <div class="col monto senia__prc"></div>
-      <div class="col monto abonado__prc"></div>
-      <div class="col monto saldo__prc"></div>
-    </article>
-  </template>
-
-  <!-- Modal Vehiculos Cliente nuevo -->
-  <!-- 
-    id_vehiculo
-  id_cliente
-  patente
-  marca
-  modelo
-  anio 
--->
-
-  <section class="nuevoVehiculoClientes">
-    <article class="modal__container">
-      <h2 class="modal__title">Vehículo</h2>
-      <form id="form__Altavehiculo">
-
-        <!-- <label class="modal__item">Cliente</label> -->
-        <input class="modal__input idvehiculo_ac" type="hidden" name="id_vehiculo_txt">
-        <input class="modal__input idcliente_ac" type="hidden" name="id_cliente_txt">
-
-        <label class="modal__item">Patente</label>
-        <input class="modal__input patente_ac" type="text" name="patente_txt">
-
-        <label class="modal__item">Marca</label>
-        <input class="modal__input marca_ac" type="text" name="marca_txt">
-
-        <label class="modal__item">Modelo</label>
-        <input class="modal__input modelo_ac" type="text" name="modelo_txt">
-
-        <label class="modal__item">Año</label>
-        <input class="modal__input anio_ac" type="text" name="anio_txt">
-
-        <button class="modal__cancel izquierda" type="reset">Cancelar</button>
-        <button class="modal__close derecha" type="submit">Aceptar</button>
-
-      </form>
-      <div id="modal__alertV"></div>
-    </article>
-  </section>
 
   <script src="js/scripts.js" defer></script>
   <script src="js/clientes.js" defer></script>

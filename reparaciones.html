@@ -120,18 +120,18 @@
     <section class="tablagen div__reparaciones">
       <article class="fila tit__tabla">
         <div class="col accion">
-          <input type="image" class="add__form" src="./assets/img/acciones/action_add.png" alt="Nuevo Presupuesto">
+          <input type="image" class="add__form" src="./assets/img/acciones/action_add.png" alt="Nuevo Reparación">
         </div>
         <div class="col fecha">Ingreso</div>
         <div class="col fecha">Entrega</div>
         <div class="col patente">Patente</div>
         <div class="col marca">Marca</div>
         <div class="col modelo">Modelo</div>
-        <div class="col descript">Observaciones</div>
+        <div class="col km">KM</div>
+        <!-- <div class="col descript">Observaciones</div> -->
         <div class="col presu">Presupuesto</div>
         <div class="col factu">Factura</div>
         <div class="col client">Cliente</div>
-        <!-- <div class="col accion"></div> -->
       </article>
       <article class="line__tabla"></article>
     </section>
@@ -152,38 +152,35 @@
       <div class="col patente patente__t"></div>
       <div class="col marca marca__t"></div>
       <div class="col modelo modelo__t"></div>
-      <div class="col descript descript__t"></div>
+      <div class="col km km__t"></div>
+      <!-- <div class="col descript descript__t"></div> -->
       <div class="col presu presu__t"></div>
       <div class="col factu factu__t"></div>
       <div class="col client client__t"></div>
-      <!-- <div class="col accion">
-        <input type="image" class="del__form" src="./assets/img/acciones/action_delete.png" alt="Eliminar Presupuesto">
-      </div> -->
+    </article>
+    <article>
+      <!-- <div class="col accion"></div> -->
+      <div class="col accion"></div>
+      <div class="col descript-t tit__tabla">Descripción</div>
+      <div class="col descript-d descript__t"></div>
+      <br>
     </article>
   </template>
 
   <section class="modal">
     <div class="modal__container">
       <h2 class="modal__title">Reparación</h2>
-
-      <!-- <form id="form__ARep" class="modal__items"> -->
       <form id="form__ARep">
-
         <label class="modal__item" for="presuAR_slc">Presupuesto</label>
         <select class="modal__input slc-ARpresu" name="presuAR_slc" id="presuAR_slc" required>
         </select>
-
         <label class="modal__item" for="patente_txt">Patente</label>
-        <!-- <input class="modal__input mPatente" type="text" name="patente_txt"> -->
-
         <span class="modal__input mPatente"></span>
         <br>
         <label class="modal__item" for="marca_txt">Marca</label>
-        <!-- <input class="modal__input mMarca" type="text" name="marca_txt"> -->
         <span class="modal__input mMarca"></span>
         <br>
         <label class="modal__item" for="modelo_txt">Modelo</label>
-        <!-- <input class="modal__input mModelo" type="text" name="modelo_txt"> -->
         <span class="modal__input mModelo"></span>
         <br>
         <label class=" modal__item" for="fecha_txt">Ingreso</label>
@@ -191,28 +188,20 @@
         <label class="modal__item" for="km_txt">Kilometraje</label>
         <input class="modal__input" type="text" name="km_txt" required>
         <input class="repId_txt" type="hidden" name="repId_txt">
-
         <label class="modal__item modal__textareaI-item" for=" obs_txt">Observaciones del Vehiculo</label>
         <textarea class="modal__input modal__textarea-input" name="obs_txt" cols="30" rows="5" required></textarea>
-
-        <!-- <input class="modal__cancel" type="reset" value="Cancelar">
-          <input class="modal__close" type="submit" value="Aceptar"> -->
-        <button class="modal__cancel izquierda" type="reset">Cancelar</button>
-        <!-- <input class="modal__cancel izquierda" type="reset" value="Cancelar"> -->
-        <button class="modal__close derecha" type="submit">Aceptar</button>
-
+        <button class="modal__cancel raclt" type="reset">Cancelar</button>
+        <button class="modal__close saclt" type="submit">Aceptar</button>
         <div id="modal__alert"></div>
       </form>
-
     </div>
   </section>
 
   <!-- EDITAR REPARACIONES -->
-  <section class="modal__edit">
+  <section class="modal__modificacion">
     <div class="modal__container">
       <h2 class="modal__title">Reparación</h2>
       <form id="form__ERep">
-
         <label class="modal__item" for="presuER_slc">Presupuesto</label>
         <input class="modal__input" type="text" name="presuER_slc" readonly>
         <label class="modal__item" for="patente_txt">Patente</label>
@@ -226,23 +215,16 @@
         <label class="modal__item" for="km_txt">Kilometraje</label>
         <input class="modal__input" type="text" name="km_txt" required>
         <input class="repId_txt" type="hidden" name="repId_txt">
-
         <label class="modal__item modal__textareaI-item" for=" obs_txt">Observaciones del Vehiculo</label>
         <textarea class="modal__input modal__textarea-input" name="obs_txt" cols="30" rows="5" required></textarea>
 
-        <button class="modal__cancel izquierda" type="reset">Cancelar</button>
-
-        <button class="modal__close derecha" type="submit">Aceptar</button>
-
+        <button class="modal__cancel reclt" type="reset">Cancelar</button>
+        <button class="modal__close reclt" type="submit">Aceptar</button>
         <div id="modal__alert"></div>
       </form>
-
     </div>
   </section>
 
-  <footer class=" modal-footer">...</footer>
-  </div>
-  </div>
   <script src="js/scripts.js"></script>
   <script src="js/reparaciones.js"></script>
 </body>

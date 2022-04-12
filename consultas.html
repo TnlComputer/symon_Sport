@@ -123,39 +123,20 @@
         <div id="respuesta" class="respuesta"></div>
       </article>
     </section>
-    <section>
-      <article class="consultas__patentes ">
-        <section class="tablegen">
-          <article class="fila tit__tabla none">
-            <div class="col patente">Patente</div>
-            <div class="col fecha">Ingreso</div>
-            <div class="col fecha">Entrega</div>
-            <div class="col client">Cliente</div>
-            <div class="col marca">Marca</div>
-            <div class="col modelo">Modelo</div>
-            <div class="col descript">Observaciones</div>
-            <div class="col factu">Factura</div>
-            <div class="col presu">Presupuesto</div>
-          </article>
-          <article class="line__tabla"></article>
-        </section>
-        <template id="temp__datos-patentes" class="temp__datos-patentes">
-          <article class="fila ">
-            <div class="col patente patente__t"></div>
-            <div class="col fecha fecha__t"></div>
-            <div class="col fecha fecha__e"></div>
-            <div class="col client client__t"></div>
-            <div class="col marca marca__t"></div>
-            <div class="col modelo modelo__t"></div>
-            <div class="col descript descript__t"></div>
-            <div class="col factu factu__t"></div>
-            <div class="col presu presu__t"></div>
-          </article>
-        </template>
-        <!-- </tabla> -->
-        <!-- </div> -->
-        <!-- <div id="respuesta" class="respuesta"></div> -->
+
+    <section class="consultas__patentes">
+      <article class="fila tit__tabla none">
+        <div class="col patente">Patente</div>
+        <div class="col fecha">Ingreso</div>
+        <div class="col fecha">Entrega</div>
+        <div class="col client">Cliente</div>
+        <div class="col marca">Marca</div>
+        <div class="col modelo">Modelo</div>
+        <!-- <div class="col descript">Observaciones</div> -->
+        <div class="col factu">Factura</div>
+        <div class="col presu">Presupuesto </div>
       </article>
+      <article class="line__tabla"></article>
     </section>
   </main>
   <footer class="footer">
@@ -163,8 +144,28 @@
       Diseñado por <a href="http://tnlcomputer.com.ar"> @TNLCOMPUTER</a>
     </p>
   </footer>
-  <!-- <script src="js/login.js" defer></script>
-  <script src="js/consulta.js" defer></script> -->
+
+  <template id="temp__datos-patentes">
+    <article class="fila ">
+      <div class="col patente patente__t"></div>
+      <div class="col fecha fecha__t"></div>
+      <div class="col fecha fecha__e"></div>
+      <div class="col client client__t"></div>
+      <div class="col marca marca__t"></div>
+      <div class="col modelo modelo__t"></div>
+      <!-- <div class="col descript descript__t"></div> -->
+      <div class="col factu factu__t"></div>
+      <div class="col presu presu__t"></div>
+    </article>
+    <article>
+      <!-- <div class="col accion"></div> -->
+      <div class="col accion"></div>
+      <div class="col descript-t tit__tabla">Observaciones</div>
+      <div class="col descript-d descript__t"></div>
+      <br>
+    </article>
+  </template>
+
   <script src="js/scripts.js" defer></script>
 </body>
 

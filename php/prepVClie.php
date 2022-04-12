@@ -9,6 +9,11 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 $metodo= $_SERVER['REQUEST_METHOD'];
 $resultado = array();
 
+    // para el php a ver si resuelvo lo del PUT
+    // if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    // parse_str(file_get_contents("php://input"),$put_vars);
+    // echo $put_vars['foo'];
+
  if ($metodo==='POST') {
 
       // $patente = json_decode(file_get_contents("php://input"), true);
