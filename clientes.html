@@ -46,8 +46,7 @@
   <!-- <link
     href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bowlby+One+SC&family=Rubik+Mono+One&display=swap"
     rel="stylesheet"> -->
-
-
+  <!-- <script src="https://kit.fontawesome.com/54dcb4109d.js" crossorigin="anonymous"></script> -->
   <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.15.4/css/all.css">
   <!-- <link rel="stylesheet" href="css/all.css"> -->
 
@@ -123,9 +122,8 @@
           <input type="image" class="add__form" src="./assets/img/acciones/action_add.png" alt="Nuevo Cliente"
             title="Nuevo Cliente">
         </div>
-        <div class="col accion  accNo">
-          <img src="./assets/img/acciones/car-16.png" alt="Vehícilos" title="Ver Vehícilos">
-        </div>
+        <div class="col accion "> </div>
+        <div class="col accion "> </div>
         <div class="col cuit"> CUIT/CUIL/DNI </div>
         <div class="col client"> Cliente </div>
         <div class="col direccion"> Dirección </div>
@@ -157,6 +155,10 @@
       <div class="col accion">
         <input type="image" class="veh__form" src="./assets/img/acciones/car-16.png" alt="Ver Vehículos"
           name="id_cliente" title="Ver Vehículos">
+      </div>
+      <div class="col accion ">
+        <input type="image" class="usrCli__form" src="./assets/img/acciones/icons8-usuario-16.png"
+          alt="Usuarios del cliente" name="id_usrcli" title="Ver Usuarios del cliente">
       </div>
       <div class="col cuit cuit__c"></div>
       <div class="col client cliente__c"></div>
@@ -208,9 +210,60 @@
     </div>
   </section>
 
-  <!--  DATOS VEHICULOS DEL CLIENTE -->
+  <!-- MODAL USUARIOS DEL CLIENTE -->
+  <section class="modal__userClie">
+    <div class="modal__container-usrclie">
+      <h2 class="modal__title">Usuarios del Cliente</h2>
+      <form id="form__alt-user-clie">
+        <label class="modal__item" for="usuario_txt">Usuario</label>
+        <input class="modal__input" type="text" name="clave_txt" required>
+        <input class="modal__input" type="hidden" name="id_cliente_txt">
 
-  <!-- MODAL  DATOS vehiculos del Cliente -->
+        <label class="modal__item" for="clave_txt">Contraseña</label>
+        <input class="modal__input" type="password" name="usuario_txt" required>
+
+        <label class="modal__item" for="nombre_txt">Nombre</label>
+        <input class="modal__input" type="text" name="nombre_txt">
+
+        <label class="modal__item" for="ape_txt">Apellido</label>
+        <input class="modal__input" type="text" name="ape_txt">
+
+        <label class="modal__item" for="dni_txt">DNI</label>
+        <input class="modal__input" type="text" name="dni_txt">
+
+        <button class="modal__cancel" type="reset">Cancelar</button>
+        <button class="modal__close" type="submit">Aceptar</button>
+
+        <div id="modal__alert"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- MODAL  Titulos usuarios del Cliente -->
+  <section class="usrTit__clientes">
+    <div class="modal__container-clieUsr">
+      <section class="usr__cliente">
+        <h2 class="modal__title">Usuarios del Cliente <span class="clienteTit"></span></h2>
+        <article class="fila tit__tabla">
+          <div class="col accion">
+            <input type="image" class="cerrar__UC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
+          </div>
+          <div class="col accion">
+            <input type="image" class="add__UC" src="./assets/img/acciones/action_add.png" title="Nuevo Usuario">
+          </div>
+          <div class="col usuario">Usuario</div>
+          <div class="col clave">Contraseña</div>
+          <div class="col nombre">Nombre</div>
+          <div class="col apellido">Apellido</div>
+          <div class="col cuit">DNI</div>
+        </article>
+        <article class="line__UCDtabla"></article>
+      </section>
+    </div>
+  </section>
+
+
+  <!--  DATOS VEHICULOS DEL CLIENTE -->
   <section class="vehTit__clientes">
     <div class="modal__container-clienV">
       <section class="V__cliente">
@@ -292,8 +345,8 @@
         <label class="modal__item">Año</label>
         <input class="modal__input anio_ac" type="text" name="anio_txt" required>
 
-        <button class="modal__cancel cnvc" type="reset">Cancelar</button>
-        <button class="modal__close snvc" type="submit">Aceptar</button>
+        <button class="modal__cancel" type="reset">Cancelar</button>
+        <button class="modal__close" type="submit">Aceptar</button>
 
         <div id="modal__alertV"></div>
       </form>
@@ -310,7 +363,7 @@
       <div class="col fecIng fecIng__rc"></div>
       <div class="col fecEnt fecEnt__rc"></div>
       <!-- <div class="col accion">
-          <input type="image" class="muestro__descripcion" src="./assets/img/acciones/icons8-archivo-nuevo-16.png"
+          <input type="image" class="muestro__descripcion" src="./assets/img/acciones/icons8-desplazamiento-verificado-16.png"
             name="obs_txt" alt="Ver Descripción" title="Ver Descripción">
         </div> -->
       <div class="col km km__rc"></div>
@@ -320,16 +373,12 @@
     </article>
     <article>
       <!-- <article class="obs__cvr unshow"> -->
-      <span class="col accion"></span>
-      <span class="col descript-t tit__tabla">Observaciones</span>
-      <span class="col descript-d obs__rc"></sp>
+      <div class="col accion"></div>
+      <div class="col descript-t tit__tabla">Observaciones</div>
+      <div class="col descript-d obs__rc"></div>
     </article>
     <!-- <article class="line__CRDet"></article> -->
   </template>
-
-  <!-- <template id="RVDet__clientes">
-
-    </template> -->
 
   <!--  DATOS Presu reparac vehic Cliente -->
   <template id="PRVDatos__clientes">
@@ -346,7 +395,7 @@
       <div class="col monto abonado__prc"></div>
       <div class="col monto saldo__prc"></div>
     </article>
-    <article class="unshow">
+    <article>
       <div class="col accion"></div>
       <div class="col descript-t tit__tabla">Descripción</div>
       <div class="col descript-d descript__prc"></div>
@@ -370,6 +419,26 @@
       <div class="col anio anio__c"></div>
     </article>
   </template>
+
+  <!--  DATOS reparaciones del vehiculo del Cliente -->
+  <template id="usrDatos__clientes">
+    <article class="fila">
+      <div class="col accion">
+        <!-- <input type="image" class="presupuesto__form" src="./assets/img/acciones/icons8-costo-16.png"
+                    alt="Ver Presupuesto" name="id_presu" title="Ver Presupuestos"> -->
+      </div>
+      <div class="col accion"> </div>
+      <div class="col user id_user_uc"></div>
+      <div class="col cliente id_cliente_uc"></div>
+      <div class="col user usuario_uc"></div>
+      <div class="col clave clave_uc"></div>
+      <div class="col nombre nombre_uc"></div>
+      <div class="col apellido apellido_uc"></div>
+      <div class="col dni dni_uc"></div>
+      <div class="col nivel nivel_uc"></div>
+    </article>
+  </template>
+
 
   <script src="js/scripts.js" defer></script>
   <script src="js/clientes.js" defer></script>

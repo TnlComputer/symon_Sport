@@ -102,15 +102,14 @@ tablaGenerator.addEventListener("click", async (event) => {
       method: "POST",
       body: datos,
     };
-    fetch("php/patmm.php", opciones)
-      .then((resp) => resp.json())
-      .then((data) => {
-        // const resultPmm = await resPmm.json();
+    const resp = await fetch("php/patmm.php", opciones);
+    const data = await resp.json();
+    // .then((data) => {
+    // const resultPmm = await resPmm.json();
 
-        presuMarca.innerHTML = `${data.marca}`;
-        presuModelo.innerHTML = `${data.modelo}`;
-        presuCliente.innerHTML = `Cliente: ${data.empresa_nyp}`;
-      });
+    presuMarca.innerHTML = `${data.marca}`;
+    presuModelo.innerHTML = `${data.modelo}`;
+    presuCliente.innerHTML = `Cliente: ${data.empresa_nyp}`;
   }
 
   addlinePresu.addEventListener("submit", async function (ealp) {
@@ -136,23 +135,6 @@ tablaGenerator.addEventListener("click", async (event) => {
         }
       });
   });
-
-  //chequeo si se presiono algun boton de eliminar tarea
-  // if (event.target.closest(".del__form")) {
-  //   // console.log(event.target.closest(".del__form").parentElement.parentElement);
-  //   const elementToDelete =
-  //     event.target.closest(".del__form").parentElement.parentElement; // aca uso dos parentElement, porque el boton (o tu formulario) estaba dentro de un div, y luego dentro de un article
-
-  //   if (confirm("esta seguro que quiere borrar el Presupuesto")) {
-  //     // la siguiente linea solo borra el item del DOM
-  //     // console.log(
-  //     //   event.target.closest(".del__form").parentElement.parentElement
-  //     // );
-  //     consPresuDatos.removeChild(elementToDelete);
-  //     // console.log(consTrabDatos.removeChild(elementToDelete));
-  //     // llamar al back para eliminar de la base de datos la reparacion
-  //   }
-  // }
 
   //chequeo si se presiono algun boton de editar tarea
   if (event.target.closest(".edit__form")) {

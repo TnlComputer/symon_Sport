@@ -8,7 +8,8 @@ $_SESSION['datos']="";
   $usuario = $_POST['user_txt'];
   $clave = $_POST['pass_txt'];
 
-    $consUsr=$conexionApi->query("SELECT id_user, id_cliente, nivel, nombre FROM usuarios WHERE nombre='".$usuario."' AND clave = '".$clave."' ");
+    // $consUsr=$conexionApi->query("SELECT id_user, id_cliente, nivel, nombre, usuario, apellido, dni FROM usuarios WHERE nombre='".$usuario."' AND clave = '".$clave."' ");
+    $consUsr=$conexionApi->query("SELECT * FROM usuarios WHERE nombre='".$usuario."' AND clave = '".$clave."' ");
 
     $datos = mysqli_fetch_array($consUsr);
 

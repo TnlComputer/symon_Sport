@@ -451,8 +451,8 @@ legend {
 
 .div__reparaciones {
   width: 100%;
-  max-width: 1100px;
-  min-width: 1100px;
+  max-width: 1200px;
+  min-width: 1200px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -497,8 +497,13 @@ legend {
   text-align: center;
 }
 
-.marca,
 .modelo {
+  min-width: 200px;
+  max-width: 200px;
+  text-align: center;
+}
+
+.marca {
   min-width: 100px;
   max-width: 100px;
   text-align: center;
@@ -537,16 +542,16 @@ legend {
 }
 
 .descript-t {
-  min-width: 100px;
-  max-width: 100px;
+  min-width: 120px;
+  max-width: 120px;
   color: #fff;
-  text-align: left;
+  text-align: center;
 }
 
 .descript-d {
-  background-color: #616060;
-  min-width: calc(100% - 100px);
-  max-width: calc(100% - 100px);
+  /* background-color: #616060; */
+  min-width: calc(100% - 120px);
+  max-width: calc(100% - 120px);
   color: #fff;
   text-align: left;
 }
@@ -612,6 +617,8 @@ legend {
   text-align: left;
 }
 
+.usrTit__clientes,
+.modal__userClie,
 .modal__modificacion,
 .newVeh__Clientes,
 .vehTit__clientes,
@@ -647,6 +654,8 @@ legend {
   opacity: 1;
 }
 
+.modal__container-clieUsr,
+.modal__container-usrclie,
 .modal__container,
 .modal__container-clie {
   margin: auto;
@@ -655,16 +664,13 @@ legend {
   background-color: #fff;
   border-radius: 6px;
   padding: 1em;
-  /* display: grid;
-  gap: .3em; */
-  /* place-items: center; */
-  /* grid-auto-columns: 100%; */
   transform: var(--transform);
   transition: var(--transition);
 }
 
 .modal__container {
   max-width: 320px;
+  margin: auto;
 }
 
 .modal__container-presu {
@@ -680,17 +686,33 @@ legend {
 
 }
 
+.modal__container-clieUsr,
 .modal__container-clie {
   width: 100%;
   max-width: 500px;
   background-color: rgb(183, 209, 224);
+  height: auto;
+  margin: auto;
+}
+
+.modal__container-clieUsr {
+  width: 100%;
+  max-width: 550px;
+  background-color: rgb(216, 223, 172);
+  height: auto;
+  margin: auto;
+}
+
+.modal__container-usrclie {
+  width: 100%;
+  max-width: 320px;
+  /* background-color: rgb(183, 209, 224); */
   height: auto;
 }
 
 .modal__container-clienV {
   margin: 50px auto;
   width: 90%;
-  /* max-width: 1200px; */
   height: auto;
   max-height: 90%;
   background-color: rgb(57, 68, 74);
