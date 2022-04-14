@@ -6,21 +6,6 @@ const elo = document.querySelector(".logout");
 const elu = document.querySelectorAll(".user");
 const ela = document.querySelectorAll(".adm");
 
-/* Clientes */
-// const $clientes = document.getElementById("list__clie");
-// const $formClie = document.getElementById("cli-formulario");
-
-/* Trabajos */
-// const $trabajos = document.querySelector(".div__trabajos");
-// const consTrabDatos = document.querySelector(".line__tabla");
-// const addTrabajo = document.querySelector(".form__add");
-// const editTrabajo = document.querySelector(".form__edit");
-// const delTrabajo = document.querySelector(".form__del");
-// const tablaGenerator = document.querySelector(".tablagen");
-
-/* Presupuestos */
-// const $presupuestos = document.getElementById("presupuestos");
-
 /* Consultas */
 const cPatente = document.getElementById("form_cPat");
 const $vehiculos = document.getElementById("cli-vehiculos");
@@ -39,10 +24,6 @@ toggleMenuElement.addEventListener("click", () => {
 });
 
 /************* Valido y restringimos menues ***************/
-// const $hostname = window.location.hostname;
-// if ($hostname === "tnlcomputer.com.ar") {
-// alert(pathname);
-
 const $pathname = window.location.pathname;
 fetch("./php/valido.php")
   .then((res) => res.json())

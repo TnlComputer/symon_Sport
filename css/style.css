@@ -637,6 +637,10 @@ legend {
   --transition: transform .8s;
 }
 
+.modal__userClie {
+  z-index: 1;
+}
+
 .modal--show {
   opacity: 1;
   pointer-events: unset;
@@ -686,7 +690,6 @@ legend {
 
 }
 
-.modal__container-clieUsr,
 .modal__container-clie {
   width: 100%;
   max-width: 500px;
@@ -697,11 +700,26 @@ legend {
 
 .modal__container-clieUsr {
   width: 100%;
-  max-width: 550px;
-  background-color: rgb(216, 223, 172);
+  min-width: 830px;
+  max-width: 830px;
+  background-color: rgb(87, 92, 57);
   height: auto;
   margin: auto;
 }
+
+.nombre,
+.apellido,
+.dni {
+  max-width: 150px;
+  min-width: 150px;
+}
+
+.usuario,
+.clave {
+  max-width: 100px;
+  min-width: 100px;
+}
+
 
 .modal__container-usrclie {
   width: 100%;

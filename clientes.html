@@ -210,17 +210,19 @@
     </div>
   </section>
 
-  <!-- MODAL USUARIOS DEL CLIENTE -->
+
+  <!-- MODAL ALTA/EDIT USUARIOS DEL CLIENTE -->
   <section class="modal__userClie">
     <div class="modal__container-usrclie">
       <h2 class="modal__title">Usuarios del Cliente</h2>
       <form id="form__alt-user-clie">
         <label class="modal__item" for="usuario_txt">Usuario</label>
-        <input class="modal__input" type="text" name="clave_txt" required>
+        <input class="modal__input" type="text" name="usuario_txt" required>
         <input class="modal__input" type="hidden" name="id_cliente_txt">
+        <input class="modal__input" type="hidden" name="id_user_txt">
 
         <label class="modal__item" for="clave_txt">Contraseña</label>
-        <input class="modal__input" type="password" name="usuario_txt" required>
+        <input class="modal__input" type="password" name="clave_txt" required>
 
         <label class="modal__item" for="nombre_txt">Nombre</label>
         <input class="modal__input" type="text" name="nombre_txt">
@@ -236,29 +238,6 @@
 
         <div id="modal__alert"></div>
       </form>
-    </div>
-  </section>
-
-  <!-- MODAL  Titulos usuarios del Cliente -->
-  <section class="usrTit__clientes">
-    <div class="modal__container-clieUsr">
-      <section class="usr__cliente">
-        <h2 class="modal__title">Usuarios del Cliente <span class="clienteTit"></span></h2>
-        <article class="fila tit__tabla">
-          <div class="col accion">
-            <input type="image" class="cerrar__UC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
-          </div>
-          <div class="col accion">
-            <input type="image" class="add__UC" src="./assets/img/acciones/action_add.png" title="Nuevo Usuario">
-          </div>
-          <div class="col usuario">Usuario</div>
-          <div class="col clave">Contraseña</div>
-          <div class="col nombre">Nombre</div>
-          <div class="col apellido">Apellido</div>
-          <div class="col cuit">DNI</div>
-        </article>
-        <article class="line__UCDtabla"></article>
-      </section>
     </div>
   </section>
 
@@ -420,22 +399,49 @@
     </article>
   </template>
 
+  <!-- MODAL  Titulos usuarios del Cliente -->
+  <section class="usrTit__clientes">
+    <div class="modal__container-clieUsr">
+      <section class="usr__cliente">
+        <h2 class="modal__title">Usuarios del Cliente <span class="clienteTit"></span></h2>
+        <article class="fila tit__tabla">
+          <div class="col accion">
+            <input type="image" class="cerrar__UC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar"
+              alt="Cerrar">
+          </div>
+          <div class="col accion">
+            <input type="image" class="add__UC" src="./assets/img/acciones/action_add.png" title="Nuevo Usuario"
+              name="id_cliente_txt" alt="Nuevo Usuario">
+          </div>
+          <div class="col usuario">Usuario</div>
+          <div class="col clave">Contraseña</div>
+          <div class="col nombre">Nombre</div>
+          <div class="col apellido">Apellido</div>
+          <div class="col dni">DNI</div>
+        </article>
+        <article class="line__UCDtabla"></article>
+      </section>
+    </div>
+  </section>
+
   <!--  DATOS reparaciones del vehiculo del Cliente -->
   <template id="usrDatos__clientes">
     <article class="fila">
+
       <div class="col accion">
-        <!-- <input type="image" class="presupuesto__form" src="./assets/img/acciones/icons8-costo-16.png"
-                    alt="Ver Presupuesto" name="id_presu" title="Ver Presupuestos"> -->
+        <input type="image" class="edit__UC" src="./assets/img/acciones/edit_16x16.gif" title="Editar Usuario"
+          alt="Editar Usuario">
       </div>
       <div class="col accion"> </div>
-      <div class="col user id_user_uc"></div>
-      <div class="col cliente id_cliente_uc"></div>
-      <div class="col user usuario_uc"></div>
-      <div class="col clave clave_uc"></div>
-      <div class="col nombre nombre_uc"></div>
-      <div class="col apellido apellido_uc"></div>
-      <div class="col dni dni_uc"></div>
-      <div class="col nivel nivel_uc"></div>
+
+      <!-- <div class="col user iduser__uc"></div> -->
+      <!-- <div class="col cliente id_cliente__uc"></div> -->
+      <div class="col usuario usuario__uc"></div>
+      <div class="col clave clave__uc"></div>
+      <div class="col nombre nombre__uc"></div>
+      <div class="col apellido apellido__uc"></div>
+      <div class="col dni dni__uc"></div>
+      <!-- <div class="col nivel nivel__uc"></div> -->
     </article>
   </template>
 

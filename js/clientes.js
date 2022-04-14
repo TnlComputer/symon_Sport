@@ -14,8 +14,8 @@ const agregoCliente = document.getElementById("form__alt-clie");
 //  user clientes
 const modalUsr = document.querySelector(".modal__userClie");
 const utclie = document.querySelector(".usrTit__clientes");
-const templateUsrClie = document.getElementById("usrDatos__clientes").content;
-const fragmentUsrClie = document.createDocumentFragment();
+const tempUsrClie = document.getElementById("usrDatos__clientes").content;
+const fragUsrClie = document.createDocumentFragment();
 const agregoUserCliente = document.getElementById("form__alt-user-clie");
 const udclie = document.querySelector(".line__UCDtabla");
 
@@ -133,10 +133,8 @@ tablaGenerator.addEventListener("click", async (event) => {
 
   if (event.target.matches(".usrCli__form")) {
     id = event.target.dataset.id_cliente;
-    // console.log("Cliente", id);
-    // console.log(event);
     utclie.classList.add("modal--show");
-    loadUsrClie(id);
+    loadUC(id);
   }
 });
 
@@ -181,10 +179,30 @@ agregoCliente.addEventListener("reset", (cac) => {
 //  Usuarios Cliente
 utclie.addEventListener("click", async (eUserClientes) => {
   if (eUserClientes.target.matches(".add__UC")) {
+    eUserClientes.preventDefault();
     modalUsr.classList.add("modal--show");
+    agregoUserCliente.id_cliente_txt.value =
+      eUserClientes.target.dataset.id_cliente;
   }
   if (eUserClientes.target.matches(".cerrar__UC")) {
+    eUserClientes.preventDefault();
     utclie.classList.remove("modal--show");
+  }
+
+  if (eUserClientes.target.matches(".edit__UC")) {
+    eUserClientes.preventDefault();
+    console.log("click edit usuario del cliente");
+    // utclie.classList.remove("modal--show");
+
+    agregoUserCliente.id_user_txt.value = eUserClientes.target.dataset.id_user;
+    agregoUserCliente.id_cliente_txt.value =
+      eUserClientes.target.dataset.id_cliente;
+    agregoUserCliente.usuario_txt.value = eUserClientes.target.dataset.usuario;
+    agregoUserCliente.clave_txt.value = eUserClientes.target.dataset.clave;
+    agregoUserCliente.nombre_txt.value = eUserClientes.target.dataset.nombre;
+    agregoUserCliente.ape_txt.value = eUserClientes.target.dataset.apellido;
+    agregoUserCliente.dni_txt.value = eUserClientes.target.dataset.dni;
+    modalUsr.classList.add("modal--show");
   }
 });
 
@@ -194,31 +212,25 @@ agregoUserCliente.addEventListener("reset", (cau) => {
   modalUsr.classList.remove("modal--show");
 });
 
-// userCliente.addEventListener("reset", (cauc) => {
-//     userCliente.reset();
-//     cauc.preventDefault();
-//   usrClie.classList.remove("modal--show");
-// });
-
 agregoUserCliente.addEventListener("submit", async function (auc) {
   auc.preventDefault();
+  const datosAUC = new FormData(agregoUserCliente);
   if (!auc.target.id_cliente_txt.value) {
-    const datosAUC = new FormData(agregoUserCliente);
-
     let opciones = {
       method: "POST",
       body: datosAUC,
     };
-    respAU = await fetch("php/addusr.php", opciones);
+    respAU = await fetch("php/adduser.php", opciones);
   } else {
     const datosEUC = new FormData(agregoUserCliente);
     let opciones = {
       method: "POST",
       body: datosEUC,
     };
-    respAU = await fetch("php/actusr.php", opciones);
-    auc.target.id_cliente_txt.value = "";
+    respAU = await fetch("php/actuser.php", opciones);
+    // auc.target.id_cliente_txt.value = "";
   }
+
   datausr = await respAU.json();
 
   if (datausr === "400") {
@@ -227,16 +239,9 @@ agregoUserCliente.addEventListener("submit", async function (auc) {
       alertas.innerHTML = ``;
     }, 3000);
   }
-  agregoagregoUserClienteCliente.reset();
   modalUsr.classList.remove("modal--show");
-  loadUsrClie();
+  loadUC(datausr);
 });
-
-// modalUsr.addEventListener("click", async function (usrclie) {
-//   if (usrclie.target.matches(".cerrar__UC")) {
-//     modalUsr.classList.remove("modal--show");
-//   }
-// });
 
 // Vehiculos Clientes
 lvtclie.addEventListener("click", async function (cclie) {
@@ -341,56 +346,56 @@ agregoVehiculo.addEventListener("submit", async function (vac) {
 });
 
 agregoVehiculo.addEventListener("reset", (avc) => {
-  // console.log("click agregoVehiculo");
-  // console.log(object);
   agregoVehiculo.reset();
   nvc.classList.remove("modal--show");
 });
 
-//  Usuarios Cliente
-async function loadUsrClie(idc) {
+async function loadUC(idcli) {
   udclie.innerHTML = ``;
+  try {
+    let datosUC = idcli;
+    // console.log(datosUC);
+    utclie.querySelector(".add__UC").dataset.id_cliente = datosUC;
+    const opciones = {
+      method: "POST",
+      body: datosUC,
+    };
 
-  let datosUC = idc;
-  const opciones = {
-    method: "POST",
-    body: datosUC,
-  };
-
-  await fetch("php/usrclie.php", opciones)
-    .then((respUC) => respUC.json())
-    .then((resulUC) => {
-      // const resultadosUC = await respUC.json();
-      if (resulUC === "inexistente") {
-        udclie.innerHTML = `
+    let respuc = await fetch("php/usrclie.php", opciones);
+    let resuc = await respuc.json();
+    if (resuc === "inexistente") {
+      udclie.innerHTML = `
         <div class="alert alert-danger" role="alert">
-          No hay Usuarios del cliente aun cargados
-          </div>`;
-        setTimeout(() => {
-          udclie.innerHTML = ``;
-        }, 3000);
-      } else {
-        // udclie.innerHTML = `
-        // <div class="alert alert-danger" role="alert">
-        //   Hay Usuarios del cliente cargados, pero no los muestra, me da error
-        //   </div>`;
-        resulUC.forEach((el) => {
-          templateUsrClie.querySelector(".id_user_uc").textContent = el.id_user;
-          templateUsrClie.querySelector(".id_cliente_uc").textContent =
-            el.id_cliente;
-          templateUsrClie.querySelector(".usuario_uc").textContent = el.usuario;
-          templateUsrClie.querySelector(".clave_uc").textContent = el.clave;
-          templateUsrClie.querySelector(".nombre_uc").textContent = el.nombre;
-          templateUsrClie.querySelector(".apellido_uc").textContent =
-            el.apellido;
-          templateUsrClie.querySelector(".dni_uc").textContent = el.dni;
-          templateUsrClie.querySelector(".nivel_uc").textContent = el.nivel;
-          const clone = templateUsrClie.cloneNode(true);
-          fragmentUsrClie.appendChild(clone);
-        });
-        udclie.appendChild(fragmentUsrClie);
-      }
-    });
+        No hay usuarios del cliente
+        </div>`;
+      setTimeout(() => {
+        udclie.innerHTML = ``;
+      }, 3000);
+    } else {
+      resuc.forEach((eluc) => {
+        tempUsrClie.querySelector(".edit__UC").dataset.id_user = eluc.id_user;
+        tempUsrClie.querySelector(".edit__UC").dataset.id_cliente =
+          eluc.id_cliente;
+        tempUsrClie.querySelector(".edit__UC").dataset.usuario = eluc.usuario;
+        tempUsrClie.querySelector(".edit__UC").dataset.clave = eluc.clave;
+        tempUsrClie.querySelector(".edit__UC").dataset.nombre = eluc.nombre;
+        tempUsrClie.querySelector(".edit__UC").dataset.apellido = eluc.apellido;
+        tempUsrClie.querySelector(".edit__UC").dataset.dni = eluc.dni;
+
+        tempUsrClie.querySelector(".usuario__uc").textContent = eluc.usuario;
+        tempUsrClie.querySelector(".clave__uc").textContent = eluc.clave;
+        tempUsrClie.querySelector(".nombre__uc").textContent = eluc.nombre;
+        tempUsrClie.querySelector(".apellido__uc").textContent = eluc.apellido;
+        tempUsrClie.querySelector(".dni__uc").textContent = eluc.dni;
+
+        const clone = tempUsrClie.cloneNode(true);
+        fragUsrClie.appendChild(clone);
+      });
+      udclie.appendChild(fragUsrClie);
+    }
+  } catch (err) {
+    console.log("Error ", err);
+  }
 }
 
 //  vehiculo del Cliente
@@ -477,7 +482,6 @@ async function loadRVC(ptt) {
     // lvdclie.insertBefore(fragVehDClie);
   }
 }
-
 //  Prespuesto reparaciones del vehiculo del Cliente
 async function loadPRVC(prc) {
   lprvdclie.innerHTML = ``;

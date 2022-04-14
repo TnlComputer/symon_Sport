@@ -140,14 +140,34 @@ tablaGenerator.addEventListener("click", async (event) => {
   if (event.target.closest(".edit__form")) {
     //ejecutar la funcion de editar tarea
     // alert("esta seguro que quiere editar la tarea");
-    event.stopPropagation();
     event.preventDefault();
     data = event.target.dataset.id_presu;
+
+    //Coloca aqui el id de tu select, esta función te detecta cuando haces un cambio en tu selección
+    // $("#marca").change(function () {
+    //         // aqui vuelve a colocar el id de tu select, pero en esta ocación detectamos el valor que tiene el mismo
+    //         $("#marca option:selected").each(function () {
+    //             // luego guardas el valor en una variable
+    //             id_mar = $(this).val();
+    //             //luego envias el valor a tu archivo donde armaras tu consulta a la base de datos
+    //             $.get("controlador/selectModelo2.php", { id_marca: id_mar }, function(data){
+    //                 aqui colocas el id del input donde quieres mostrar la respuesta
+    //                 $("#modelo").html(data);
+
+    //             });
+    //         });
+    //     });
+
+    // const miSelect = document.getElementById("patente_slc");
+    // const selecionado = miSelect.options[miSelect.selectedIndex].value;
 
     console.log(data);
     modal.classList.add("modal--show");
     // formAPres.id_presu.value = event.target.dataset.id_presu;
     addlinePresu.fecha_txt.value = event.target.dataset.fecha_presu;
+
+    // const selecionado = patenteSlc.options[patenteSlc.selectedIndex].value;
+
     addlinePresu.patente_slc.value = event.target.dataset.patente;
     // addlinePresu.marca_txt.value = event.target.dataset.marca;
     // addlinePresu.modelo_txt.value = event.target.dataset.modelo;
@@ -167,24 +187,24 @@ addlinePresu.addEventListener("reset", (ecam) => {
 addlinePresu.addEventListener("submit", async function (efr) {
   efr.preventDefault();
 
-  // const datosAPres = new FormData(addlinePresu);
-  // console.log(formAPres);
-  // await fetch("./php/addPres.php", {
-  //   method: "Post",
-  //   body: datosAPres,
-  // })
-  //   .then((resAPres) => resAPres.json())
-  //   .then((dataAP) => {
-  //     if (dataAP === "error") {
-  //       alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos del Presupuesto</div>`;
-  //       setTimeout(() => {
-  //         alertas.innerHTML = ``;
-  //       }, 3000);
-  //     } else if (dataAP === "correcto") {
-  // console.log(dataAR);
-  // modal.classList.remove("modal--show");
-  // agrego registro a la lista de reparaciones
-  //   loadPresupuestos();
-  // }
-  // });
+  const datosAPres = new FormData(addlinePresu);
+  console.log(formAPres);
+  await fetch("./php/addPres.php", {
+    method: "Post",
+    body: datosAPres,
+  })
+    .then((resAPres) => resAPres.json())
+    .then((dataAP) => {
+      if (dataAP === "error") {
+        alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos del Presupuesto</div>`;
+        setTimeout(() => {
+          alertas.innerHTML = ``;
+        }, 3000);
+      } else if (dataAP === "correcto") {
+        console.log(dataAP);
+        modal.classList.remove("modal--show");
+        // agrego registro a la lista de reparaciones
+        loadPresupuestos();
+      }
+    });
 });

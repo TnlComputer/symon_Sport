@@ -1,15 +1,17 @@
 <?php
   require_once "connections/conexion.php";
   error_reporting(E_ALL ^ E_NOTICE);
+   session_start(); 
 
-  $idCliente = file_get_contents("php://input");
+   $idCliente = file_get_contents("php://input");
   
-    $consUC=$conexionApi->query("SELECT * FROM usuarios WHERE id_cliente='".$idCliente."'");
+    $consUC="SELECT * FROM usuarios WHERE id_cliente='".$idCliente."' ";
 
-    $datosUC = mysqli_fetch_array($consUC);
+      $resultado = mysqli_query($conexionApi,$consUC);
+      $datos = mysqli_fetch_all($resultado,MYSQLI_ASSOC);
 
-    if(!empty($datosUC)){
-      echo json_encode($datosUC);
+    if(!empty($datos)){
+      echo json_encode($datos);
         }else{
       echo json_encode('inexistente');
     }   
