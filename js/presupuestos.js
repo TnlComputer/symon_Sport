@@ -33,6 +33,8 @@ async function loadPresupuestos() {
   } else {
     resultados.forEach((el) => {
       templatePresu.querySelector(".edit__form").dataset.id_presu = el.id_presu;
+      templatePresu.querySelector(".edit__form").dataset.id_vehiculo =
+        el.id_vehiculo;
       templatePresu.querySelector(".edit__form").dataset.empresa_nyp =
         el.empresa_nyp;
       templatePresu.querySelector(".edit__form").dataset.patente = el.patente;
@@ -65,7 +67,7 @@ async function loadPresupuestos() {
 loadPresupuestos();
 
 //agrego un listener unico al contenedor en donde se encuentra el boton de agregar reparación y toda la tabla de los productos
-tablaGenerator.addEventListener("click", async (event) => {
+tablaGenerator.addEventListener("click", (event) => {
   // console.log(event.target);
 
   // chequeo si se presiono el boton de agregar tarea
@@ -75,21 +77,7 @@ tablaGenerator.addEventListener("click", async (event) => {
     event.preventDefault();
     modal.classList.add("modal--show");
 
-    const respPsv = await fetch("php/patentes.php");
-    const resultPsv = await respPsv.json();
-    if (resultPsv === "error") {
-      alert("No hay vehiculos cargados!!!");
-      setTimeout(() => {
-        alertas.innerHTML = ``;
-      }, 3000);
-    } else {
-      let $options = `<option value="">Elige una Patente</option>`;
-
-      resultPsv.forEach((elPat) => {
-        $options += `<option value = "${elPat.id_vehiculo}">${elPat.patente}</option>`;
-      });
-      patenteSlc.innerHTML = $options;
-    }
+    loadPatentes();
   }
 
   /** relleno los campos de Cliente, Marca y Modelo * */
@@ -113,7 +101,6 @@ tablaGenerator.addEventListener("click", async (event) => {
   }
 
   addlinePresu.addEventListener("submit", async function (ealp) {
-    ealp.preventDefault();
     // alert("agergo linea al prespuesto");
     const datosALP = new FormData(addlinePresu);
     // console.log(addlinePresu);
@@ -130,6 +117,7 @@ tablaGenerator.addEventListener("click", async (event) => {
         } else {
           // inputs.forEach((input) => (input.value = ""));
           addlinePresu.reset();
+          ealp.preventDefault();
           modal.classList.remove("modal--show");
           loadPresupuestos();
         }
@@ -139,41 +127,20 @@ tablaGenerator.addEventListener("click", async (event) => {
   //chequeo si se presiono algun boton de editar tarea
   if (event.target.closest(".edit__form")) {
     //ejecutar la funcion de editar tarea
-    // alert("esta seguro que quiere editar la tarea");
     event.preventDefault();
+    loadPatentes();
     data = event.target.dataset.id_presu;
-
-    //Coloca aqui el id de tu select, esta función te detecta cuando haces un cambio en tu selección
-    // $("#marca").change(function () {
-    //         // aqui vuelve a colocar el id de tu select, pero en esta ocación detectamos el valor que tiene el mismo
-    //         $("#marca option:selected").each(function () {
-    //             // luego guardas el valor en una variable
-    //             id_mar = $(this).val();
-    //             //luego envias el valor a tu archivo donde armaras tu consulta a la base de datos
-    //             $.get("controlador/selectModelo2.php", { id_marca: id_mar }, function(data){
-    //                 aqui colocas el id del input donde quieres mostrar la respuesta
-    //                 $("#modelo").html(data);
-
-    //             });
-    //         });
-    //     });
-
+    // console.log(data);
+    modal.classList.add("modal--show");
+    addlinePresu.fecha_txt.value = event.target.dataset.fecha_presu;
     // const miSelect = document.getElementById("patente_slc");
     // const selecionado = miSelect.options[miSelect.selectedIndex].value;
-
-    console.log(data);
-    modal.classList.add("modal--show");
-    // formAPres.id_presu.value = event.target.dataset.id_presu;
-    addlinePresu.fecha_txt.value = event.target.dataset.fecha_presu;
-
-    // const selecionado = patenteSlc.options[patenteSlc.selectedIndex].value;
-
-    addlinePresu.patente_slc.value = event.target.dataset.patente;
-    // addlinePresu.marca_txt.value = event.target.dataset.marca;
-    // addlinePresu.modelo_txt.value = event.target.dataset.modelo;
+    // addlinePresu.patenteSlc.option[patenteSlc.id_vehiculo].value =
+    //   event.target.dataset.id_vehiculo;
+    // console.log(event.target.dataset.id_vehiculo);
+    loadVehiculos(event.target.dataset.id_vehiculo);
     addlinePresu.total_txt.value = event.target.dataset.total_presu;
     addlinePresu.desc_txt.value = event.target.dataset.descripcion_presu;
-    // addlinePresu.presuId_txt.value = event.target.dataset.id_presu;
   }
 });
 
@@ -208,3 +175,24 @@ addlinePresu.addEventListener("submit", async function (efr) {
       }
     });
 });
+
+// leo lista de patentes para el select
+function loadPatentes(evptt) {
+  fetch("php/patentes.php")
+    .then((respPtt) => respPtt.json())
+    .then((resultPsv) => {
+      if (resultPsv === "error") {
+        alert("No hay vehiculos cargados!!!");
+        setTimeout(() => {
+          alertas.innerHTML = ``;
+        }, 3000);
+      } else {
+        let $options = `<option value="">Elige una Patente</option>`;
+
+        resultPsv.forEach((elPat) => {
+          $options += `<option value = "${elPat.id_vehiculo}">${elPat.patente}</option>`;
+        });
+        patenteSlc.innerHTML = $options;
+      }
+    });
+}
