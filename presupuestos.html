@@ -173,6 +173,10 @@
         <fieldset class="model__presu-fieldset">
 
           <label class="modal__item-fec" for="fecha_txt">Fecha</label>
+          <input class="modal__input-fec" type="hidden" name="id_presu_txt">
+          <input class="modal__input-fec" type="hidden" name="id_cliente_txt">
+          <input class="modal__input-fec" type="hidden" name="id_vehiculo_txt">
+
           <input class="modal__input-fec" type="date" name="fecha_txt" required>
           <span class="modal__cliente-presu"></span>
           <br>
@@ -193,9 +197,13 @@
           <table>
             <tr>
               <td class="modal__item-presu">Repuestos</td>
-              <td><input class="modal__input-imp" type="text" name="repuestos_txt"></td>
+              <td>
+                <input class="modal__input-imp valor1" type="text" name="repuestos_txt">
+              </td>
               <td class="modal__item-presu">Mano de Obra</td>
-              <td><input class="modal__input-imp" type="text" name="mobra_txt" required></td>
+              <td>
+                <input class="modal__input-imp valor2" type="text" name="mobra_txt" required>
+              </td>
               <td class="modal__item-presu">Total</td>
               <td class="modal__input-presu">
                 <input class="modal__input-imp" type="text" name="total_txt" required>

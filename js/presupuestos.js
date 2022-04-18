@@ -19,7 +19,9 @@ const presuMarca = document.querySelector(".modal__marca-presu");
 const presuModelo = document.querySelector(".modal__modelo-presu");
 
 const addlinePresu = document.querySelector(".alp__form");
-let inputs = document.querySelectorAll("input");
+const valor1 = document.querySelector(".valor1");
+const valor2 = document.querySelector(".valor2");
+// let inputs = document.querySelectorAll("input");
 
 async function loadPresupuestos() {
   consPresuDatos.innerHTML = ``;
@@ -35,6 +37,8 @@ async function loadPresupuestos() {
       templatePresu.querySelector(".edit__form").dataset.id_presu = el.id_presu;
       templatePresu.querySelector(".edit__form").dataset.id_vehiculo =
         el.id_vehiculo;
+      templatePresu.querySelector(".edit__form").dataset.id_cliente =
+        el.id_cliente;
       templatePresu.querySelector(".edit__form").dataset.empresa_nyp =
         el.empresa_nyp;
       templatePresu.querySelector(".edit__form").dataset.patente = el.patente;
@@ -46,6 +50,16 @@ async function loadPresupuestos() {
         el.total_presu;
       templatePresu.querySelector(".edit__form").dataset.descripcion_presu =
         el.descripcion_presu;
+      templatePresu.querySelector(".edit__form").dataset.repuestos_presu =
+        el.repuestos_presu;
+      templatePresu.querySelector(".edit__form").dataset.mobra_presu =
+        el.mobra_presu;
+      templatePresu.querySelector(".edit__form").dataset.dias_presu =
+        el.dias_presu;
+      templatePresu.querySelector(".edit__form").dataset.senia_presu =
+        el.senia_presu;
+      templatePresu.querySelector(".edit__form").dataset.abonado_presu =
+        el.abonado_presu;
 
       templatePresu.querySelector(".presu__p").textContent = el.id_presu;
       templatePresu.querySelector(".client__p").textContent = el.empresa_nyp;
@@ -72,11 +86,8 @@ tablaGenerator.addEventListener("click", (event) => {
 
   // chequeo si se presiono el boton de agregar tarea
   if (event.target.closest(".add__form")) {
-    //ejecutar funcion de agregar tarea
-    // alert("quiere agregar una nuevo Presupuesto");
     event.preventDefault();
     modal.classList.add("modal--show");
-
     loadPatentes();
   }
 
@@ -92,8 +103,6 @@ tablaGenerator.addEventListener("click", (event) => {
     };
     const resp = await fetch("php/patmm.php", opciones);
     const data = await resp.json();
-    // .then((data) => {
-    // const resultPmm = await resPmm.json();
 
     presuMarca.innerHTML = `${data.marca}`;
     presuModelo.innerHTML = `${data.modelo}`;
@@ -101,79 +110,65 @@ tablaGenerator.addEventListener("click", (event) => {
   }
 
   addlinePresu.addEventListener("submit", async function (ealp) {
-    // alert("agergo linea al prespuesto");
-    const datosALP = new FormData(addlinePresu);
-    // console.log(addlinePresu);
-    // console.log(datosALP);
-    const opciones = {
-      method: "POST",
-      body: datosALP,
-    };
-    fetch("php/addlp.php", opciones)
-      .then((respLP) => respLP.json())
-      .then((dataadLP) => {
-        if (dataadLP === "400") {
-          alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos del Presupuesto</div>`;
-        } else {
-          // inputs.forEach((input) => (input.value = ""));
-          addlinePresu.reset();
-          ealp.preventDefault();
-          modal.classList.remove("modal--show");
-          loadPresupuestos();
-        }
-      });
+    ealp.preventDefault();
+    if (!ealp.target.id_cliente_txt.value) {
+      const datosALP = new FormData(addlinePresu);
+
+      const opciones = {
+        method: "POST",
+        body: datosALP,
+      };
+      respLP = await fetch("php/addlp.php", opciones);
+    } else {
+      const datosELP = new FormData(addlinePresu);
+
+      const opciones = {
+        method: "POST",
+        body: datosELP,
+      };
+      respLP = await fetch("php/actlp.php", opciones);
+      ealp.target.id_cliente_txt.value = "";
+    }
+    dataadLP = await respLP.json();
+    if (dataadLP === "400") {
+      alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos del Presupuesto</div>`;
+    } else {
+      addlinePresu.reset();
+      modal.classList.remove("modal--show");
+      loadPresupuestos();
+    }
   });
 
   //chequeo si se presiono algun boton de editar tarea
   if (event.target.closest(".edit__form")) {
-    //ejecutar la funcion de editar tarea
     event.preventDefault();
-    loadPatentes();
+    loadPatentes(event.target.dataset.id_vehiculo);
     data = event.target.dataset.id_presu;
     // console.log(data);
     modal.classList.add("modal--show");
     addlinePresu.fecha_txt.value = event.target.dataset.fecha_presu;
-    // const miSelect = document.getElementById("patente_slc");
-    // const selecionado = miSelect.options[miSelect.selectedIndex].value;
-    // addlinePresu.patenteSlc.option[patenteSlc.id_vehiculo].value =
-    //   event.target.dataset.id_vehiculo;
-    // console.log(event.target.dataset.id_vehiculo);
     loadVehiculos(event.target.dataset.id_vehiculo);
-    addlinePresu.total_txt.value = event.target.dataset.total_presu;
+    addlinePresu.id_presu_txt.value = event.target.dataset.id_presu;
+    addlinePresu.id_cliente_txt.value = event.target.dataset.id_cliente;
+    addlinePresu.id_vehiculo_txt.value = event.target.dataset.id_vehiculo;
     addlinePresu.desc_txt.value = event.target.dataset.descripcion_presu;
+    addlinePresu.total_txt.value = event.target.dataset.total_presu;
+    addlinePresu.repuestos_txt.value = event.target.dataset.repuestos_presu;
+    addlinePresu.mobra_txt.value = event.target.dataset.mobra_presu;
+    addlinePresu.dias_txt.value = event.target.dataset.dias_presu;
+    addlinePresu.senia_txt.value = event.target.dataset.senia_presu;
+    addlinePresu.abonado_txt.value = event.target.dataset.abonado_presu;
   }
+  // if (event.target.closest(".sumar")) {
+  //   calcular(event.target.repuestos_txt.value, event.target.mobra_txt.value);
+  //   // addlinePresu.total_txt.value =
+  // }
 });
 
 addlinePresu.addEventListener("reset", (ecam) => {
   addlinePresu.reset();
   ecam.preventDefault();
   modal.classList.remove("modal--show");
-});
-
-/** Formulario datos para agregar**/
-addlinePresu.addEventListener("submit", async function (efr) {
-  efr.preventDefault();
-
-  const datosAPres = new FormData(addlinePresu);
-  console.log(formAPres);
-  await fetch("./php/addPres.php", {
-    method: "Post",
-    body: datosAPres,
-  })
-    .then((resAPres) => resAPres.json())
-    .then((dataAP) => {
-      if (dataAP === "error") {
-        alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos del Presupuesto</div>`;
-        setTimeout(() => {
-          alertas.innerHTML = ``;
-        }, 3000);
-      } else if (dataAP === "correcto") {
-        console.log(dataAP);
-        modal.classList.remove("modal--show");
-        // agrego registro a la lista de reparaciones
-        loadPresupuestos();
-      }
-    });
 });
 
 // leo lista de patentes para el select
@@ -190,9 +185,39 @@ function loadPatentes(evptt) {
         let $options = `<option value="">Elige una Patente</option>`;
 
         resultPsv.forEach((elPat) => {
-          $options += `<option value = "${elPat.id_vehiculo}">${elPat.patente}</option>`;
+          let seleccionado = "";
+          if (evptt === elPat.id_vehiculo) {
+            seleccionado = "selected";
+          }
+
+          $options += `<option value = "${elPat.id_vehiculo}" ${seleccionado}>${elPat.patente}</option>`;
         });
         patenteSlc.innerHTML = $options;
       }
     });
 }
+
+// function calcular(repuestos, mobra) {
+// valor1.addEventListener("change", (evento1) => {
+//   const valor1 = evento1.target.value;
+//   console.log(valor1);
+//   addlinePresu.repuestos_txt.value = event.target.dataset.repuestos_presu;
+//   addlinePresu.mobra_txt.value = event.target.dataset.mobra_presu;
+//   if (valor1 != "" || valor2 != "") {
+//     // result = eval(operando1 + operacion + operando2);
+//     let total = Number(valor1) + Number(valor2);
+//   }
+//   addlinePresu.total_txt.value = total;
+// });
+
+// valor2.addEventListener("change", (evento2) => {
+//   const valor2 = evento2.target.value;
+
+//   console.log(valor2);
+//   if (valor1 != "" || valor2 != "") {
+//     // result = eval(operando1 + operacion + operando2);
+//     let total = Number(valor1) + Number(valor2);
+//   }
+//   addlinePresu.total_txt.value = total;
+// });
+// // }

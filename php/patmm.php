@@ -18,9 +18,13 @@ if ($metodo==='POST') {
       $resultado['datos'] = json_encode($datos);
       $cliente=$resultado['datos'];
 
-      $consPmm=$conexionApi->query("SELECT clientes.empresa_nyp, vehiculos.marca, vehiculos.modelo, vehiculos.patente FROM vehiculos INNER JOIN clientes ON vehiculos.id_cliente=clientes.id_cliente WHERE vehiculos.id_vehiculo = '".$cliente."' ");
+      $consPmm="SELECT clientes.empresa_nyp, vehiculos.marca, vehiculos.modelo, vehiculos.patente FROM vehiculos INNER JOIN clientes ON vehiculos.id_cliente=clientes.id_cliente WHERE vehiculos.id_vehiculo = '".$cliente."' ";
 
-      $datos = mysqli_fetch_array($consPmm);
+      // $datos = mysqli_fetch_array($consPmm);
+        $resultado = mysqli_query($conexionApi,$consPmm);
+        $datos = mysqli_fetch_array($resultado,MYSQLI_ASSOC);
+
+
 }
       if(!empty($datos)){
         echo json_encode($datos);
