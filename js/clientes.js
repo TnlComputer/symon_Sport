@@ -96,17 +96,13 @@ tablaGenerator.addEventListener("click", async (event) => {
   // console.log(event.target);
 
   if (event.target.closest(".add__form")) {
+    // event.defaultPrevented();
     modal.classList.add("modal--show");
   }
 
   if (event.target.closest(".edit__form")) {
+    // event.defaultPrevented();
     modal.classList.add("modal--show");
-
-    /** PROBAR LO DEL SELECT**/
-    // opcion para seleccion el id que necesito mostrar en el select
-    // const miSelect = document.getElementById("idSelect");
-    // const selecionado = miSelect.options[miSelect.selectedIndex].value;
-
     agregoCliente.id_cliente_txt.value = event.target.dataset.id_cliente;
     agregoCliente.cuit_txt.value = event.target.dataset.cuit;
     agregoCliente.empers_txt.value = event.target.dataset.empresa_nyp;
@@ -121,6 +117,7 @@ tablaGenerator.addEventListener("click", async (event) => {
   }
 
   if (event.target.matches(".veh__form")) {
+    // event.defaultPrevented();
     id = event.target.dataset.id_cliente;
     lvtclie.classList.add("modal--show");
     lvdclie.innerHTML = ``;
@@ -289,7 +286,7 @@ lvtclie.addEventListener("click", async function (cclie) {
   // Presupuestos reparaciones Vehiculos Cliente
   if (cclie.target.matches(".presupuesto__form")) {
     prc = cclie.target.dataset.presupuesto;
-    console.log(prc);
+    // console.log(prc);
     loadPRVC(prc);
   }
 
@@ -383,7 +380,9 @@ async function loadUC(idcli) {
         tempUsrClie.querySelector(".edit__UC").dataset.dni = eluc.dni;
 
         tempUsrClie.querySelector(".usuario__uc").textContent = eluc.usuario;
-        tempUsrClie.querySelector(".clave__uc").textContent = eluc.clave;
+
+        tempUsrClie.querySelector(".clave__uc").textContent = "**********";
+        // tempUsrClie.querySelector(".clave__uc").textContent = eluc.clave;
         tempUsrClie.querySelector(".nombre__uc").textContent = eluc.nombre;
         tempUsrClie.querySelector(".apellido__uc").textContent = eluc.apellido;
         tempUsrClie.querySelector(".dni__uc").textContent = eluc.dni;

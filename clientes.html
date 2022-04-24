@@ -5,15 +5,16 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta description="Taller Mecánico en Caseros, reparación integral de vehiculos, nafta o diesel">
+  <meta
+    description="Taller Mecánico en Caseros, reparación integral de vehiculos, nafta o diesel, mantenimiento de flota empresas.">
 
   <link rel="canonical" href="https://tnlcomputer.com.ar/ssp">
-  <meta name="application-name" content="tnlcomputer">
-  <meta property="og:title" content="Tnlcomputer">
-  <meta property="og:site_name" content="Tnlcomputer">
+  <meta name="application-name" content="Symon Sport">
+  <meta property="og:title" content="Symon Sport">
+  <meta property="og:site_name" content="Symon Sport">
   <meta property="og:url" content="https://tnlcomputer.com.ar/ssp/index.html">
   <meta property="og:description"
-    content="Venta y Service de computadoras, notebook, desarrollo web, backend - Frontend, Hosting, Alojamiento de Paginas, software.">
+    content="Taller Mecánico en Caseros, reparación integral de vehiculos, nafta o diesel, mantenimiento de flota empresas.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://tnlcomputer.com.ar/ssp/assets/img/favicon/android-icon-192x192.png">
 
@@ -46,7 +47,8 @@
   <!-- <link
     href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bowlby+One+SC&family=Rubik+Mono+One&display=swap"
     rel="stylesheet"> -->
-  <!-- <script src="https://kit.fontawesome.com/54dcb4109d.js" crossorigin="anonymous"></script> -->
+
+
   <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.15.4/css/all.css">
   <!-- <link rel="stylesheet" href="css/all.css"> -->
 
@@ -145,35 +147,6 @@
     </p>
   </footer>
 
-  <!-- TEMPLATE Cliente -->
-  <template id="template__clientes">
-    <article class="fila">
-      <div class="col accion">
-        <input type="image" class="edit__form" src="./assets/img/acciones/reply.gif" alt="Edit Cliente"
-          title="Edit Cliente">
-      </div>
-      <div class="col accion">
-        <input type="image" class="veh__form" src="./assets/img/acciones/car-16.png" alt="Ver Vehículos"
-          name="id_cliente" title="Ver Vehículos">
-      </div>
-      <div class="col accion ">
-        <input type="image" class="usrCli__form" src="./assets/img/acciones/icons8-usuario-16.png"
-          alt="Usuarios del cliente" name="id_usrcli" title="Ver Usuarios del cliente">
-      </div>
-      <div class="col cuit cuit__c"></div>
-      <div class="col client cliente__c"></div>
-      <div class="col direccion direccion__c"></div>
-      <div class="col loc localidad__c"></div>
-      <div class="col pro provincia__c"></div>
-      <div class="col cpost cpost__c"></div>
-      <div class="col contacto contacto__c"></div>
-      <div class="col telefono telefono__c"></div>
-      <div class="col celular celular__c"></div>
-      <div class="col mail mail__c"></div>
-    </article>
-  </template>
-  <!-- FIN TEMPLATE CLIENTES -->
-
   <!-- MODAL ALTA/EDIT CLIENTES  -->
   <section class="modal">
     <div class="modal__container-clie">
@@ -183,7 +156,7 @@
         <input class="modal__input" type="hidden" name="id_cliente_txt">
         <input class="modal__input" type="text" name="cuit_txt" maxlength="11"
           placeholder="Ingrese Cuit o Cuil sin guiones" required>
-        <label class="modal__item" for="empers_txt">Empresa/Persona</label>
+        <label class="modal__item" for="empers_txt">Empresa / Persona</label>
         <input class="modal__input" type="text" name="empers_txt" required>
         <label class="modal__item" for="direccion">Dirección</label>
         <input class="modal__input" type="text" name="dire_txt">
@@ -202,14 +175,13 @@
         <label class="modal__item" for="mail_txt">Mail</label>
         <input class="modal__input" type="text" name="mail_txt">
         <div class="btn__center">
-          <button class="modal__cancel izquierda" type="reset">Cancelar</button>
-          <button class="modal__close derecha" type="submit">Aceptar</button>
+          <button class="modal__cancel " type="reset">Cancelar</button>
+          <button class="modal__close" type="submit">Aceptar</button>
         </div>
         <div id="modal__alert"></div>
       </form>
     </div>
   </section>
-
 
   <!-- MODAL ALTA/EDIT USUARIOS DEL CLIENTE -->
   <section class="modal__userClie">
@@ -303,6 +275,32 @@
     </div>
   </section>
 
+  <!-- MODAL  Titulos usuarios del Cliente -->
+  <section class="usrTit__clientes">
+    <div class="modal__container-clieUsr">
+      <section class="usr__cliente">
+        <h2 class="modal__title">Usuarios del Cliente <span class="clienteTit"></span></h2>
+        <article class="fila tit__tabla">
+          <div class="col accion">
+            <input type="image" class="cerrar__UC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar"
+              alt="Cerrar">
+          </div>
+          <div class="col accion">
+            <input type="image" class="add__UC" src="./assets/img/acciones/action_add.png" title="Nuevo Usuario"
+              name="id_cliente_txt" alt="Nuevo Usuario">
+          </div>
+          <div class="col usuario">Usuario</div>
+          <div class="col clave none">Contraseña</div>
+          <div class="col nombre">Nombre</div>
+          <div class="col apellido">Apellido</div>
+          <div class="col none dni">DNI</div>
+        </article>
+        <article class="line__UCDtabla"></article>
+      </section>
+    </div>
+  </section>
+  <!-- </section> -->
+
   <!-- Modal Vehiculos Cliente nuevo -->
   <section class="newVeh__Clientes">
     <article class="modal__container">
@@ -332,6 +330,35 @@
     </article>
   </section>
 
+  <!-- TEMPLATE Cliente -->
+  <template id="template__clientes">
+    <article class="fila">
+      <div class="col accion">
+        <input type="image" class="edit__form" src="./assets/img/acciones/reply.gif" alt="Edit Cliente"
+          title="Edit Cliente">
+      </div>
+      <div class="col accion">
+        <input type="image" class="veh__form" src="./assets/img/acciones/car-16.png" alt="Ver Vehículos"
+          name="id_cliente" title="Ver Vehículos">
+      </div>
+      <div class="col accion ">
+        <input type="image" class="usrCli__form" src="./assets/img/acciones/icons8-usuario-16.png"
+          alt="Usuarios del cliente" name="id_usrcli" title="Ver Usuarios del cliente">
+      </div>
+      <div class="col cuit cuit__c"></div>
+      <div class="col client cliente__c"></div>
+      <div class="col direccion direccion__c"></div>
+      <div class="col loc localidad__c"></div>
+      <div class="col pro provincia__c"></div>
+      <div class="col cpost cpost__c"></div>
+      <div class="col contacto contacto__c"></div>
+      <div class="col telefono telefono__c"></div>
+      <div class="col celular celular__c"></div>
+      <div class="col mail mail__c"></div>
+    </article>
+  </template>
+  <!-- FIN TEMPLATE CLIENTES -->
+
   <!--  DATOS reparaciones del vehiculo del Cliente -->
   <template id="RVDatos__clientes">
     <article class="fila">
@@ -342,9 +369,9 @@
       <div class="col fecIng fecIng__rc"></div>
       <div class="col fecEnt fecEnt__rc"></div>
       <!-- <div class="col accion">
-          <input type="image" class="muestro__descripcion" src="./assets/img/acciones/icons8-desplazamiento-verificado-16.png"
-            name="obs_txt" alt="Ver Descripción" title="Ver Descripción">
-        </div> -->
+            <input type="image" class="muestro__descripcion" src="./assets/img/acciones/icons8-desplazamiento-verificado-16.png"
+              name="obs_txt" alt="Ver Descripción" title="Ver Descripción">
+          </div> -->
       <div class="col km km__rc"></div>
       <!-- <div class="col descript obs__rc"></div> -->
       <div class="col npresu presu__rc"></div>
@@ -399,31 +426,6 @@
     </article>
   </template>
 
-  <!-- MODAL  Titulos usuarios del Cliente -->
-  <section class="usrTit__clientes">
-    <div class="modal__container-clieUsr">
-      <section class="usr__cliente">
-        <h2 class="modal__title">Usuarios del Cliente <span class="clienteTit"></span></h2>
-        <article class="fila tit__tabla">
-          <div class="col accion">
-            <input type="image" class="cerrar__UC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar"
-              alt="Cerrar">
-          </div>
-          <div class="col accion">
-            <input type="image" class="add__UC" src="./assets/img/acciones/action_add.png" title="Nuevo Usuario"
-              name="id_cliente_txt" alt="Nuevo Usuario">
-          </div>
-          <div class="col usuario">Usuario</div>
-          <div class="col clave">Contraseña</div>
-          <div class="col nombre">Nombre</div>
-          <div class="col apellido">Apellido</div>
-          <div class="col dni">DNI</div>
-        </article>
-        <article class="line__UCDtabla"></article>
-      </section>
-    </div>
-  </section>
-
   <!--  DATOS reparaciones del vehiculo del Cliente -->
   <template id="usrDatos__clientes">
     <article class="fila">
@@ -437,10 +439,10 @@
       <!-- <div class="col user iduser__uc"></div> -->
       <!-- <div class="col cliente id_cliente__uc"></div> -->
       <div class="col usuario usuario__uc"></div>
-      <div class="col clave clave__uc"></div>
+      <div class="col clave none clave__uc"></div>
       <div class="col nombre nombre__uc"></div>
       <div class="col apellido apellido__uc"></div>
-      <div class="col dni dni__uc"></div>
+      <div class="col dni none dni__uc"></div>
       <!-- <div class="col nivel nivel__uc"></div> -->
     </article>
   </template>
