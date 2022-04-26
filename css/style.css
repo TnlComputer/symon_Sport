@@ -47,7 +47,13 @@ textarea {
   resize: none;
 }
 
-.toggle-menu {
+.main {
+  /* margin-top: 0; */
+  width: 100%;
+  height: 100%;
+}
+
+/* .toggle-menu {
   position: fixed;
   width: 40px;
   bottom: 0.5rem;
@@ -55,8 +61,6 @@ textarea {
   filter: invert(1);
   cursor: pointer;
   z-index: 99;
-  /* background-color: white;
-  border-radius: 5px; */
 }
 
 .main-menu {
@@ -99,23 +103,50 @@ textarea {
   width: 100%;
   margin: 20px 40px;
   margin-top: 20px;
-  /* margin-left: auto; */
-  /* margin-right: auto; */
 }
 
 .social__link {
   width: 50px;
   height: 50px;
   margin: 15px;
-}
+} */
 
-.main {
+.main-nav {
+  position: fixed;
   width: 100%;
-  height: 100%;
-  margin-top: 0;
+  height: 50px;
+  display: flex;
+  top: 0;
+  background-color: var(--menu-primary);
+  z-index: 99;
 }
 
-.main-logo {
+.main-menu {
+  /* position: fixed; */
+  width: 70%;
+  display: flex;
+  flex-direction: row;
+  align-items: left;
+  justify-content: space-around;
+  list-style: none;
+  border: 2px solid transparent;
+}
+
+.main-menu-social {
+  /* position: fixed; */
+  width: 25%;
+  display: flex;
+  flex-direction: row;
+  align-items: right;
+  justify-content: space-around;
+  list-style: none;
+}
+
+/* .main-menu__item {
+  padding: 1em;
+} */
+
+/* .main-logo {
   margin: 10px auto;
 }
 
@@ -128,13 +159,14 @@ textarea {
 .linea {
   font-weight: normal;
   width: 100%;
-}
+} */
 
 .none {
   display: none;
 }
 
 .main-section {
+  margin-top: 100px;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
@@ -415,7 +447,7 @@ legend {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  position: fixed;
+  /* position: fixed; */
   margin-left: auto;
   margin-right: auto;
   left: 0;
@@ -443,8 +475,8 @@ legend {
 }
 
 .div__presupuestos {
+  width: 100%;
   max-width: 320px;
-  min-width: 320px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -477,7 +509,13 @@ legend {
   overflow: auto;
 }
 
-.V__cliente,
+.V__cliente {
+  max-width: 320px;
+  min-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .RepTit__clientes,
 .RVDatos__clientes,
 .PRepTit__clientes,
@@ -520,6 +558,60 @@ legend {
   --transition: transform .8s .8s;
 }
 
+.modal__container-clieUsr,
+.modal__container-usrclie,
+.modal__container,
+.modal__container-clie {
+  margin: auto;
+  width: 90%;
+  height: auto;
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 10px;
+  transform: var(--transform);
+  transition: var(--transition);
+  /* z-index: 10; */
+}
+
+.modal__container {
+  max-width: 320px;
+  margin: auto;
+}
+
+.modal__container-presu {
+  min-width: 320px;
+  max-width: 320px;
+  margin: auto;
+  background-color: rgb(196, 240, 196);
+  height: auto;
+  border-radius: 6px;
+  padding: 1em;
+  transform: var(--transform);
+  transition: var(--transition);
+  overflow: auto;
+}
+
+.modal__container-clie {
+  width: 100%;
+  max-width: 320px;
+  background-color: rgb(183, 209, 224);
+  margin: auto;
+}
+
+.modal__container-clieUsr {
+  width: 100%;
+  min-width: 320px;
+  max-width: 320px;
+  background-color: rgb(87, 92, 57);
+  margin: auto;
+  font-size: 12px;
+}
+
+.modal__container-usrclie {
+  width: 100%;
+  max-width: 320px;
+}
+
 .fila {
   display: table-row;
   color: #ffffff;
@@ -528,7 +620,7 @@ legend {
 .col {
   display: table-cell;
   padding: 12px;
-  font-size: 12px;
+  font-size: 16px;
 }
 
 .tit__tabla {
@@ -543,8 +635,8 @@ legend {
 }
 
 .modelo {
-  min-width: 200px;
-  max-width: 200px;
+  min-width: 100px;
+  max-width: 100px;
   text-align: center;
 }
 
@@ -564,8 +656,8 @@ legend {
 .fecha,
 .fecIng,
 .fecEnt {
-  min-width: 130px;
-  max-width: 130px;
+  min-width: 100px;
+  max-width: 100px;
 }
 
 .npresu {
@@ -628,10 +720,6 @@ legend {
   align-items: center;
 }
 
-.accNo {
-  cursor: unset;
-}
-
 .direccion,
 .mail {
   max-width: 200px;
@@ -667,57 +755,8 @@ legend {
 }
 
 .show {
-  padding: 20px;
+  padding: 20px 0;
   opacity: 1;
-}
-
-.modal__container-clieUsr,
-.modal__container-usrclie,
-.modal__container,
-.modal__container-clie {
-  margin: auto;
-  width: 90%;
-  height: auto;
-  background-color: #fff;
-  border-radius: 6px;
-  padding: 10px;
-  transform: var(--transform);
-  transition: var(--transition);
-  /* z-index: 10; */
-}
-
-.modal__container {
-  max-width: 320px;
-  margin: auto;
-}
-
-.modal__container-presu {
-  min-width: 320px;
-  max-width: 320px;
-  margin: auto;
-  background-color: rgb(196, 240, 196);
-  height: auto;
-  border-radius: 6px;
-  padding: 1em;
-  transform: var(--transform);
-  transition: var(--transition);
-
-}
-
-.modal__container-clie {
-  width: 100%;
-  max-width: 320px;
-  background-color: rgb(183, 209, 224);
-  margin: auto;
-}
-
-.modal__container-clieUsr {
-  width: 100%;
-  min-width: 320px;
-  max-width: 320px;
-  background-color: rgb(87, 92, 57);
-  margin: auto;
-  font-size: 12px;
 }
 
 .nombre,
@@ -733,11 +772,6 @@ legend {
   min-width: 60px;
 }
 
-
-.modal__container-usrclie {
-  width: 100%;
-  max-width: 320px;
-}
 
 .modal__title {
   font-size: 1.5rem;
@@ -761,8 +795,8 @@ legend {
 }
 
 .modal__textarea-item {
+  display: block;
   width: 100%;
-  padding-bottom: 10px;
 }
 
 .modal__textarea-input {
@@ -800,7 +834,7 @@ legend {
 
 .textarea__presu {
   width: 98%;
-  height: 100px;
+  height: 70px;
 }
 
 .modal__form-Presu {
@@ -809,7 +843,7 @@ legend {
 }
 
 .model__presu-fieldset {
-  margin: 10px auto;
+  margin: auto;
   /* padding: 10px; */
   background-color: var(--bg-primary);
   color: var(--color-primary);
@@ -819,10 +853,7 @@ legend {
 
 /* .factu, */
 .modal__input-fec,
-.modal__input-pat,
-.modal__cliente-presu,
-.modal__marca-presu,
-.modal__modelo-presu {
+.modal__input-pat {
   margin: 10px;
 }
 
@@ -838,12 +869,21 @@ legend {
 .modal__marca-presu,
 .modal__modelo-presu {
   color: #fff;
+  /* text-align: center; */
 }
 
-/* .modal__item-fec,
-.modal__item-pat {
-  margin-left: 10px;
-} */
+.modal__cliente-presu,
+.modal__marcaModelo {
+  display: inline-block;
+  width: 300px;
+  margin: 10px 0 15px 0;
+  text-align: center;
+  align-content: center;
+}
+
+.tabla__show {
+  display: none;
+}
 
 .modal__item-desc,
 .modal__input-desc,
@@ -855,10 +895,6 @@ legend {
   margin-right: 10px;
 }
 
-/* .modal__item-presu,
-.modal__input-presu {
-  width: 150px;
-} */
 .modal__item-presu {
   display: inline-block;
   width: 38%;
@@ -1009,8 +1045,24 @@ legend {
 }
 
 /* @MEDIA*/
-
 @media (hover:hover) {
+  .main-menu__link:hover {
+    /* height: 50px;
+    border: 3px solid var(--text-negro); */
+    border-bottom: 3px solid var(--text-negro);
+  }
+
+  .social__link:hover {
+    border-bottom: 3px solid var(--text-negro);
+  }
+
+  .moda__close:hover {
+    color: orangered;
+    background-color: #fff;
+  }
+}
+
+/* @media (hover:hover) {
   .main-menu__link:hover {
     color: var(--text-negro);
   }
@@ -1024,11 +1076,11 @@ legend {
     background-color: #fff;
   }
 
-}
+} */
 
-@media screen and (min-width: 600px) {
-  .main-nav {
-    z-index: 10;
+/* @media screen and (min-width: 600px) {
+  .main-menu__item {
+    padding: 1em;
   }
 
   .main-section {
@@ -1065,15 +1117,15 @@ legend {
     max-width: 540px;
   }
 
-}
+} */
 
 /* TABLET */
 @media screen and (min-width: 768px) {
-  .main {
+  /* .main {
     padding-bottom: 60px;
-  }
+  } */
 
-  .toggle-menu {
+  /* .toggle-menu {
     display: none;
   }
 
@@ -1113,7 +1165,7 @@ legend {
     width: auto;
     margin: 10px 10px;
     margin-top: 10px;
-  }
+  } */
 
   .main-section {
     /* position: relative; */
@@ -1156,13 +1208,18 @@ legend {
   .contact-form * {
     max-width: 768px;
   }
+
+  .tabla__show {
+    display: table-cell;
+  }
+
 }
 
 @media screen and (min-width: 1440px) {
 
-  .none {
+  /* .none {
     display: block;
-  }
+  } */
 
   .div__clientes,
   .vehDatos__clientes {
@@ -1227,8 +1284,8 @@ legend {
   }
 
   .modal__container-presu {
-    min-width: 700px;
-    max-width: 700px;
+    min-width: 500px;
+    max-width: 500px;
   }
 
   .modal__container-clie {
@@ -1276,27 +1333,9 @@ legend {
     font-size: 16px;
   }
 
-  .model__presu-fieldset {
-    /* margin: 10px auto; */
-    padding: 10px;
-    /* background-color: var(--bg-primary);
-    color: var(--color-primary);
-    border: 2px solid var(--menu-primary);
-    border-radius: 10px; */
-  }
-
-  /* .modal__item-presu,
-  .modal__input-presu {
-    width: 90px;
-  } */
-
   .textarea__presu {
     height: 150px;
   }
-
-  /* .modal__empresa {
-    padding: 20px;
-  } */
 
   .modal__close,
   .modal__cancel {
@@ -1304,6 +1343,12 @@ legend {
     padding: 1em 3em;
     font-weight: 500;
 
+  }
+
+  .modal__cliente-presu,
+  .modal__marcaModelo {
+    width: 200px;
+    text-align: left;
   }
 
 }

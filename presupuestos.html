@@ -57,57 +57,57 @@
 
 <body>
   <main class="main">
-    <div id="toggle-menu" class="toggle-menu">
-      <label for="toggle-menu-checkbox">
-        <img src="assets/img/hamburguer-icon.png" alt="" />
-      </label>
-    </div>
     <nav class="main-nav">
-      <ul id="main-menu" class="main-menu">
-        <img class="main-logo" src="assets/img/logo symon sport-150.png" alt="SYMON SPORT">
-        <hr class="linea">
-
+      <ul class="main-menu">
         <li class="main-menu__item">
-          <a href="index.html" class="main-menu__link"><i class="nav__item fas fa-home"></i>Home</a>
+          <a href="index.html" class="main-menu__link"><img src="assets/menu/icons8-casa-24.png" alt=""></a>
         </li>
 
         <li class="main-menu__item adm none">
-          <a href="clientes.html" class="main-menu__link"><i class="nav__item fas fa-file-user"></i>Clientes</a>
+          <a href="clientes.html" class="main-menu__link"><img src="assets/menu/icons8-contrato-de-trabajo-24.png"
+              alt=""></a>
         </li>
 
         <li class="main-menu__item adm none">
-          <a href="reparaciones.html" class="main-menu__link"><i
-              class="nav__item fas fa-car-mechanic"></i>Reparaciones</a>
+          <a href="reparaciones.html" class="main-menu__link">
+            <img class="img-menu" src="assets/menu/reparaciones.png" alt=""></a>
         </li>
 
         <li class="main-menu__item adm none">
-          <a href="presupuestos.html" class="main-menu__link"><i class="nav__item fas fa-file-alt"></i>Presupuestos</a>
+          <a href="presupuestos.html" class="main-menu__link">
+            <img src="assets/menu/icons8-costo-24.png" alt="">
+          </a>
         </li>
 
         <li class="main-menu__item adm user none">
-          <a href="consultas.html" class="main-menu__link"><i class="nav__item fas fa-file-search"></i>Consultas</a>
+          <a href="consultas.html" class="main-menu__link"><img src="assets/menu/icons8-barra-de-búsqueda-24.png"
+              alt="">
+          </a>
         </li>
 
         <li class="main-menu__item">
-          <a href="contacto.html" class="main-menu__link"><i class="nav__item fas fa-mailbox"></i>Contacto</a>
+          <a href="contacto.html" class="main-menu__link"><img src="assets/menu/icons8-mensaje-relleno-24.png"
+              alt=""></a>
         </li>
 
-        <hr class="linea">
         <li class="main-menu__item login">
-          <a href="login.html" class="main-menu__link"><i class="nav__item fas fa-user"></i>Login</a>
+          <a href="login.html" class="main-menu__link"><img src="assets/menu/icons8-usuario-de-género-neutro-24.png"
+              alt=""></a>
         </li>
         <li class="main-menu__item logout none">
-          <a href="desconectar.html" class="main-menu__link"><i class="nav__item fas fa-user"></i>Logout</a>
+          <a href="desconectar.html" class="main-menu__link"><img src="assets/menu/icons8-salida-24.png" alt=""> </a>
         </li>
+      </ul>
 
-        <hr class="linea">
+      <!-- menu social -->
+      <ul class="main-menu-social">
         <li class="social">
-
           <a href="https://www.facebook.com/Symon-Sport-308309696321701" target="_blank" rel="noopener noreferrer"
-            class="social__link"><i class="fab fa-facebook"></i></a>
+            class="social__link"><img src="assets/menu/icons8-facebook-24.png" alt=""></a>
 
           <a href="https://api.whatsapp.com/send?phone=541167993863&app=facebook&entry_point=page_cta&fbclid=IwAR15Rerqvh_Srlw7PNjopti51MWggmeeyyFRHkni8euy_Q76AiepM-JSKvM"
-            target="_blank" rel="noopener noreferrer" class="social__link"><i class="fab fa-whatsapp"></i></a>
+            target="_blank" rel="noopener noreferrer" class="social__link"><img src="assets/menu/icons8-whatsapp-24.png"
+              alt=""></a>
         </li>
       </ul>
     </nav>
@@ -124,14 +124,12 @@
           <input type="image" class="add__form" src="./assets/img/acciones/action_add.png" alt="Nuevo Presupuesto">
         </div>
         <div class="col fecha">Ingreso</div>
-        <div class="col presu">Presupuesto</div>
-        <div class="col client">Cliente</div>
+        <div class="col npresu">Presupuesto</div>
         <div class="col patente">Patente</div>
-        <div class="col marca">Marca</div>
-        <div class="col modelo">Modelo</div>
-        <div class="col monto">Importe</div>
-        <!-- <div class="col descript">Descripción</div> -->
-        <!-- <div class="col accion"></div> -->
+        <div class="col client tablatablaw">Cliente</div>
+        <div class="col marca tablatablaw">Marca</div>
+        <div class="col modelo tablatablaw">Modelo</div>
+        <div class="col monto tablatablaw">Importe</div>
       </article>
       <article class="line__tabla"></article>
     </section>
@@ -149,19 +147,17 @@
         <input type="image" class="edit__form" src="./assets/img/acciones/reply.gif" alt="Edit Presupuesto">
       </div>
       <div class="col fecha fecha__p"></div>
-      <div class="col presu presu__p"></div>
-      <div class="col client client__p"></div>
+      <div class="col npresu presu__p"></div>
       <div class="col patente patente__p"></div>
-      <div class="col marca marca__p"></div>
-      <div class="col modelo modelo__p"></div>
-      <div class="col monto monto__p"></div>
-      <!-- <div class="col descript descript__p"></div> -->
+      <div class="col client client__p tabla__show"></div>
+      <div class="col marca marca__p tabla__show"></div>
+      <div class="col modelo modelo__p tabla__show"></div>
+      <div class="col monto monto__p tabla__show"></div>
     </article>
     <article>
-      <!-- <div class="col accion"></div> -->
-      <div class="col accion"></div>
-      <div class="col descript-t tit__tabla">Descripción</div>
-      <div class="col descript-d descript__p"></div>
+      <div class="col accion tabla__show"></div>
+      <div class="col descript-t tit__tabla tabla__show">Descripción</div>
+      <div class="col descript-d descript__p tabla__show"></div>
       <br>
     </article>
   </template>
@@ -169,58 +165,39 @@
   <section class="modal">
     <div class="modal__container-presu">
       <h2 class="modal__title">Presupuesto</h2>
-
       <form class="alp__form">
         <fieldset class="model__presu-fieldset">
-
           <label class="modal__item-fec" for="fecha_txt">Fecha
             <input class="modal__input-fec" type="hidden" name="id_presu_txt">
             <input class="modal__input-fec" type="hidden" name="id_cliente_txt">
             <input class="modal__input-fec" type="hidden" name="id_vehiculo_txt">
             <input class="modal__input-fec" type="date" name="fecha_txt" required></label>
-
           <!-- /* muestro el cliente*/ -->
           <div class="modal__cliente-presu"></div>
-
-          <label class="modal__item-pat" for="patente_slc">Patente</label>
+          <br>
+          <label class="modal__pat-presu" for="patente_slc">Patente</label>
           <select class="modal__input-pat slc-patente" name="patente_slc" id="patente_slc" required>
           </select>
-
-          <!-- /* muestro marca y modelo */ -->
-          <div class="modal__marca-presu"></div>
-          <div class="modal__modelo-presu"></div>
-
+          <div class="modal__marcaModelo">
+            <!-- /* muestro marca y modelo */ -->
+            <span class="modal__marca-presu"></span>
+            <span class="modal__modelo-presu"></span>
+          </div>
           <label class="modal__textarea-item"> Detalle </label>
           <textarea class="textarea__presu" name="desc_txt" required></textarea>
-
           <label class="modal__item-presu">Repuestos</label>
           <input class="modal__input-presu valor1 ar" type="text" name="repuestos_txt">
-
           <label class="modal__item-presu">Mano de Obra</label>
           <input class="modal__input-presu valor2 ar" type="text" name="mobra_txt" required>
-
-
           <label class="modal__item-presu">Total</label>
           <input class="modal__input-presu ar" type="text" name="total_txt" required>
-
-
-
           <label class="modal__item-presu">Seña</label>
           <input class="modal__input-presu ar" type="text" name="senia_txt">
-
-          <!-- <td class="modal__item-presu"></td>
-            <td class="modal__item-presu"></td>
-            <td class="modal__item-presu"></td>
-            <td class="modal__item-presu"></td> -->
-
           <label class="modal__item-presu">Saldo</label>
           <input class="modal__input-presu ar" type="text" name="abonado_txt">
-
           <label class="modal__item-presu">Validor por:</label>
           <input class="modal__inputDias-presu ar" type="text" name="dias_txt" required><span
             class="diasVale">días</span>
-
-
           <div class="modal__empresa">
             <button class="modal__cancel" type="reset">Cancelar</button>
             <button class="modal__close" type="submit">Aceptar</button>
