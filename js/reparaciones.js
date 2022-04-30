@@ -162,8 +162,8 @@ formARep.addEventListener("submit", async function (efr) {
 /** Limpio campos cargados al oprimir el boton cancelar **/
 formARep.addEventListener("reset", (ecam) => {
   formARep.reset();
-  ecam.stopPropagation();
-  ecam.preventDefault();
+  // ecam.stopPropagation();
+  // ecam.preventDefault();
   modal.classList.remove("modal--show");
 });
 
@@ -200,7 +200,7 @@ formERep.addEventListener("submit", async function (efer) {
 /** Limpio campos cargados al cancelar **/
 formERep.addEventListener("reset", (ecame) => {
   formERep.reset();
-  ecame.stopPropagation();
-  ecame.preventDefault();
+  // ecame.stopPropagation();
+  // ecame.preventDefault();
   modalE.classList.remove("modal--show");
 });

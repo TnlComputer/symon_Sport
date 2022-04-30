@@ -119,27 +119,65 @@
     </section>
 
     <section class="tablagen div__clientes">
-      <article class="fila tit__tabla">
-        <div class="col accion">
-          <input type="image" class="add__form" src="./assets/img/acciones/action_add.png" alt="Nuevo Cliente"
-            title="Nuevo Cliente">
-        </div>
-        <div class="col accion "> </div>
-        <div class="col accion "> </div>
-        <div class="col cuit tabla__show"> CUIT/CUIL/DNI </div>
-        <div class="col client"> Cliente </div>
-        <div class="col direccion tabla__show"> Dirección </div>
-        <div class="col loc tabla__show"> Localidad </div>
-        <div class="col pro tabla__show"> Provincia </div>
-        <div class="col cpost tabla__show"> Cod.Post. </div>
-        <div class="col contacto tabla__show"> Contacto </div>
-        <div class="col telefono tabla__show"> telefono </div>
-        <div class="col celular tabla__show"> Celular </div>
-        <div class="col mail tabla__show"> Mail </div>
-      </article>
+      <!-- <article class="fila tit__tabla"> -->
+      <table class="tit__tabla">
+        <tr>
+
+          <td class="col accion">
+            <input type="image" class="add__form" src="./assets/img/acciones/action_add.png" alt="Nuevo Cliente"
+              title="Nuevo Cliente">
+          </td>
+          <td class="col accion "> </td>
+          <td class="col accion "> </td>
+          <td class="col cuit tabla__show-48"> CUIT/DNI </td>
+          <td class="col client"> Cliente </td>
+          <td class="col direccion tabla__show-60"> Dirección </td>
+          <td class="col loc tabla__show-76"> Localidad </td>
+          <td class="col pro tabla__show-102"> Provincia </td>
+          <td class="col cpost tabla__show-102"> Cod.Post. </td>
+          <td class="col contacto tabla__show-120"> Contacto </td>
+          <td class="col telefono tabla__show"> telefono </td>
+          <td class="col celular tabla__show"> Celular </td>
+          <td class="col mail tabla__show"> Mail </td>
+        </tr>
+      </table>
+      <!-- </article> -->
       <article class="line__tabla"></article>
     </section>
   </main>
+
+  <!-- TEMPLATE Cliente -->
+  <template id="template__clientes">
+    <!-- <article class="fila"> -->
+    <table class="dat__tabla">
+      <tr>
+        <td class="col accion">
+          <input type="image" class="edit__form" src="./assets/img/acciones/reply.gif" alt="Edit Cliente"
+            title="Edit Cliente">
+        </td>
+        <td class="col accion">
+          <input type="image" class="veh__form" src="./assets/img/acciones/car-16.png" alt="Ver Vehículos"
+            name="id_cliente" title="Ver Vehículos">
+        </td>
+        <td class="col accion ">
+          <input type="image" class="usrCli__form" src="./assets/img/acciones/icons8-usuario-16.png"
+            alt="Usuarios del cliente" name="id_usrcli" title="Ver Usuarios del cliente">
+        </td>
+        <td class="col cuit cuit__c tabla__show-48"></td>
+        <td class="col client cliente__c"></td>
+        <td class="col direccion direccion__c tabla__show-60"></td>
+        <td class="col loc localidad__c tabla__show-76"></td>
+        <td class="col pro provincia__c tabla__show-102"></td>
+        <td class="col cpost cpost__c tabla__show-102"></td>
+        <td class="col contacto contacto__c tabla__show-120"></td>
+        <td class="col telefono telefono__c tabla__show"></td>
+        <td class="col celular celular__c tabla__show"></td>
+        <td class="col mail mail__c tabla__show"></td>
+      </tr>
+    </table>
+    <!-- </article> -->
+  </template>
+  <!-- FIN TEMPLATE CLIENTES -->
 
   <footer class="footer">
     <p class="origen">
@@ -219,57 +257,59 @@
     <div class="modal__container-clienV">
       <section class="V__cliente">
         <h2 class="modal__title">Vehículos del Cliente <span class="clienteTit"></span></h2>
-        <article class="fila tit__tabla">
-          <div class="col accion">
-            <input type="image" class="cerrar__VC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
-          </div>
-
-          <div class="col accion">
-            <input type="image" class="add__VC" src="./assets/img/acciones/action_add.png" title="Nuevo Vehiculo">
-          </div>
-          <div class="col patente">Patente</div>
-          <div class="col marca tabla__show">Marca</div>
-          <div class="col modelo">Modelo</div>
-          <div class="col anio">Año</div>
-        </article>
+        <table class="tit__tabla">
+          <tr>
+            <td class="col accion">
+              <input type="image" class="cerrar__VC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
+            </td>
+            <td class="col accion">
+              <input type="image" class="add__VC" src="./assets/img/acciones/action_add.png" title="Nuevo Vehiculo">
+            </td>
+            <td class="col patente">Patente</td>
+            <td class="col marca tabla__show-48">Marca</td>
+            <td class="col modelo tabla__show-48">Modelo</td>
+            <td class="col anio">Año</td>
+          </tr>
+        </table>
         <article class="line__VCDtabla"></article>
       </section>
 
       <!-- Titulos Reparaciones CLIENTE -->
       <section class="RepTit__clientes unshow">
-        <article class="fila tit__tabla">
-          <div class="col accion">
-            <input type="image" class="cerrar__RVC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
-          </div>
-          <div class="col fecIng">Fecha Ingreso</div>
-          <div class="col fecEnt">Fecha Entrega</div>
-          <!-- <div class="col accion">Obs</div> -->
-          <div class="col km tabla__show">KM</div>
-          <!-- <div class="col descript">Observaciones</div> -->
-          <div class="col npresu tabla__show">Presupuesto</div>
-          <div class="col factu tabla__show">Factura</div>
-        </article>
+        <table class="tit__tabla">
+          <tr>
+            <td class="col accion">
+              <input type="image" class="cerrar__RVC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
+            </td>
+            <td class="col fecIng">Fecha Ingreso</td>
+            <td class="col fecEnt">Fecha Entrega</td>
+            <td class="col km tabla__show-48">KM</td>
+            <td class="col npresu tabla__show-60">Presu</td>
+            <td class="col factu tabla__show-76">Factura</td>
+          </tr>
+        </table>
         <article class="line__RVCDtabla"></article>
       </section>
 
       <!-- Titulos Presupuestos Reparaciones CLIENTE -->
       <section class="PRepTit__clientes unshow">
-        <article class="fila tit__tabla">
-          <div class="col accion">
-            <input type="image" class="cerrar__PRVC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
-          </div>
-          <div class="col npresu">Presupuesto</div>
-          <div class="col fecIng tabla__show">Fecha Presup.</div>
-          <div class="col fecIng tabla__show">Fecha Ingreso</div>
-          <div class="col fecIng">Fecha Entregado</div>
-          <!-- <div class="col descript">Descripción</div> -->
-          <div class="col monto tabla__show">Repuestos</div>
-          <div class="col monto tabla__show">M. Obra</div>
-          <div class="col monto tabla__show">Total</div>
-          <div class="col monto tabla__show">Seña</div>
-          <div class="col monto tabla__show">Abonado</div>
-          <div class="col monto">Saldo</div>
-        </article>
+        <table class="tit__tabla">
+          <tr>
+            <td class="col accion">
+              <input type="image" class="cerrar__PRVC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
+            </td>
+            <td class="col npresu">Presu</td>
+            <td class="col fecIng">Fecha Presup.</td>
+            <td class="col fecIng tabla__show-48">Fecha Ingreso</td>
+            <td class="col fecIng tabla__show-48">Fecha Entregado</td>
+            <td class="col monto tabla__show-76">Repuestos</td>
+            <td class="col monto tabla__show-76">M. Obra</td>
+            <td class="col monto tabla__show-102">Total</td>
+            <td class="col monto tabla__show-102">Seña</td>
+            <td class="col monto tabla__show-120">Abonado</td>
+            <td class="col monto tabla__show-120">Saldo</td>
+          </tr>
+        </table>
         <article class="line__PRVCDtabla"></article>
       </section>
     </div>
@@ -330,100 +370,80 @@
     </article>
   </section>
 
-  <!-- TEMPLATE Cliente -->
-  <template id="template__clientes">
-    <article class="fila">
-      <div class="col accion">
-        <input type="image" class="edit__form" src="./assets/img/acciones/reply.gif" alt="Edit Cliente"
-          title="Edit Cliente">
-      </div>
-      <div class="col accion">
-        <input type="image" class="veh__form" src="./assets/img/acciones/car-16.png" alt="Ver Vehículos"
-          name="id_cliente" title="Ver Vehículos">
-      </div>
-      <div class="col accion ">
-        <input type="image" class="usrCli__form" src="./assets/img/acciones/icons8-usuario-16.png"
-          alt="Usuarios del cliente" name="id_usrcli" title="Ver Usuarios del cliente">
-      </div>
-      <div class="col cuit cuit__c tabla__show"></div>
-      <div class="col client cliente__c"></div>
-      <div class="col direccion direccion__c tabla__show"></div>
-      <div class="col loc localidad__c tabla__show"></div>
-      <div class="col pro provincia__c tabla__show"></div>
-      <div class="col cpost cpost__c tabla__show"></div>
-      <div class="col contacto contacto__c tabla__show"></div>
-      <div class="col telefono telefono__c tabla__show"></div>
-      <div class="col celular celular__c tabla__show"></div>
-      <div class="col mail mail__c tabla__show"></div>
-    </article>
-  </template>
-  <!-- FIN TEMPLATE CLIENTES -->
-
   <!--  DATOS reparaciones del vehiculo del Cliente -->
   <template id="RVDatos__clientes">
-    <article class="fila">
-      <div class="col accion">
-        <input type="image" class="presupuesto__form" src="./assets/img/acciones/icons8-costo-16.png"
-          alt="Ver Presupuesto" name="id_presu" title="Ver Presupuestos">
-      </div>
-      <div class="col fecIng fecIng__rc"></div>
-      <div class="col fecEnt fecEnt__rc"></div>
-      <!-- <div class="col accion">
-            <input type="image" class="muestro__descripcion" src="./assets/img/acciones/icons8-desplazamiento-verificado-16.png"
-              name="obs_txt" alt="Ver Descripción" title="Ver Descripción">
-          </div> -->
-      <div class="col km km__rc tabla__show"></div>
-      <!-- <div class="col descript obs__rc"></div> -->
-      <div class="col npresu presu__rc tabla__show"></div>
-      <div class="col factu fac__rc tabla__show"></div>
-    </article>
-    <article>
-      <!-- <article class="obs__cvr unshow"> -->
-      <div class="col accion"></div>
-      <div class="col descript-t tit__tabla">Observaciones</div>
-      <div class="col descript-d obs__rc"></div>
-    </article>
-    <!-- <article class="line__CRDet"></article> -->
+    <table class="dat__tabla">
+      <tr>
+        <td class="col accion">
+          <input type="image" class="presupuesto__form" src="./assets/img/acciones/icons8-costo-16.png"
+            alt="Ver Presupuesto" name="id_presu" title="Ver Presupuestos">
+        </td>
+        <td class="col fecIng fecIng__rc"></td>
+        <td class="col fecEnt fecEnt__rc"></td>
+        <td class="col km km__rc tabla__show-48"></td>
+        <td class="col npresu presu__rc tabla__show-60"></td>
+        <td class="col factu fac__rc tabla__show-60"></td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <td class="col accion tabla__show-102"></td>
+        <!-- </tr class="desc__60">
+      <tr class="desc__60"> -->
+        <td class="col descript-t tabla__show-48">Observaciones</td>
+        <!-- </tr class="desc__60">
+      <tr class="desc__60"> -->
+        <td class="col descript-d obs__rc tabla__show-48"></td>
+      </tr>
+    </table>
   </template>
 
   <!--  DATOS Presu reparac vehic Cliente -->
   <template id="PRVDatos__clientes">
-    <article class="fila">
-      <div class="col accion"></div>
-      <div class="col npresu presu__prc"></div>
-      <div class="col fecIng fecpresu__prc tabla__show"></div>
-      <div class="col fecIng fecIng__prc tabla__show"></div>
-      <div class="col fecIng fecEnt__prc"></div>
-      <div class="col monto repuestos__prc tabla__show"></div>
-      <div class="col monto mobra__prc tabla__show"></div>
-      <div class="col monto total__prc tabla__show"></div>
-      <div class="col monto senia__prc tabla__show"></div>
-      <div class="col monto abonado__prc tabla__show"></div>
-      <div class="col monto saldo__prc"></div>
-    </article>
-    <article>
-      <div class="col accion"></div>
-      <div class="col descript-t tit__tabla">Descripción</div>
-      <div class="col descript-d descript__prc"></div>
-    </article>
+    <table class="dat__tabla">
+      <tr>
+        <td class="col accion"></td>
+        <td class="col npresu presu__prc"></td>
+        <td class="col fecIng fecpresu__prc "></td>
+        <td class="col fecIng fecIng__prc tabla__show-48"></td>
+        <td class="col fecIng fecEnt__prc tabla__show-48"></td>
+        <td class="col monto repuestos__prc tabla__show-76"></td>
+        <td class="col monto mobra__prc tabla__show-76"></td>
+        <td class="col monto total__prc tabla__show-102"></td>
+        <td class="col monto senia__prc tabla__show-102"></td>
+        <td class="col monto abonado__prc tabla__show-120"></td>
+        <td class="col monto saldo__prc tabla__show-120"></td>
+      </tr>
+    </table>
+    <table>
+      <td class="col accion tabla__show-102"></td>
+      <!-- </tr class="desc__60">
+      <tr class="desc__60"> -->
+      <td class="col descript-t tabla__show-48">Descripción</td>
+      <!-- </tr class="desc__60">
+      <tr class="desc__60"> -->
+      <td class="col descript-d descript__prc tabla__show-48"></td>
+    </table>
   </template>
 
   <template id="vehDatos__clientes">
-    <article class="fila">
-      <div class="col accion">
-        <input type="image" class="editVeh__form" src="./assets/img/acciones/edit_16x16.gif" alt="Editar Vehículos"
-          name="patente" title="Editar Vehículos">
-      </div>
-      <div class="col accion">
-        <input type="image" class="reparaciones__form" src="./assets/img/acciones/icons8-llave-16.png"
-          alt="Ver Reparaciones" name="patente" title="Ver Reparaciones">
-      </div>
-      <div class=" col patente patente__c">
-      </div>
-      <div class="col marca marca__c tabla__show"></div>
-      <div class="col modelo modelo__c"></div>
-      <div class="col anio anio__c"></div>
-    </article>
+    <table class="dat__tabla">
+      <tr>
+        <td class="col accion">
+          <input type="image" class="editVeh__form" src="./assets/img/acciones/edit_16x16.gif" alt="Editar Vehículos"
+            name="patente" title="Editar Vehículos">
+        </td>
+        <td class="col accion">
+          <input type="image" class="reparaciones__form" src="./assets/img/acciones/icons8-llave-16.png"
+            alt="Ver Reparaciones" name="patente" title="Ver Reparaciones">
+        </td>
+        <td class=" col patente patente__c">
+        </td>
+        <td class="col marca marca__c tabla__show-48"></td>
+        <td class="col modelo modelo__c tabla__show-48"></td>
+        <td class="col anio anio__c"></td>
+      </tr>
+    </table>
   </template>
 
   <!--  DATOS reparaciones del vehiculo del Cliente -->

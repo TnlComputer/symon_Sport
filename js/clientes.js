@@ -169,7 +169,7 @@ agregoCliente.addEventListener("submit", async function (ac) {
 
 agregoCliente.addEventListener("reset", (cac) => {
   agregoCliente.reset();
-  cac.preventDefault();
+  // cac.preventDefault();
   modal.classList.remove("modal--show");
 });
 
@@ -205,7 +205,7 @@ utclie.addEventListener("click", async (eUserClientes) => {
 
 agregoUserCliente.addEventListener("reset", (cau) => {
   agregoUserCliente.reset();
-  cau.preventDefault();
+  // cau.preventDefault();
   modalUsr.classList.remove("modal--show");
 });
 

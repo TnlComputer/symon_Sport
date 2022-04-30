@@ -167,7 +167,7 @@ tablaGenerator.addEventListener("click", (event) => {
 
 addlinePresu.addEventListener("reset", (ecam) => {
   addlinePresu.reset();
-  ecam.preventDefault();
+  // ecam.preventDefault();
   modal.classList.remove("modal--show");
 });
 

@@ -1,5 +1,5 @@
 /* Menu */
-const toggleMenuElement = document.getElementById("toggle-menu");
+// const toggleMenuElement = document.getElementById("toggle-menu");
 const mainMenuElement = document.getElementById("main-menu");
 const ell = document.querySelector(".login");
 const elo = document.querySelector(".logout");
@@ -19,9 +19,9 @@ const respuesta = document.getElementById("respuesta");
 
 /************* MENU oculto o muestro en Moviles ***************/
 
-toggleMenuElement.addEventListener("click", () => {
-  mainMenuElement.classList.toggle("main-menu--show");
-});
+// toggleMenuElement.addEventListener("click", () => {
+//   mainMenuElement.classList.toggle("main-menu--show");
+// });
 
 /************* Valido y restringimos menues ***************/
 const $pathname = window.location.pathname;
