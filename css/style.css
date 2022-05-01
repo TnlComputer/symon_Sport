@@ -47,9 +47,21 @@ textarea {
   resize: none;
 }
 
+.footer a:visited {
+  text-decoration: none;
+  color: var(--text-ssp);
+}
+
+.footer a:active {
+  text-decoration: underline;
+  color: var(--text-negro);
+
+}
+
 .main {
   width: 100%;
-  height: auto;
+  height: 100%;
+  min-height: calc(100vh - 100px);
 }
 
 .social__link {
@@ -78,16 +90,13 @@ textarea {
 }
 
 .main-menu {
-  /* position: fixed; */
   width: 100%;
-  /* max-width: 100%; */
   display: flex;
   flex-direction: row;
   align-content: center;
   align-items: center;
   justify-content: space-around;
   list-style: none;
-  /* border: 2px solid transparent; */
   padding: 0;
 
 }
@@ -99,28 +108,8 @@ textarea {
   justify-content: space-around;
   list-style: none;
   padding: 0;
-
   display: none;
 }
-
-/* .main-menu__item {
-  padding: 5px;
-} */
-
-/* .main-logo {
-  margin: 10px auto;
-}
-
-.nav__item {
-  width: 12px;
-  margin: 0 10px 0 5px;
-  color: var(--color-secondary);
-}
-
-.linea {
-  font-weight: normal;
-  width: 100%;
-} */
 
 .none {
   display: none;
@@ -139,12 +128,16 @@ textarea {
 .sec-clientes {
   margin-left: auto;
   margin-right: auto;
-  width: 80%;
   color: var(--color-primary);
+}
+
+.sec-clientes {
+  width: 90%;
 }
 
 .main-descripcion {
   text-align: left;
+  width: 80%;
 }
 
 .img-index {
@@ -405,20 +398,21 @@ legend {
 }
 
 .footer {
-
   display: flex;
   align-items: flex-end;
   justify-content: center;
   /* position: fixed; */
+  /* margin-top: 40px; */
   margin-left: auto;
   margin-right: auto;
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 60px;
+  height: 40px;
   background-color: var(--menu-primary);
   font-size: 10px;
-  display: none;
+  text-decoration: none;
+  color: #ffffff;
 }
 
 .div__reparaciones,
@@ -434,11 +428,12 @@ legend {
 }
 
 .consultas__patentes {
-  /* background-color: #F26250; */
-  max-width: 320px;
-  min-width: 320px;
+  max-width: 300px;
+  min-width: 300px;
+  margin-top: 30px;
   margin-left: auto;
   margin-right: auto;
+  color: #ffffff;
 }
 
 /* .div__presupuestos {
@@ -562,12 +557,12 @@ legend {
 }
 
 .modal__container-clieUsr {
-  width: 100%;
-  min-width: 320px;
-  max-width: 320px;
+  /* width: 100%; */
+  min-width: 300px;
+  max-width: 300px;
   background-color: rgb(87, 92, 57);
   margin: auto;
-  font-size: 12px;
+  /* font-size: 12px; */
 }
 
 .modal__container-usrclie {
@@ -864,7 +859,7 @@ legend {
   align-content: center;
 }
 
-.tabla__show-32,
+.tabla__show-36,
 .tabla__show-48,
 .tabla__show-60,
 .tabla__show-76,
@@ -1049,6 +1044,11 @@ legend {
     color: orangered;
     background-color: #fff;
   }
+
+  .footer a:hover {
+    text-decoration: underline;
+    color: var(--text-negro);
+  }
 }
 
 @media screen and (min-width: 360px) {
@@ -1081,6 +1081,13 @@ legend {
     min-width: 340px;
   }
 
+  .modal__container-clieUsr {
+    max-width: 350px;
+    min-width: 350px;
+  }
+
+
+  .modal__container-clieUsr,
   .RepTit__clientes,
   .RVDatos__clientes,
   .PRepTit__clientes,
@@ -1107,24 +1114,17 @@ legend {
   }
 
   .div__clientes,
-  .vehDatos__clientes {
-    min-width: 470px;
+  .vehDatos__clientes,
+  .modal__container-clieUsr {
     max-width: 470px;
-    /* margin-left: auto;
-    margin-right: auto; */
+    min-width: 470px;
   }
 
   /* ventanas modal*/
-  .modal__container-clienV {
-    max-width: 460px;
-    min-width: 460px;
-  }
-
-  .V__cliente {
-    max-width: 460px;
-    min-width: 460px;
-  }
-
+  .consultas__patentes,
+  .modal__container-clienV,
+  .V__cliente,
+  .modal__container-clieUsr,
   .RepTit__clientes,
   .RVDatos__clientes,
   .PRepTit__clientes,
@@ -1173,6 +1173,7 @@ legend {
     min-width: 580px;
   }
 
+  .consultas__patentes,
   .RepTit__clientes,
   .RVDatos__clientes,
   .PRepTit__clientes,
@@ -1180,12 +1181,6 @@ legend {
     max-width: 580px;
     min-width: 580px;
   }
-
-  /* .main-section {
-    height: auto;
-    padding-top: 10px;
-    padding-bottom: 30px;
-  } */
 
   .main-descripcion {
     width: 600px;
@@ -1232,6 +1227,7 @@ legend {
     /* position: fixed; */
     display: flex;
     width: 100px;
+    padding-left: 30px;
   }
 
   .main-nav {
@@ -1285,15 +1281,10 @@ legend {
     min-width: 748px;
   }
 
-  /* .main-section { */
-  /* position: relative; */
-  /* top: 40px; */
-  /* width: 100%;
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 40px; */
-  /* } */
+  .consultas__patentes {
+    max-width: 748px;
+    min-width: 748px;
+  }
 
   .form__clientes {
     width: 100%;
@@ -1375,6 +1366,11 @@ legend {
     min-width: 914px;
   }
 
+  .consultas__patentes {
+    max-width: 940px;
+    min-width: 940px;
+  }
+
 }
 
 @media screen and (min-width: 1200px) {
@@ -1382,11 +1378,6 @@ legend {
   .tabla__show-120 {
     display: table-cell;
   }
-
-  /* .div__presupuestos {
-    max-width: 900px;
-    min-width: 900px;
-  } */
 
   .div__reparaciones {
     max-width: 1111px;
@@ -1397,8 +1388,6 @@ legend {
   .vehDatos__clientes {
     max-width: 1190px;
     max-width: 1190px;
-    /* margin-left: auto;
-    margin-right: auto; */
   }
 
   /* ventanas modal*/
@@ -1412,21 +1401,15 @@ legend {
     min-width: 1180px;
   }
 
+  .consultas__patentes {
+    max-width: 1040px;
+    min-width: 1040px;
+  }
 }
 
 @media screen and (min-width: 1440px) {
-
-  /* .none {
-    display: block;
-  } */
-
   .main-nav {
-    /* width: 1440px; */
-    /* align-items: center; */
     align-content: center;
-    /*
-    margin-left: auto;
-    margin-right: auto; */
   }
 
   .main-menu {
@@ -1456,25 +1439,12 @@ legend {
   .vehDatos__clientes {
     min-width: 1440px;
     max-width: 1440px;
-    /* margin-left: auto;
-    margin-right: auto; */
   }
 
 
-  .consultas__patentes {
+  /* .consultas__patentes {
     max-width: 1040px;
     min-width: 1040px;
-  }
-
-  /* .div__presupuestos {
-    max-width: 900px;
-    min-width: 900px;
-  }
-
-  .div__reparaciones {
-    width: 100%;
-    max-width: 1200px;
-    min-width: 1200px;
   } */
 
   /* ventanas modal*/
@@ -1545,17 +1515,6 @@ legend {
   .modal__title {
     font-size: 2.5rem;
   }
-
-  /* .fila {
-    display: table-row;
-    color: #ffffff;
-  } */
-
-  /* .col {
-    display: table-cell;
-    padding: 12px;
-    font-size: 16px;
-  } */
 
   .textarea__presu {
     height: 150px;

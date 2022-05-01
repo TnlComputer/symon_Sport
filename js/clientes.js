@@ -273,6 +273,7 @@ lvtclie.addEventListener("click", async function (cclie) {
     lprvtclie.classList.remove("show");
     lprvdclie.innerHTML = ``;
     // console.log(ptt);
+    // loadPatente(ptt);
     loadRVC(ptt);
   }
 
@@ -478,7 +479,6 @@ async function loadRVC(ptt) {
     });
     lrvtclie.classList.add("show");
     lrvdclie.appendChild(fragRVDClie);
-    // lvdclie.insertBefore(fragVehDClie);
   }
 }
 //  Prespuesto reparaciones del vehiculo del Cliente
@@ -502,6 +502,8 @@ async function loadPRVC(prc) {
   } else {
     resultadosprv.forEach((el) => {
       let saldo = 0;
+      let total = 0;
+      total = Number(el.repuestosl_presu) - Number(el.mobra_presu);
       saldo =
         Number(el.total_presu) -
         Number(el.senia_presu) -
@@ -515,7 +517,8 @@ async function loadPRVC(prc) {
       prvdclientes.querySelector(".repuestos__prc").textContent =
         el.repuestos_presu;
       prvdclientes.querySelector(".mobra__prc").textContent = el.mobra_presu;
-      prvdclientes.querySelector(".total__prc").textContent = el.total_presu;
+      prvdclientes.querySelector(".total__prc").textContent = total;
+      // prvdclientes.querySelector(".total__prc").textContent = el.total_presu;
       prvdclientes.querySelector(".mobra__prc").textContent = el.senia_presu;
       prvdclientes.querySelector(".abonado__prc").textContent =
         el.abonado_presu;

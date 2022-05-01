@@ -122,7 +122,6 @@
       <!-- <article class="fila tit__tabla"> -->
       <table class="tit__tabla">
         <tr>
-
           <td class="col accion">
             <input type="image" class="add__form" src="./assets/img/acciones/action_add.png" alt="Nuevo Cliente"
               title="Nuevo Cliente">
@@ -178,12 +177,6 @@
     <!-- </article> -->
   </template>
   <!-- FIN TEMPLATE CLIENTES -->
-
-  <footer class="footer">
-    <p class="origen">
-      Diseñado por <a href="http://tnlcomputer.com.ar"> @TNLCOMPUTER</a>
-    </p>
-  </footer>
 
   <!-- MODAL ALTA/EDIT CLIENTES  -->
   <section class="modal">
@@ -320,21 +313,23 @@
     <div class="modal__container-clieUsr">
       <section class="usr__cliente">
         <h2 class="modal__title">Usuarios del Cliente <span class="clienteTit"></span></h2>
-        <article class="fila tit__tabla">
-          <div class="col accion">
-            <input type="image" class="cerrar__UC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar"
-              alt="Cerrar">
-          </div>
-          <div class="col accion">
-            <input type="image" class="add__UC" src="./assets/img/acciones/action_add.png" title="Nuevo Usuario"
-              name="id_cliente_txt" alt="Nuevo Usuario">
-          </div>
-          <div class="col usuario">Usuario</div>
-          <div class="col clave none">Contraseña</div>
-          <div class="col nombre">Nombre</div>
-          <div class="col apellido">Apellido</div>
-          <div class="col none dni">DNI</div>
-        </article>
+        <table class="tit__tabla">
+          <tr>
+            <td class="col accion">
+              <input type="image" class="cerrar__UC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar"
+                alt="Cerrar">
+            </td>
+            <td class="col accion">
+              <input type="image" class="add__UC" src="./assets/img/acciones/action_add.png" title="Nuevo Usuario"
+                name="id_cliente_txt" alt="Nuevo Usuario">
+            </td>
+            <td class="col usuario">Usuario</td>
+            <td class="col clave none">Contraseña</td>
+            <td class="col nombre">Nombre</td>
+            <td class="col apellido  tabla__show-36">Apellido</td>
+            <td class="col none dni  tabla__show-48">DNI</td>
+          </tr>
+        </table>
         <article class="line__UCDtabla"></article>
       </section>
     </div>
@@ -448,24 +443,26 @@
 
   <!--  DATOS reparaciones del vehiculo del Cliente -->
   <template id="usrDatos__clientes">
-    <article class="fila">
-
-      <div class="col accion">
-        <input type="image" class="edit__UC" src="./assets/img/acciones/edit_16x16.gif" title="Editar Usuario"
-          alt="Editar Usuario">
-      </div>
-      <div class="col accion"> </div>
-
-      <!-- <div class="col user iduser__uc"></div> -->
-      <!-- <div class="col cliente id_cliente__uc"></div> -->
-      <div class="col usuario usuario__uc"></div>
-      <div class="col clave none clave__uc"></div>
-      <div class="col nombre nombre__uc"></div>
-      <div class="col apellido apellido__uc"></div>
-      <div class="col dni none dni__uc"></div>
-      <!-- <div class="col nivel nivel__uc"></div> -->
-    </article>
+    <table class="dat__tabla">
+      <tr>
+        <td class="col accion">
+          <input type="image" class="edit__UC" src="./assets/img/acciones/edit_16x16.gif" title="Editar Usuario"
+            alt="Editar Usuario">
+        </td>
+        <td class="col accion"> </td>
+        <td class="col usuario usuario__uc"></td>
+        <td class="col clave none clave__uc"></td>
+        <td class="col nombre nombre__uc"></td>
+        <td class="col apellido apellido__uc  tabla__show-36"></td>
+        <td class="col dni none dni__uc  tabla__show-48"></td>
+      </tr>
+    </table>
   </template>
+  <footer class="footer">
+    <p class="origen">
+      Diseñado por <a href="http://tnlcomputer.com.ar"> @TNLCOMPUTER</a>
+    </p>
+  </footer>
 
 
   <script src="js/scripts.js" defer></script>

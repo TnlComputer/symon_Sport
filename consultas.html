@@ -126,17 +126,19 @@
     </section>
 
     <section class="consultas__patentes">
-      <article class="fila tit__tabla none">
-        <div class="col patente">Patente</div>
-        <div class="col fecha">Ingreso</div>
-        <div class="col fecha">Entrega</div>
-        <div class="col client">Cliente</div>
-        <div class="col marca">Marca</div>
-        <div class="col modelo">Modelo</div>
-        <!-- <div class="col descript">Observaciones</div> -->
-        <div class="col factu">Factura</div>
-        <div class="col presu">Presupuesto </div>
-      </article>
+      <table class="tit__tabla none">
+        <tr>
+          <td class="col patente">Patente</td>
+          <td class="col fecha">Ingreso</td>
+          <td class="col fecha tabla__show-48">Entrega</td>
+          <td class="col client tabla__show-60">Cliente</td>
+          <td class="col marca tabla__show-76">Marca</td>
+          <td class="col modelo tabla__show-76">Modelo</td>
+          <!-- <div class="col descript">Observaciones</div> -->
+          <td class="col factu tabla__show-102">Factura</td>
+          <td class="col presu tabla__show-120">Presupuesto </td>
+        </tr>
+      </table>
       <article class="line__tabla"></article>
     </section>
   </main>
@@ -147,24 +149,26 @@
   </footer>
 
   <template id="temp__datos-patentes">
-    <article class="fila ">
-      <div class="col patente patente__t"></div>
-      <div class="col fecha fecha__t"></div>
-      <div class="col fecha fecha__e"></div>
-      <div class="col client client__t"></div>
-      <div class="col marca marca__t"></div>
-      <div class="col modelo modelo__t"></div>
-      <!-- <div class="col descript descript__t"></div> -->
-      <div class="col factu factu__t"></div>
-      <div class="col presu presu__t"></div>
-    </article>
-    <article>
-      <!-- <div class="col accion"></div> -->
-      <div class="col accion"></div>
-      <div class="col descript-t tit__tabla">Observaciones</div>
-      <div class="col descript-d descript__t"></div>
-      <br>
-    </article>
+    <table class="dat__tabla ">
+      <tr>
+        <td class="col patente patente__t"></td>
+        <td class="col fecha fecha__t"></td>
+        <td class="col fecha fecha__e tabla__show-48"></td>
+        <td class="col client client__t tabla__show-60"></td>
+        <td class="col marca marca__t tabla__show-76"></td>
+        <td class="col modelo modelo__t tabla__show-76"></td>
+        <td class="col factu factu__t tabla__show-102"></td>
+        <td class="col presu presu__t tabla__show-120"></td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <!-- <div class="col accion"></div> -->
+        <td class="col accion tabla__show-60"></td>
+        <td class="col descript-t tabla__show-60">Observaciones</td>
+        <td class="col descript-d descript__t tabla__show-60"></td>
+      </tr>
+    </table>
   </template>
 
   <script src="js/scripts.js" defer></script>
