@@ -152,12 +152,72 @@ tablaGenerator.addEventListener("click", (event) => {
     addlinePresu.id_cliente_txt.value = event.target.dataset.id_cliente;
     addlinePresu.id_vehiculo_txt.value = event.target.dataset.id_vehiculo;
     addlinePresu.desc_txt.value = event.target.dataset.descripcion_presu;
-    addlinePresu.total_txt.value = event.target.dataset.total_presu;
-    addlinePresu.repuestos_txt.value = event.target.dataset.repuestos_presu;
-    addlinePresu.mobra_txt.value = event.target.dataset.mobra_presu;
+
+    let $saldo = 0;
+    let $total = 0;
+    let $repuestos = 0;
+    let $mobra = 0;
+    let $senia = 0;
+    let $abonado = 0;
+
+    // $repuestos = Number(el.repuestos_presu);
+    if (
+      event.target.dataset.repuestos_presu === "NaN" ||
+      event.target.dataset.repuestos_presu === "undefined" ||
+      event.target.dataset.repuestos_presu === "null"
+    ) {
+      $repuestos = 0;
+    } else {
+      $repuestos = Number(event.target.dataset.repuestos_presu);
+    }
+    // console.log("REPU", el.repuestos_presu);
+    // console.log($repuestos);
+
+    // $mobra = el.mobra_presu;
+    if (
+      event.target.dataset.mobra_presu === "NaN" ||
+      event.target.dataset.mobra_presu === "undefined" ||
+      event.target.dataset.mobra_presu === "null"
+    ) {
+      $mobra = 0;
+    } else {
+      $mobra = Number(event.target.dataset.mobra_presu);
+    }
+
+    if (
+      event.target.dataset.senia_presu === "NaN" ||
+      event.target.dataset.senia_presu === "undefined" ||
+      event.target.dataset.senia_presu === "null"
+    ) {
+      $senia = 0;
+      // console.log("$senia", $senia);
+    } else {
+      $senia = Number(event.target.dataset.senia_presu);
+      // console.log("el.senia", el.senia_presu);
+    }
+    // console.log("el.senia", el.senia_presu);
+    if (
+      event.target.dataset.abonado_presu === "NaN" ||
+      event.target.dataset.abonado_presu === "undefined" ||
+      event.target.dataset.abonado_presu === "null"
+    ) {
+      $abonado = 0;
+    } else {
+      $abonado = Number(event.target.dataset.abonado_presu);
+    }
+
+    $total = Number($repuestos) + Number($mobra);
+    // $total = $repuestos + $mobra;
+
+    // $saldo = $total - $senia - $abonado;
+    $saldo = Number($total) - Number($senia) - Number($abonado);
+
+    addlinePresu.repuestos_txt.value = $repuestos;
+    addlinePresu.mobra_txt.value = $mobra;
+    addlinePresu.total_txt.value = $total;
+    addlinePresu.senia_txt.value = $senia;
+    addlinePresu.abonado_txt.value = $saldo;
     addlinePresu.dias_txt.value = event.target.dataset.dias_presu;
-    addlinePresu.senia_txt.value = event.target.dataset.senia_presu;
-    addlinePresu.abonado_txt.value = event.target.dataset.abonado_presu;
   }
   // if (event.target.closest(".sumar")) {
   //   calcular(event.target.repuestos_txt.value, event.target.mobra_txt.value);
