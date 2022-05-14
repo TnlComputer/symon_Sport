@@ -2,8 +2,8 @@
 function conectarse()
 {
 	$hostDb = "localhost";
-	$nomDb = "tnlcom55_ssp";
-	$userDb = "tnlcom55_ssp";
+	$nomDb = "symonsport_db";
+	$userDb = "symonsport_db";
 	$passDb = "Camisa00!QW";
 
 	$conectar = new mysqli($hostDb,$userDb,$passDb,$nomDb); 

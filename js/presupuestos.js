@@ -33,6 +33,7 @@ async function loadPresupuestos() {
           No hay presupuestos emitidos
           </div>`;
   } else {
+    consPresuDatos.innerHTML = ``;
     resultados.forEach((el) => {
       templatePresu.querySelector(".edit__form").dataset.id_presu = el.id_presu;
       templatePresu.querySelector(".edit__form").dataset.id_vehiculo =
@@ -67,9 +68,70 @@ async function loadPresupuestos() {
       templatePresu.querySelector(".marca__p").textContent = el.marca;
       templatePresu.querySelector(".modelo__p").textContent = el.modelo;
       templatePresu.querySelector(".fecha__p").textContent = el.fecha_presu;
+
+      let $saldo = 0;
+      let $total = 0;
+      let $repuestos = 0;
+      let $mobra = 0;
+      let $senia = 0;
+      let $abonado = 0;
+
+      // $repuestos = Number(el.repuestos_presu);
+      if (
+        el.repuestos_presu === "NaN" ||
+        el.repuestos_presu === "undefined" ||
+        el.repuestos_presu === "null"
+      ) {
+        $repuestos = 0;
+      } else {
+        $repuestos = Number(el.repuestos_presu);
+      }
+      console.log("REPU", el.repuestos_presu);
+      console.log($repuestos);
+
+      // $mobra = el.mobra_presu;
+      if (
+        el.mobra_presu === "NaN" ||
+        el.mobra_presu === "undefined" ||
+        el.mobra_presu === "null"
+      ) {
+        $mobra = 0;
+      } else {
+        $mobra = Number(el.mobra_presu);
+      }
+
+      if (
+        el.senia_presu === "NaN" ||
+        el.senia_presu === "undefined" ||
+        el.senia_presu === "null"
+      ) {
+        $senia = 0;
+        // console.log("$senia", $senia);
+      } else {
+        $senia = Number(el.senia_presu);
+        console.log("el.senia", el.senia_presu);
+      }
+      console.log("el.senia", el.senia_presu);
+      if (
+        el.abonado_presu === "NaN" ||
+        el.abonado_presu === "undefined" ||
+        el.abonado_presu === "null"
+      ) {
+        $abonado = 0;
+      } else {
+        $abonado = Number(el.abonado_presu);
+      }
+
+      $total = Number($repuestos) + Number($mobra);
+      // $total = $repuestos + $mobra;
+
+      // $saldo = $total - $senia - $abonado;
+      $saldo = $total - (Number($senia) + Number($abonado));
+
       templatePresu.querySelector(
         ".monto__p"
       ).textContent = `$ ${el.total_presu}`;
+      templatePresu.querySelector(".saldo__p").textContent = $saldo;
       templatePresu.querySelector(".descript__p").textContent =
         el.descripcion_presu;
       const clone = templatePresu.cloneNode(true);
@@ -78,6 +140,7 @@ async function loadPresupuestos() {
     consPresuDatos.appendChild(fragmentPresu);
   }
 }
+// consPresuDatos.innerHTML = ``;
 loadPresupuestos();
 
 //agrego un listener unico al contenedor en donde se encuentra el boton de agregar reparación y toda la tabla de los productos
@@ -135,6 +198,7 @@ tablaGenerator.addEventListener("click", (event) => {
     } else {
       addlinePresu.reset();
       modal.classList.remove("modal--show");
+      consPresuDatos.innerHTML = ``;
       loadPresupuestos();
     }
   });
@@ -152,12 +216,72 @@ tablaGenerator.addEventListener("click", (event) => {
     addlinePresu.id_cliente_txt.value = event.target.dataset.id_cliente;
     addlinePresu.id_vehiculo_txt.value = event.target.dataset.id_vehiculo;
     addlinePresu.desc_txt.value = event.target.dataset.descripcion_presu;
-    addlinePresu.total_txt.value = event.target.dataset.total_presu;
-    addlinePresu.repuestos_txt.value = event.target.dataset.repuestos_presu;
-    addlinePresu.mobra_txt.value = event.target.dataset.mobra_presu;
+
+    let $saldo = 0;
+    let $total = 0;
+    let $repuestos = 0;
+    let $mobra = 0;
+    let $senia = 0;
+    let $abonado = 0;
+
+    // $repuestos = Number(el.repuestos_presu);
+    if (
+      event.target.dataset.repuestos_presu === "NaN" ||
+      event.target.dataset.repuestos_presu === "undefined" ||
+      event.target.dataset.repuestos_presu === "null"
+    ) {
+      $repuestos = 0;
+    } else {
+      $repuestos = Number(event.target.dataset.repuestos_presu);
+    }
+    // console.log("REPU", el.repuestos_presu);
+    // console.log($repuestos);
+
+    // $mobra = el.mobra_presu;
+    if (
+      event.target.dataset.mobra_presu === "NaN" ||
+      event.target.dataset.mobra_presu === "undefined" ||
+      event.target.dataset.mobra_presu === "null"
+    ) {
+      $mobra = 0;
+    } else {
+      $mobra = Number(event.target.dataset.mobra_presu);
+    }
+
+    if (
+      event.target.dataset.senia_presu === "NaN" ||
+      event.target.dataset.senia_presu === "undefined" ||
+      event.target.dataset.senia_presu === "null"
+    ) {
+      $senia = 0;
+      // console.log("$senia", $senia);
+    } else {
+      $senia = Number(event.target.dataset.senia_presu);
+      // console.log("el.senia", el.senia_presu);
+    }
+    // console.log("el.senia", el.senia_presu);
+    if (
+      event.target.dataset.abonado_presu === "NaN" ||
+      event.target.dataset.abonado_presu === "undefined" ||
+      event.target.dataset.abonado_presu === "null"
+    ) {
+      $abonado = 0;
+    } else {
+      $abonado = Number(event.target.dataset.abonado_presu);
+    }
+
+    $total = Number($repuestos) + Number($mobra);
+    // $total = $repuestos + $mobra;
+
+    // $saldo = $total - $senia - $abonado;
+    $saldo = $total - (Number($senia) + Number($abonado));
+
+    addlinePresu.repuestos_txt.value = $repuestos;
+    addlinePresu.mobra_txt.value = $mobra;
+    addlinePresu.total_txt.value = $total;
+    addlinePresu.senia_txt.value = $senia;
+    addlinePresu.abonado_txt.value = $saldo;
     addlinePresu.dias_txt.value = event.target.dataset.dias_presu;
-    addlinePresu.senia_txt.value = event.target.dataset.senia_presu;
-    addlinePresu.abonado_txt.value = event.target.dataset.abonado_presu;
   }
   // if (event.target.closest(".sumar")) {
   //   calcular(event.target.repuestos_txt.value, event.target.mobra_txt.value);
@@ -167,7 +291,7 @@ tablaGenerator.addEventListener("click", (event) => {
 
 addlinePresu.addEventListener("reset", (ecam) => {
   addlinePresu.reset();
-  ecam.preventDefault();
+  // ecam.preventDefault();
   modal.classList.remove("modal--show");
 });
 

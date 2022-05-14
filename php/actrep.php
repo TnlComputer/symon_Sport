@@ -8,6 +8,8 @@ $presu = $_POST['presuER_slc'];
 $fecIni = $_POST["fecha_txt"];
 $obs = $_POST['obs_txt'];
 $km = $_POST['km_txt'];
+$fechaEnt = $_POST['fechaEnt_txt'];
+$factura = $_POST['factura_txt'];
 
 // id_trabajo
 // id_cliente
@@ -20,7 +22,7 @@ $km = $_POST['km_txt'];
 // fecha_entrega
 // km
 
-     $datosU="UPDATE reparaciones SET fecha_trab='".$fecIni."', km='".$km."',  observaciones='".$obs."' WHERE  id_trabajo='".$reparacion."'";
+     $datosU="UPDATE reparaciones SET fecha_trab='".$fecIni."', fecha_entrega='".$fechaEnt."', km='".$km."',  factura='".$factura."',  observaciones='".$obs."' WHERE  id_trabajo='".$reparacion."'";
 
     $conexionApi->query($datosU);
 

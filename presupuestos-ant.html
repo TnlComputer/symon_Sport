@@ -113,32 +113,143 @@
     </nav>
     <section class="main-section">
       <h1><span>S</span>YMON <span>S</span>PORT</h1>
-      <div class="div__main-login">
-        <form id="form__login" class="form__login" action="" method="post">
-          <fieldset class="login__fieldset">
-            <legend>Login</legend>
-            <div class="div__login">
-              <label for="user_txt">Usuario </label>
-              <input type="text" name="user_txt" placeholder="Ingrese su usuario" required>
-            </div>
-            <div class="div__pass">
-              <label for="pass_txt">Contraseña </label>
-              <input type="password" name="pass_txt" placeholder="Ingrese su contraseña" required>
-            </div>
-            <input type="submit" value="INGRESAR" class="div__button">
-          </fieldset>
-        </form>
-        <div id="respuesta" class="respuesta"></div>
-      </div>
+      <article class="sec-clientes">
+        <h2>PRESUPUESTOS</h2>
+      </article>
+    </section>
+
+    <section class="tablagen div__presupuestos">
+      <article class="fila tit__tabla">
+        <div class="col accion">
+          <input type="image" class="add__form" src="./assets/img/acciones/action_add.png" alt="Nuevo Presupuesto">
+        </div>
+        <div class="col fecha">Ingreso</div>
+        <div class="col presu">Presupuesto</div>
+        <div class="col client">Cliente</div>
+        <div class="col patente">Patente</div>
+        <div class="col marca">Marca</div>
+        <div class="col modelo">Modelo</div>
+        <div class="col monto">Importe</div>
+        <!-- <div class="col descript">Descripción</div> -->
+        <!-- <div class="col accion"></div> -->
+      </article>
+      <article class="line__tabla"></article>
     </section>
   </main>
+
   <footer class="footer">
     <p class="origen">
       Diseñado por <a href="http://tnlcomputer.com.ar"> @TNLCOMPUTER</a>
     </p>
   </footer>
-  <!-- <script src="js/login.js" defer></script> -->
-  <script src="js/scripts.js" defer></script>
+
+  <template id="template__Presupuestos">
+    <article class="fila ">
+      <div class="col accion">
+        <input type="image" class="edit__form" src="./assets/img/acciones/reply.gif" alt="Edit Presupuesto">
+      </div>
+      <div class="col fecha fecha__p"></div>
+      <div class="col presu presu__p"></div>
+      <div class="col client client__p"></div>
+      <div class="col patente patente__p"></div>
+      <div class="col marca marca__p"></div>
+      <div class="col modelo modelo__p"></div>
+      <div class="col monto monto__p"></div>
+      <!-- <div class="col descript descript__p"></div> -->
+    </article>
+    <article>
+      <!-- <div class="col accion"></div> -->
+      <div class="col accion"></div>
+      <div class="col descript-t">Descripción</div>
+      <div class="col descript-d descript__p"></div>
+      <br>
+    </article>
+  </template>
+
+  <section class="modal">
+    <div class="modal__container-presu">
+      <h2 class="modal__title">Presupuesto</h2>
+
+      <form class="alp__form">
+        <fieldset class="model__presu-fieldset">
+
+          <label class="modal__item-fec" for="fecha_txt">Fecha</label>
+          <input class="modal__input-fec" type="hidden" name="id_presu_txt">
+          <input class="modal__input-fec" type="hidden" name="id_cliente_txt">
+          <input class="modal__input-fec" type="hidden" name="id_vehiculo_txt">
+
+          <input class="modal__input-fec" type="date" name="fecha_txt" required>
+          <span class="modal__cliente-presu"></span>
+          <br>
+          <label class="modal__item-pat" for="patente_slc">Patente</label>
+          <select class="modal__input-pat slc-patente" name="patente_slc" id="patente_slc" required>
+          </select>
+          <!-- <div class="modal_empresa"> -->
+          <span class="modal__marca-presu"></span>
+          <span class="modal__modelo-presu"></span>
+          <!-- </div> -->
+
+          <div class="modal__textarea-item"> Detalle </div>
+          <div class="modal__textarea-item">
+            <textarea class="textarea__presu" name="desc_txt" required></textarea>
+          </div>
+
+          <table>
+            <tr>
+              <td class="modal__item-presu">Repuestos</td>
+              <td>
+                <input class="modal__input-imp valor1" type="text" name="repuestos_txt">
+              </td>
+              <td class="modal__item-presu">Mano de Obra</td>
+              <td>
+                <input class="modal__input-imp valor2" type="text" name="mobra_txt" required>
+              </td>
+              <td class="modal__item-presu">Total</td>
+              <td class="modal__input-presu">
+                <input class="modal__input-imp" type="text" name="total_txt" required>
+              </td>
+            </tr>
+            <tr>
+              <td class="modal__item-presu">Validor por:</td>
+              <td class="modal__input-presu">
+                <input class="modal__input-imp" type="text" name="dias_txt" required>
+              </td>
+              <td colspan="2">días</td>
+              <td class="modal__item-presu">Seña</td>
+              <td><input class="modal__input-imp" type="text" name="senia_txt"></td>
+
+            </tr>
+            <tr>
+              <!-- <td class="modal__item-presu">Fecha Inicio:</td>
+              <td class="modal__item-presu">
+                <input class="modal__input-imp" type="date" name="fecIni_txt">
+              </td>
+              <td class="modal__item-presu">Fecha Retiro:</td>
+              <td class="modal__item-presu">
+                <input class="modal__input-imp" type="date" name="fecRet_txt">
+              </td> -->
+              <td class="modal__item-presu"></td>
+              <td class="modal__item-presu"></td>
+              <td class="modal__item-presu"></td>
+              <td class="modal__item-presu"></td>
+
+              <td class="modal__item-imp">Abonado</td>
+              <td class="modal__item-presu"><input class="modal__input-imp" type="text" name="abonado_txt"></td>
+
+            </tr>
+          </table>
+          <div class="modal__empresa">
+            <button class="modal__cancel" type="reset">Cancelar</button>
+            <button class="modal__close" type="submit">Aceptar</button>
+          </div>
+      </form>
+      <div id="modal__alert"></div>
+      </fieldset>
+    </div>
+  </section>
+
+  <script src="js/scripts.js"></script>
+  <script src="js/presupuestos.js"></script>
 </body>
 
 </html>

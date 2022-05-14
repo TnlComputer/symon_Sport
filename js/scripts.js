@@ -1,5 +1,5 @@
 /* Menu */
-const toggleMenuElement = document.getElementById("toggle-menu");
+// const toggleMenuElement = document.getElementById("toggle-menu");
 const mainMenuElement = document.getElementById("main-menu");
 const ell = document.querySelector(".login");
 const elo = document.querySelector(".logout");
@@ -19,9 +19,9 @@ const respuesta = document.getElementById("respuesta");
 
 /************* MENU oculto o muestro en Moviles ***************/
 
-toggleMenuElement.addEventListener("click", () => {
-  mainMenuElement.classList.toggle("main-menu--show");
-});
+// toggleMenuElement.addEventListener("click", () => {
+//   mainMenuElement.classList.toggle("main-menu--show");
+// });
 
 /************* Valido y restringimos menues ***************/
 const $pathname = window.location.pathname;
@@ -31,9 +31,9 @@ fetch("./php/valido.php")
     // console.log(data);
     if (dataU === "inexistente") {
       if (
-        $pathname != "/ssp/index.html" &&
-        $pathname != "/ssp/contacto.html" &&
-        $pathname != "/ssp/login.html"
+        $pathname != "/index.html" &&
+        $pathname != "/contacto.html" &&
+        $pathname != "/login.html"
       ) {
         document.location.href = "index.html";
       }
@@ -147,20 +147,25 @@ if (cPatente) {
 
           consPatDatos.innerHTML = ``;
           dataP.forEach((ele) => {
-            templateCons.querySelector(".patente__t").textContent = ele.patente;
+            // templateCons.querySelector(".patente__t").textContent = ele.patente;
             templateCons.querySelector(".fecha__t").textContent =
               ele.fecha_trab;
             templateCons.querySelector(".fecha__e").textContent =
               ele.fecha_entrega;
-            templateCons.querySelector(".client__t").textContent =
-              ele.empresa_nyp;
+            // templateCons.querySelector(".client__t").textContent =
+            //   ele.empresa_nyp;
             templateCons.querySelector(".marca__t").textContent = ele.marca;
             templateCons.querySelector(".modelo__t").textContent = ele.modelo;
-            templateCons.querySelector(".descript__t").textContent =
-              ele.observaciones;
-            templateCons.querySelector(".factu__t").textContent = ele.factura;
+            templateCons.querySelector(".km__t").textContent = ele.km;
             templateCons.querySelector(".presu__t").textContent =
               ele.presupuesto;
+            templateCons.querySelector(
+              ".total__t"
+            ).textContent = `$ ${ele.total_presu}
+            `;
+            // templateCons.querySelector(".factu__t").textContent = ele.factura;
+            templateCons.querySelector(".descript__t").textContent =
+              ele.observaciones;
             const clone = templateCons.cloneNode(true);
             fragmentCons.appendChild(clone);
           });

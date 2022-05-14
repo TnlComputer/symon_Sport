@@ -42,7 +42,7 @@ if (isset($_POST)){
     ];
   }
 
-  header("Access-Control-Allow-Origin: https://tnlcomputer.com.ar/ssp");
+  header("Access-Control-Allow-Origin: https://symonsport.com.ar");
   header(`Content-type: application/json`);
   echo json_encode($res);
   exit;

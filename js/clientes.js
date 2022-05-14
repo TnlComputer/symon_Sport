@@ -96,17 +96,13 @@ tablaGenerator.addEventListener("click", async (event) => {
   // console.log(event.target);
 
   if (event.target.closest(".add__form")) {
+    // event.defaultPrevented();
     modal.classList.add("modal--show");
   }
 
   if (event.target.closest(".edit__form")) {
+    // event.defaultPrevented();
     modal.classList.add("modal--show");
-
-    /** PROBAR LO DEL SELECT**/
-    // opcion para seleccion el id que necesito mostrar en el select
-    // const miSelect = document.getElementById("idSelect");
-    // const selecionado = miSelect.options[miSelect.selectedIndex].value;
-
     agregoCliente.id_cliente_txt.value = event.target.dataset.id_cliente;
     agregoCliente.cuit_txt.value = event.target.dataset.cuit;
     agregoCliente.empers_txt.value = event.target.dataset.empresa_nyp;
@@ -121,6 +117,7 @@ tablaGenerator.addEventListener("click", async (event) => {
   }
 
   if (event.target.matches(".veh__form")) {
+    // event.defaultPrevented();
     id = event.target.dataset.id_cliente;
     lvtclie.classList.add("modal--show");
     lvdclie.innerHTML = ``;
@@ -172,7 +169,7 @@ agregoCliente.addEventListener("submit", async function (ac) {
 
 agregoCliente.addEventListener("reset", (cac) => {
   agregoCliente.reset();
-  cac.preventDefault();
+  // cac.preventDefault();
   modal.classList.remove("modal--show");
 });
 
@@ -208,7 +205,7 @@ utclie.addEventListener("click", async (eUserClientes) => {
 
 agregoUserCliente.addEventListener("reset", (cau) => {
   agregoUserCliente.reset();
-  cau.preventDefault();
+  // cau.preventDefault();
   modalUsr.classList.remove("modal--show");
 });
 
@@ -276,6 +273,7 @@ lvtclie.addEventListener("click", async function (cclie) {
     lprvtclie.classList.remove("show");
     lprvdclie.innerHTML = ``;
     // console.log(ptt);
+    // loadPatente(ptt);
     loadRVC(ptt);
   }
 
@@ -289,7 +287,7 @@ lvtclie.addEventListener("click", async function (cclie) {
   // Presupuestos reparaciones Vehiculos Cliente
   if (cclie.target.matches(".presupuesto__form")) {
     prc = cclie.target.dataset.presupuesto;
-    console.log(prc);
+    // console.log(prc);
     loadPRVC(prc);
   }
 
@@ -383,7 +381,9 @@ async function loadUC(idcli) {
         tempUsrClie.querySelector(".edit__UC").dataset.dni = eluc.dni;
 
         tempUsrClie.querySelector(".usuario__uc").textContent = eluc.usuario;
-        tempUsrClie.querySelector(".clave__uc").textContent = eluc.clave;
+
+        tempUsrClie.querySelector(".clave__uc").textContent = "**********";
+        // tempUsrClie.querySelector(".clave__uc").textContent = eluc.clave;
         tempUsrClie.querySelector(".nombre__uc").textContent = eluc.nombre;
         tempUsrClie.querySelector(".apellido__uc").textContent = eluc.apellido;
         tempUsrClie.querySelector(".dni__uc").textContent = eluc.dni;
@@ -479,7 +479,6 @@ async function loadRVC(ptt) {
     });
     lrvtclie.classList.add("show");
     lrvdclie.appendChild(fragRVDClie);
-    // lvdclie.insertBefore(fragVehDClie);
   }
 }
 //  Prespuesto reparaciones del vehiculo del Cliente
@@ -502,25 +501,79 @@ async function loadPRVC(prc) {
           </div>`;
   } else {
     resultadosprv.forEach((el) => {
-      let saldo = 0;
-      saldo =
-        Number(el.total_presu) -
-        Number(el.senia_presu) -
-        Number(el.abonado_presu);
+      let $saldo = 0;
+      let $total = 0;
+      let $repuestos = 0;
+      let $mobra = 0;
+      let $senia = 0;
+      let $abonado = 0;
+
+      // $repuestos = Number(el.repuestos_presu);
+      if (
+        el.repuestos_presu === "NaN" ||
+        el.repuestos_presu === "undefined" ||
+        el.repuestos_presu === "null"
+      ) {
+        $repuestos = 0;
+      } else {
+        $repuestos = Number(el.repuestos_presu);
+      }
+      // console.log("REPU", el.repuestos_presu);
+      // console.log($repuestos);
+
+      // $mobra = el.mobra_presu;
+      if (
+        el.mobra_presu === "NaN" ||
+        el.mobra_presu === "undefined" ||
+        el.mobra_presu === "null"
+      ) {
+        $mobra = 0;
+      } else {
+        $mobra = Number(el.mobra_presu);
+      }
+
+      if (
+        el.senia_presu === "NaN" ||
+        el.senia_presu === "undefined" ||
+        el.senia_presu === "null"
+      ) {
+        $senia = 0;
+        console.log("$senia", $senia);
+      } else {
+        $senia = Number(el.senia_presu);
+        console.log("el.senia", el.senia_presu);
+      }
+      // console.log("el.senia", el.senia_presu);
+      if (
+        el.abonado_presu === "NaN" ||
+        el.abonado_presu === "undefined" ||
+        el.abonado_presu === "null"
+      ) {
+        $abonado = 0;
+      } else {
+        $abonado = Number(el.abonado_presu);
+      }
+
+      $total = Number($repuestos) + Number($mobra);
+      // $total = $repuestos + $mobra;
+
+      // $saldo = $total - $senia - $abonado;
+      $saldo = Number($total) - Number($senia) - Number($abonado);
+      // console.log("Saldo", $saldo);
+
       prvdclientes.querySelector(".presu__prc").textContent = el.id_presu;
       prvdclientes.querySelector(".fecpresu__prc").textContent = el.fecha_presu;
       prvdclientes.querySelector(".fecIng__prc").textContent = el.fec_ini_presu;
       prvdclientes.querySelector(".fecIng__prc").textContent = el.fec_ret_presu;
       prvdclientes.querySelector(".descript__prc").textContent =
         el.descripcion_presu;
-      prvdclientes.querySelector(".repuestos__prc").textContent =
-        el.repuestos_presu;
-      prvdclientes.querySelector(".mobra__prc").textContent = el.mobra_presu;
-      prvdclientes.querySelector(".total__prc").textContent = el.total_presu;
-      prvdclientes.querySelector(".mobra__prc").textContent = el.senia_presu;
-      prvdclientes.querySelector(".abonado__prc").textContent =
-        el.abonado_presu;
-      prvdclientes.querySelector(".saldo__prc").textContent = saldo;
+      prvdclientes.querySelector(".repuestos__prc").textContent = $repuestos;
+      prvdclientes.querySelector(".mobra__prc").textContent = $mobra;
+      prvdclientes.querySelector(".total__prc").textContent = $total;
+      // prvdclientes.querySelector(".total__prc").textContent = el.total_presu;
+      prvdclientes.querySelector(".senia__prc").textContent = $senia;
+      prvdclientes.querySelector(".abonado__prc").textContent = $abonado;
+      prvdclientes.querySelector(".saldo__prc").textContent = $saldo;
       const clone = prvdclientes.cloneNode(true);
       fragPRVDClie.appendChild(clone);
     });

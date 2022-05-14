@@ -2,9 +2,9 @@
 require "connections/conexion.php";
 error_reporting(E_ALL ^ E_NOTICE);
 
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+// header('Access-Control-Allow-Origin: *');
+// header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
+// header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 
 $metodo= $_SERVER['REQUEST_METHOD'];
 $resultado = array();
@@ -15,8 +15,7 @@ $resultado = array();
       
       $patente = $_POST['patente_txt'];
 
-      $cons="SELECT clientes.empresa_nyp, vehiculos.marca, vehiculos.modelo, reparaciones.* 
-      FROM reparaciones INNER JOIN clientes ON reparaciones.id_cliente=clientes.id_cliente INNER JOIN vehiculos ON reparaciones.patente=vehiculos.patente WHERE reparaciones.patente='".$patente."'  ORDER BY reparaciones.fecha_trab DESC";
+      $cons="SELECT clientes.empresa_nyp, vehiculos.marca, vehiculos.modelo, presupuestos.total_presu, reparaciones.* FROM reparaciones INNER JOIN clientes ON reparaciones.id_cliente=clientes.id_cliente INNER JOIN vehiculos ON reparaciones.patente=vehiculos.patente INNER JOIN presupuestos ON reparaciones.presupuesto=presupuestos.id_presu WHERE reparaciones.patente='".$patente."'  ORDER BY reparaciones.fecha_trab DESC";
 
 
         $resultado = mysqli_query($conexionApi,$cons);
