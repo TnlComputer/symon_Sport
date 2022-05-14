@@ -7,15 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta description="Taller Mecánico en Caseros, reparación integral de vehiculos, nafta o diesel">
 
-  <link rel="canonical" href="https://tnlcomputer.com.ar/ssp">
+  <link rel="canonical" href="https://symonsport.com.ar">
   <meta name="application-name" content="tnlcomputer">
   <meta property="og:title" content="Tnlcomputer">
   <meta property="og:site_name" content="Tnlcomputer">
-  <meta property="og:url" content="https://tnlcomputer.com.ar/ssp/index.html">
+  <meta property="og:url" content="https://symonsport.com.ar/index.html">
   <meta property="og:description"
     content="Venta y Service de computadoras, notebook, desarrollo web, backend - Frontend, Hosting, Alojamiento de Paginas, software.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://tnlcomputer.com.ar/ssp/assets/img/favicon/android-icon-192x192.png">
+  <meta property="og:image" content="https://symonsport.com.ar/assets/img/favicon/android-icon-192x192.png">
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:site" content="@symon-sport">
@@ -46,7 +46,8 @@
   <!-- <link
     href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bowlby+One+SC&family=Rubik+Mono+One&display=swap"
     rel="stylesheet"> -->
-  <!-- <script src="https://kit.fontawesome.com/54dcb4109d.js" crossorigin="anonymous"></script> -->
+
+
   <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.15.4/css/all.css">
   <!-- <link rel="stylesheet" href="css/all.css"> -->
 
@@ -145,35 +146,6 @@
     </p>
   </footer>
 
-  <!-- TEMPLATE Cliente -->
-  <template id="template__clientes">
-    <article class="fila">
-      <div class="col accion">
-        <input type="image" class="edit__form" src="./assets/img/acciones/reply.gif" alt="Edit Cliente"
-          title="Edit Cliente">
-      </div>
-      <div class="col accion">
-        <input type="image" class="veh__form" src="./assets/img/acciones/car-16.png" alt="Ver Vehículos"
-          name="id_cliente" title="Ver Vehículos">
-      </div>
-      <div class="col accion ">
-        <input type="image" class="usrCli__form" src="./assets/img/acciones/icons8-usuario-16.png"
-          alt="Usuarios del cliente" name="id_usrcli" title="Ver Usuarios del cliente">
-      </div>
-      <div class="col cuit cuit__c"></div>
-      <div class="col client cliente__c"></div>
-      <div class="col direccion direccion__c"></div>
-      <div class="col loc localidad__c"></div>
-      <div class="col pro provincia__c"></div>
-      <div class="col cpost cpost__c"></div>
-      <div class="col contacto contacto__c"></div>
-      <div class="col telefono telefono__c"></div>
-      <div class="col celular celular__c"></div>
-      <div class="col mail mail__c"></div>
-    </article>
-  </template>
-  <!-- FIN TEMPLATE CLIENTES -->
-
   <!-- MODAL ALTA/EDIT CLIENTES  -->
   <section class="modal">
     <div class="modal__container-clie">
@@ -208,129 +180,184 @@
         <div id="modal__alert"></div>
       </form>
     </div>
+
+
+
+    <!-- MODAL ALTA/EDIT USUARIOS DEL CLIENTE -->
+    <section class="modal__userClie">
+      <div class="modal__container-usrclie">
+        <h2 class="modal__title">Usuarios del Cliente</h2>
+        <form id="form__alt-user-clie">
+          <label class="modal__item" for="usuario_txt">Usuario</label>
+          <input class="modal__input" type="text" name="usuario_txt" required>
+          <input class="modal__input" type="hidden" name="id_cliente_txt">
+          <input class="modal__input" type="hidden" name="id_user_txt">
+
+          <label class="modal__item" for="clave_txt">Contraseña</label>
+          <input class="modal__input" type="password" name="clave_txt" required>
+
+          <label class="modal__item" for="nombre_txt">Nombre</label>
+          <input class="modal__input" type="text" name="nombre_txt">
+
+          <label class="modal__item" for="ape_txt">Apellido</label>
+          <input class="modal__input" type="text" name="ape_txt">
+
+          <label class="modal__item" for="dni_txt">DNI</label>
+          <input class="modal__input" type="text" name="dni_txt">
+
+          <button class="modal__cancel" type="reset">Cancelar</button>
+          <button class="modal__close" type="submit">Aceptar</button>
+
+          <div id="modal__alert"></div>
+        </form>
+      </div>
+    </section>
+
+
+    <!--  DATOS VEHICULOS DEL CLIENTE -->
+    <section class="vehTit__clientes">
+      <div class="modal__container-clienV">
+        <section class="V__cliente">
+          <h2 class="modal__title">Vehículos del Cliente <span class="clienteTit"></span></h2>
+          <article class="fila tit__tabla">
+            <div class="col accion">
+              <input type="image" class="cerrar__VC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
+            </div>
+
+            <div class="col accion">
+              <input type="image" class="add__VC" src="./assets/img/acciones/action_add.png" title="Nuevo Vehiculo">
+            </div>
+            <div class="col patente">Patente</div>
+            <div class="col marca">Marca</div>
+            <div class="col modelo">Modelo</div>
+            <div class="col anio">Año</div>
+          </article>
+          <article class="line__VCDtabla"></article>
+        </section>
+
+        <!-- Titulos Reparaciones CLIENTE -->
+        <section class="RepTit__clientes unshow">
+          <article class="fila tit__tabla">
+            <div class="col accion">
+              <input type="image" class="cerrar__RVC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
+            </div>
+            <div class="col fecIng">Fecha Ingreso</div>
+            <div class="col fecEnt">Fecha Entrega</div>
+            <!-- <div class="col accion">Obs</div> -->
+            <div class="col km">KM</div>
+            <!-- <div class="col descript">Observaciones</div> -->
+            <div class="col npresu">Presupuesto</div>
+            <div class="col factu">Factura</div>
+          </article>
+          <article class="line__RVCDtabla"></article>
+        </section>
+
+        <!-- Titulos Presupuestos Reparaciones CLIENTE -->
+        <section class="PRepTit__clientes unshow">
+          <article class="fila tit__tabla">
+            <div class="col accion">
+              <input type="image" class="cerrar__PRVC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
+            </div>
+            <div class="col npresu">Presupuesto</div>
+            <div class="col fecIng">Fecha Presup.</div>
+            <div class="col fecIng">Fecha Ingreso</div>
+            <div class="col fecIng">Fecha Entregado</div>
+            <!-- <div class="col descript">Descripción</div> -->
+            <div class="col monto">Repuestos</div>
+            <div class="col monto">M. Obra</div>
+            <div class="col monto">Total</div>
+            <div class="col monto">Seña</div>
+            <div class="col monto">Abonado</div>
+            <div class="col monto">Saldo</div>
+          </article>
+          <article class="line__PRVCDtabla"></article>
+        </section>
+      </div>
+    </section>
+
+    <!-- Modal Vehiculos Cliente nuevo -->
+    <section class="newVeh__Clientes">
+      <article class="modal__container">
+        <h2 class="modal__title">Alta Vehículo</h2>
+        <form id="form__Altavehiculo">
+
+          <input class="modal__input idvehiculo_ac" type="hidden" name="id_vehiculo_txt">
+          <input class="modal__input idcliente_ac" type="hidden" name="id_cliente_txt">
+
+          <label class="modal__item">Patente</label>
+          <input class="modal__input patente_ac" type="text" name="patente_txt" required>
+
+          <label class="modal__item">Marca</label>
+          <input class="modal__input marca_ac" type="text" name="marca_txt" required>
+
+          <label class="modal__item">Modelo</label>
+          <input class="modal__input modelo_ac" type="text" name="modelo_txt" required>
+
+          <label class="modal__item">Año</label>
+          <input class="modal__input anio_ac" type="text" name="anio_txt" required>
+
+          <button class="modal__cancel" type="reset">Cancelar</button>
+          <button class="modal__close" type="submit">Aceptar</button>
+
+          <div id="modal__alertV"></div>
+        </form>
+      </article>
+    </section>
+
+    <!-- MODAL  Titulos usuarios del Cliente -->
+    <section class="usrTit__clientes">
+      <div class="modal__container-clieUsr">
+        <section class="usr__cliente">
+          <h2 class="modal__title">Usuarios del Cliente <span class="clienteTit"></span></h2>
+          <article class="fila tit__tabla">
+            <div class="col accion">
+              <input type="image" class="cerrar__UC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar"
+                alt="Cerrar">
+            </div>
+            <div class="col accion">
+              <input type="image" class="add__UC" src="./assets/img/acciones/action_add.png" title="Nuevo Usuario"
+                name="id_cliente_txt" alt="Nuevo Usuario">
+            </div>
+            <div class="col usuario">Usuario</div>
+            <div class="col clave">Contraseña</div>
+            <div class="col nombre">Nombre</div>
+            <div class="col apellido">Apellido</div>
+            <div class="col dni">DNI</div>
+          </article>
+          <article class="line__UCDtabla"></article>
+        </section>
+      </div>
+    </section>
   </section>
 
-
-  <!-- MODAL ALTA/EDIT USUARIOS DEL CLIENTE -->
-  <section class="modal__userClie">
-    <div class="modal__container-usrclie">
-      <h2 class="modal__title">Usuarios del Cliente</h2>
-      <form id="form__alt-user-clie">
-        <label class="modal__item" for="usuario_txt">Usuario</label>
-        <input class="modal__input" type="text" name="usuario_txt" required>
-        <input class="modal__input" type="hidden" name="id_cliente_txt">
-        <input class="modal__input" type="hidden" name="id_user_txt">
-
-        <label class="modal__item" for="clave_txt">Contraseña</label>
-        <input class="modal__input" type="password" name="clave_txt" required>
-
-        <label class="modal__item" for="nombre_txt">Nombre</label>
-        <input class="modal__input" type="text" name="nombre_txt">
-
-        <label class="modal__item" for="ape_txt">Apellido</label>
-        <input class="modal__input" type="text" name="ape_txt">
-
-        <label class="modal__item" for="dni_txt">DNI</label>
-        <input class="modal__input" type="text" name="dni_txt">
-
-        <button class="modal__cancel" type="reset">Cancelar</button>
-        <button class="modal__close" type="submit">Aceptar</button>
-
-        <div id="modal__alert"></div>
-      </form>
-    </div>
-  </section>
-
-
-  <!--  DATOS VEHICULOS DEL CLIENTE -->
-  <section class="vehTit__clientes">
-    <div class="modal__container-clienV">
-      <section class="V__cliente">
-        <h2 class="modal__title">Vehículos del Cliente <span class="clienteTit"></span></h2>
-        <article class="fila tit__tabla">
-          <div class="col accion">
-            <input type="image" class="cerrar__VC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
-          </div>
-
-          <div class="col accion">
-            <input type="image" class="add__VC" src="./assets/img/acciones/action_add.png" title="Nuevo Vehiculo">
-          </div>
-          <div class="col patente">Patente</div>
-          <div class="col marca">Marca</div>
-          <div class="col modelo">Modelo</div>
-          <div class="col anio">Año</div>
-        </article>
-        <article class="line__VCDtabla"></article>
-      </section>
-
-      <!-- Titulos Reparaciones CLIENTE -->
-      <section class="RepTit__clientes unshow">
-        <article class="fila tit__tabla">
-          <div class="col accion">
-            <input type="image" class="cerrar__RVC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
-          </div>
-          <div class="col fecIng">Fecha Ingreso</div>
-          <div class="col fecEnt">Fecha Entrega</div>
-          <!-- <div class="col accion">Obs</div> -->
-          <div class="col km">KM</div>
-          <!-- <div class="col descript">Observaciones</div> -->
-          <div class="col npresu">Presupuesto</div>
-          <div class="col factu">Factura</div>
-        </article>
-        <article class="line__RVCDtabla"></article>
-      </section>
-
-      <!-- Titulos Presupuestos Reparaciones CLIENTE -->
-      <section class="PRepTit__clientes unshow">
-        <article class="fila tit__tabla">
-          <div class="col accion">
-            <input type="image" class="cerrar__PRVC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar">
-          </div>
-          <div class="col npresu">Presupuesto</div>
-          <div class="col fecIng">Fecha Presup.</div>
-          <div class="col fecIng">Fecha Ingreso</div>
-          <div class="col fecIng">Fecha Entregado</div>
-          <!-- <div class="col descript">Descripción</div> -->
-          <div class="col monto">Repuestos</div>
-          <div class="col monto">M. Obra</div>
-          <div class="col monto">Total</div>
-          <div class="col monto">Seña</div>
-          <div class="col monto">Abonado</div>
-          <div class="col monto">Saldo</div>
-        </article>
-        <article class="line__PRVCDtabla"></article>
-      </section>
-    </div>
-  </section>
-
-  <!-- Modal Vehiculos Cliente nuevo -->
-  <section class="newVeh__Clientes">
-    <article class="modal__container">
-      <h2 class="modal__title">Alta Vehículo</h2>
-      <form id="form__Altavehiculo">
-
-        <input class="modal__input idvehiculo_ac" type="hidden" name="id_vehiculo_txt">
-        <input class="modal__input idcliente_ac" type="hidden" name="id_cliente_txt">
-
-        <label class="modal__item">Patente</label>
-        <input class="modal__input patente_ac" type="text" name="patente_txt" required>
-
-        <label class="modal__item">Marca</label>
-        <input class="modal__input marca_ac" type="text" name="marca_txt" required>
-
-        <label class="modal__item">Modelo</label>
-        <input class="modal__input modelo_ac" type="text" name="modelo_txt" required>
-
-        <label class="modal__item">Año</label>
-        <input class="modal__input anio_ac" type="text" name="anio_txt" required>
-
-        <button class="modal__cancel" type="reset">Cancelar</button>
-        <button class="modal__close" type="submit">Aceptar</button>
-
-        <div id="modal__alertV"></div>
-      </form>
+  <!-- TEMPLATE Cliente -->
+  <template id="template__clientes">
+    <article class="fila">
+      <div class="col accion">
+        <input type="image" class="edit__form" src="./assets/img/acciones/reply.gif" alt="Edit Cliente"
+          title="Edit Cliente">
+      </div>
+      <div class="col accion">
+        <input type="image" class="veh__form" src="./assets/img/acciones/car-16.png" alt="Ver Vehículos"
+          name="id_cliente" title="Ver Vehículos">
+      </div>
+      <div class="col accion ">
+        <input type="image" class="usrCli__form" src="./assets/img/acciones/icons8-usuario-16.png"
+          alt="Usuarios del cliente" name="id_usrcli" title="Ver Usuarios del cliente">
+      </div>
+      <div class="col cuit cuit__c"></div>
+      <div class="col client cliente__c"></div>
+      <div class="col direccion direccion__c"></div>
+      <div class="col loc localidad__c"></div>
+      <div class="col pro provincia__c"></div>
+      <div class="col cpost cpost__c"></div>
+      <div class="col contacto contacto__c"></div>
+      <div class="col telefono telefono__c"></div>
+      <div class="col celular celular__c"></div>
+      <div class="col mail mail__c"></div>
     </article>
-  </section>
+  </template>
+  <!-- FIN TEMPLATE CLIENTES -->
 
   <!--  DATOS reparaciones del vehiculo del Cliente -->
   <template id="RVDatos__clientes">
@@ -398,31 +425,6 @@
       <div class="col anio anio__c"></div>
     </article>
   </template>
-
-  <!-- MODAL  Titulos usuarios del Cliente -->
-  <section class="usrTit__clientes">
-    <div class="modal__container-clieUsr">
-      <section class="usr__cliente">
-        <h2 class="modal__title">Usuarios del Cliente <span class="clienteTit"></span></h2>
-        <article class="fila tit__tabla">
-          <div class="col accion">
-            <input type="image" class="cerrar__UC" src="./assets/img/acciones/icons8-exit-16.png" title="Cerrar"
-              alt="Cerrar">
-          </div>
-          <div class="col accion">
-            <input type="image" class="add__UC" src="./assets/img/acciones/action_add.png" title="Nuevo Usuario"
-              name="id_cliente_txt" alt="Nuevo Usuario">
-          </div>
-          <div class="col usuario">Usuario</div>
-          <div class="col clave">Contraseña</div>
-          <div class="col nombre">Nombre</div>
-          <div class="col apellido">Apellido</div>
-          <div class="col dni">DNI</div>
-        </article>
-        <article class="line__UCDtabla"></article>
-      </section>
-    </div>
-  </section>
 
   <!--  DATOS reparaciones del vehiculo del Cliente -->
   <template id="usrDatos__clientes">

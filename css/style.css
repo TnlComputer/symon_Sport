@@ -47,60 +47,21 @@ textarea {
   resize: none;
 }
 
-.toggle-menu {
-  position: fixed;
-  width: 40px;
-  bottom: 0.5rem;
-  left: 1.5rem;
-  filter: invert(1);
-  cursor: pointer;
-  z-index: 99;
-  /* background-color: white;
-  border-radius: 5px; */
-}
-
-.main-menu {
-  position: fixed;
-  top: 0;
-  list-style: none;
-  margin-top: 0px;
-  margin-bottom: 0;
-  margin-left: 0;
-  padding-left: 10px;
-  padding-right: 10px;
-  width: 200px;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--menu-primary);
-  transition: transform 0.3s;
-  transform: translateX(-100%);
-}
-
-.main-menu--show {
-  transform: translateY(0);
-}
-
-.main-menu__item {
-  padding: 1em;
-}
-
-.main-menu__link {
-  text-transform: uppercase;
-}
-
-.main-menu__link,
-.social__link {
-  color: var(--color-primary);
+.footer a:visited {
   text-decoration: none;
+  color: var(--text-ssp);
 }
 
-.social {
+.footer a:active {
+  text-decoration: underline;
+  color: var(--text-negro);
+
+}
+
+.main {
   width: 100%;
-  margin: 20px 40px;
-  margin-top: 20px;
-  /* margin-left: auto; */
-  /* margin-right: auto; */
+  height: 100%;
+  min-height: calc(100vh - 100px);
 }
 
 .social__link {
@@ -109,25 +70,45 @@ textarea {
   margin: 15px;
 }
 
-.main {
+.main-nav {
+  position: fixed;
   width: 100%;
-  height: 100%;
-  margin-top: 0;
+  min-width: 320px;
+  height: 40px;
+  display: flex;
+  top: 0;
+  padding: 0;
+  background-color: var(--menu-primary);
+  z-index: 99;
+  /* box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.75); */
+  box-shadow: 0px 3px 0px 0px rgb(236, 31, 36, 0.80);
+  -webkit-box-shadow: 0px 3px 0px 0px rgb(236, 31, 36, 0.80);
+  /* -moz-box-shadow: 0px 3px 0px 0px rgb(236, 31, 36, 0.80); */
+
 }
 
-.main-logo {
-  margin: 10px auto;
-}
-
-.nav__item {
-  width: 12px;
-  margin: 0 10px 0 5px;
-  color: var(--color-secondary);
-}
-
-.linea {
-  font-weight: normal;
+.main-menu {
   width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-content: space-around;
+  list-style: none;
+  padding: 0;
+
+}
+
+.main-menu-social {
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-content: space-around;
+  list-style: none;
+  padding: 0;
+  display: none;
 }
 
 .none {
@@ -135,6 +116,7 @@ textarea {
 }
 
 .main-section {
+  margin-top: 100px;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
@@ -146,12 +128,16 @@ textarea {
 .sec-clientes {
   margin-left: auto;
   margin-right: auto;
-  width: 80%;
   color: var(--color-primary);
+}
+
+.sec-clientes {
+  width: 90%;
 }
 
 .main-descripcion {
   text-align: left;
+  width: 80%;
 }
 
 .img-index {
@@ -415,206 +401,87 @@ legend {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  position: fixed;
+  /* position: fixed; */
+  /* margin-top: 40px; */
   margin-left: auto;
   margin-right: auto;
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 60px;
+  height: 40px;
   background-color: var(--menu-primary);
   font-size: 10px;
+  text-decoration: none;
+  color: #ffffff;
 }
 
+.div__reparaciones,
+.div__presupuestos,
 .div__clientes,
 .vehDatos__clientes {
-  max-width: 1440px;
-  min-width: 1440px;
+  min-width: 300px;
+  max-width: 300px;
   margin-left: auto;
   margin-right: auto;
+  color: #ffffff;
+  /* background-color: red; */
 }
 
 .consultas__patentes {
-  /* background-color: #F26250; */
-  max-width: 1040px;
-  min-width: 1040px;
+  max-width: 300px;
+  min-width: 300px;
+  margin-top: 30px;
   margin-left: auto;
   margin-right: auto;
+  color: #ffffff;
 }
 
-.div__presupuestos {
-  max-width: 900px;
-  min-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.div__reparaciones {
+/* .div__presupuestos {
   width: 100%;
-  max-width: 1200px;
-  min-width: 1200px;
+  max-width: 320px;
   margin-left: auto;
   margin-right: auto;
-}
+} */
+
+/* .div__reparaciones {
+  width: 100%;
+  max-width: 320px;
+  min-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+} */
 
 /* ventanas modal*/
 .modal__container-clienV {
-  max-width: 1300px;
-  min-width: 1300px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 300px;
+  min-width: 300px;
+  /* margin-left: auto;
+  margin-right: auto; */
+  margin: 50px auto;
+  /* width: 90%; */
+  /* height: auto; */
+  max-height: 80%;
+  background-color: rgb(57, 68, 74);
+  padding: 1em 0;
+  border-radius: 6px;
+  transform: var(--transform);
+  transition: var(--transition);
+  overflow: auto;
 }
 
-.V__cliente,
+.V__cliente {
+  max-width: 300px;
+  min-width: 300px;
+}
+
 .RepTit__clientes,
 .RVDatos__clientes,
 .PRepTit__clientes,
 .PRVDatos__clientes {
-  max-width: 1250px;
-  min-width: 1250px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.fila {
-  display: table-row;
-  color: #ffffff;
-}
-
-.col {
-  display: table-cell;
-  padding: 12px;
-}
-
-.tit__tabla {
-  background-color: var(--bg-ssp);
-  /* width: 1400px; */
-}
-
-.presu {
-  min-width: 90px;
-  max-width: 90px;
-  text-align: center;
-}
-
-.modelo {
-  min-width: 200px;
-  max-width: 200px;
-  text-align: center;
-}
-
-.marca {
-  min-width: 100px;
-  max-width: 100px;
-  text-align: center;
-}
-
-.client {
-  min-width: 150px;
-  max-width: 150px;
-  width: 150px;
-  text-align: left;
-}
-
-.fecha,
-.fecIng,
-.fecEnt {
-  min-width: 130px;
-  max-width: 130px;
-}
-
-.npresu {
-  min-width: 60px;
-  max-width: 60px;
-}
-
-.fecha,
-.fecIng,
-.fecEnt,
-.npresu {
-  text-align: center;
-}
-
-.km {
-  min-width: 100px;
-  max-width: 100px;
-  text-align: center;
-}
-
-.descript-t {
-  min-width: 120px;
-  max-width: 120px;
-  color: #fff;
-  text-align: center;
-}
-
-.descript-d {
-  /* background-color: #616060; */
-  min-width: calc(100% - 120px);
-  max-width: calc(100% - 120px);
-  color: #fff;
-  text-align: left;
-}
-
-.monto {
-  min-width: 90px;
-  max-width: 90px;
-  text-align: left;
-}
-
-.factu {
-  min-width: 80px;
-  max-width: 80px;
-  text-align: center;
-}
-
-.patente {
-  min-width: 80px;
-  max-width: 80px;
-  text-align: center;
-}
-
-.accion {
-  min-width: 1px;
-  max-width: 1px;
-  text-align: center;
-  cursor: pointer;
-  align-content: center;
-  align-items: center;
-}
-
-.accNo {
-  cursor: unset;
-}
-
-.direccion,
-.mail {
-  max-width: 200px;
-  min-width: 200px;
-  text-align: left;
-  word-wrap: normal;
-}
-
-.loc,
-.pro {
-  max-width: 90px;
-  min-width: 90px;
-  text-align: left;
-}
-
-.cpost,
-.contacto,
-.telefono,
-.celular {
-  max-width: 80px;
-  min-width: 80px;
-  text-align: left;
-}
-
-.cuit {
-  max-width: 90px;
-  min-width: 90px;
-  text-align: left;
+  max-width: 300px;
+  min-width: 300px;
+  /* margin-left: auto;
+  margin-right: auto; */
 }
 
 .usrTit__clientes,
@@ -649,27 +516,19 @@ legend {
   --transition: transform .8s .8s;
 }
 
-.unshow {
-  opacity: 0;
-}
-
-.show {
-  padding: 20px;
-  opacity: 1;
-}
-
 .modal__container-clieUsr,
 .modal__container-usrclie,
 .modal__container,
 .modal__container-clie {
   margin: auto;
   width: 90%;
-  max-height: 80%;
+  height: auto;
   background-color: #fff;
   border-radius: 6px;
-  padding: 1em;
+  padding: 10px;
   transform: var(--transform);
   transition: var(--transition);
+  /* z-index: 10; */
 }
 
 .modal__container {
@@ -678,8 +537,8 @@ legend {
 }
 
 .modal__container-presu {
-  min-width: 700px;
-  max-width: 700px;
+  min-width: 320px;
+  max-width: 320px;
   margin: auto;
   background-color: rgb(196, 240, 196);
   height: auto;
@@ -687,63 +546,219 @@ legend {
   padding: 1em;
   transform: var(--transform);
   transition: var(--transition);
-
+  overflow: auto;
 }
 
 .modal__container-clie {
   width: 100%;
-  max-width: 500px;
+  max-width: 320px;
   background-color: rgb(183, 209, 224);
-  height: auto;
   margin: auto;
 }
 
 .modal__container-clieUsr {
-  width: 100%;
-  min-width: 830px;
-  max-width: 830px;
+  /* width: 100%; */
+  min-width: 300px;
+  max-width: 300px;
   background-color: rgb(87, 92, 57);
-  height: auto;
   margin: auto;
+  /* font-size: 12px; */
+}
+
+.modal__container-usrclie {
+  width: 100%;
+  max-width: 320px;
+}
+
+.fila {
+  display: table-row;
+  color: #ffffff;
+}
+
+.col {
+  display: table-cell;
+  padding: 8px;
+  font-size: 16px;
+}
+
+.tit__tabla {
+  background-color: var(--bg-ssp);
+  width: 100%;
+  /* width: 320px; */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dat__tabla {
+  /* background-color: var(--bg-ssp); */
+  width: 100%;
+  /* width: 320px;*/
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+
+.presu {
+  min-width: 90px;
+  max-width: 90px;
+  text-align: center;
+}
+
+.marca,
+.modelo {
+  min-width: 100px;
+  max-width: 100px;
+  text-align: center;
+}
+
+.client {
+  max-width: 150px;
+  min-width: 150px;
+  text-align: left;
+}
+
+.fechaR {
+  max-width: 123px;
+  min-width: 123px;
+}
+
+.fecha,
+.fecIng,
+.fecEnt {
+  max-width: 100px;
+  min-width: 100px;
+}
+
+.npresu {
+  max-width: 50px;
+  min-width: 50px;
+}
+
+.descript-t,
+.km,
+.fechaR,
+.fecha,
+.fecIng,
+.fecEnt,
+.npresu {
+  text-align: center;
+}
+
+.km {
+  max-width: 100px;
+  min-width: 100px;
+}
+
+.desc__modal {
+  width: 96%;
+}
+
+.desc__60 {
+  display: none;
+}
+
+.descript-t {
+  background-color: var(--bg-ssp);
+  max-width: 120px;
+  min-width: 120px;
+  color: #fff;
+}
+
+.descript-d {
+  /* background-color: #616060; */
+  max-width: calc(100% - 120px);
+  min-width: calc(100% - 120px);
+  color: #fff;
+  text-align: left;
+}
+
+.monto {
+  min-width: 90px;
+  max-width: 90px;
+  text-align: center;
+}
+
+.monto-d {
+  min-width: 90px;
+  max-width: 90px;
+  text-align: center;
+}
+
+.factu {
+  max-width: 80px;
+  min-width: 80px;
+  text-align: center;
+}
+
+.patente {
+  max-width: 80px;
+  min-width: 80px;
+  text-align: center;
+}
+
+.accion {
+  min-width: 6px;
+  max-width: 6px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.direccion,
+.mail {
+  min-width: 200px;
+  max-width: 200px;
+  text-align: left;
+  word-wrap: normal;
+}
+
+.loc,
+.pro {
+  min-width: 90px;
+  max-width: 90px;
+  text-align: left;
+}
+
+.cpost,
+.contacto,
+.telefono,
+.celular {
+  min-width: 80px;
+  max-width: 80px;
+  text-align: left;
+}
+
+.cuit {
+  min-width: 90px;
+  max-width: 90px;
+  text-align: left;
+}
+
+.unshow {
+  opacity: 0;
+}
+
+.show {
+  padding: 20px 0;
+  opacity: 1;
 }
 
 .nombre,
 .apellido,
 .dni {
-  max-width: 150px;
-  min-width: 150px;
+  min-width: 60px;
+  max-width: 60px;
 }
 
 .usuario,
 .clave {
-  max-width: 100px;
-  min-width: 100px;
+  max-width: 60px;
+  min-width: 60px;
 }
 
-
-.modal__container-usrclie {
-  width: 100%;
-  max-width: 320px;
-  /* background-color: rgb(183, 209, 224); */
-  height: auto;
-}
-
-.modal__container-clienV {
-  margin: 50px auto;
-  width: 90%;
-  height: auto;
-  max-height: 90%;
-  background-color: rgb(57, 68, 74);
-  padding: 1em;
-  border-radius: 6px;
-  transform: var(--transform);
-  transition: var(--transition);
-  /* margin-left: auto;
-  margin-right: auto; */
-}
 
 .modal__title {
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   text-align: center;
 }
 
@@ -764,8 +779,8 @@ legend {
 }
 
 .modal__textarea-item {
+  display: block;
   width: 100%;
-  padding-bottom: 10px;
 }
 
 .modal__textarea-input {
@@ -777,7 +792,7 @@ legend {
   margin: 10px;
   text-decoration: none;
   color: #fff;
-  padding: 1em 3em;
+  padding: .5em 1.5em;
   border: 1px solid;
   border-radius: 6px;
   font-weight: 500;
@@ -793,21 +808,18 @@ legend {
 }
 
 .btn__center {
+  display: inline-block;
+  margin: auto;
   width: 100%;
-  display: block;
-  margin: 10px 20px 0 90px;
-  /* justify-content: space-between; */
+  text-align: center;
 }
-
-/* .derecha {
-  justify-content: space-between;
-}
-
-.izquierda {
-  justify-content: space-between;
-} */
 
 /*modal presupuesto*/
+
+.textarea__presu {
+  width: 98%;
+  height: 70px;
+}
 
 .modal__form-Presu {
   width: 100%;
@@ -815,8 +827,8 @@ legend {
 }
 
 .model__presu-fieldset {
-  margin: 10px auto;
-  padding: 10px;
+  margin: auto;
+  /* padding: 10px; */
   background-color: var(--bg-primary);
   color: var(--color-primary);
   border: 2px solid var(--menu-primary);
@@ -825,32 +837,42 @@ legend {
 
 /* .factu, */
 .modal__input-fec,
-.modal__input-pat,
-.modal__cliente-presu,
-.modal__marca-presu,
-.modal__modelo-presu {
-  margin: 20px;
+.modal__input-pat {
+  margin: 10px;
 }
 
-.modal_empresa {
+.modal__empresa {
   display: inline-block;
   margin: auto;
-  /* gap: .5em;
-  place-items: center; */
   width: 100%;
   text-align: center;
-  padding: 20px;
+  /* padding: 20px; */
 }
 
 .modal__cliente-presu,
 .modal__marca-presu,
 .modal__modelo-presu {
   color: #fff;
+  /* text-align: center; */
 }
 
-.modal__item-fec,
-.modal__item-pat {
-  margin-left: 20px;
+.modal__cliente-presu,
+.modal__marcaModelo {
+  display: inline-block;
+  width: 300px;
+  margin: 10px 0 15px 0;
+  text-align: center;
+  align-content: center;
+}
+
+.tabla__show-36,
+.tabla__show-48,
+.tabla__show-60,
+.tabla__show-76,
+.tabla__show-102,
+.tabla__show-120,
+.tabla__show {
+  display: none;
 }
 
 .modal__item-desc,
@@ -863,9 +885,35 @@ legend {
   margin-right: 10px;
 }
 
-.modal__item-presu,
+.modal__item-presu {
+  display: inline-block;
+  width: 38%;
+  padding: 10px 0 0 5px;
+}
+
 .modal__input-presu {
-  width: 90px;
+  display: inline-block;
+  width: 45%;
+  padding-right: 5px;
+}
+
+.ar {
+  text-align: right;
+}
+
+.ac {
+  text-align: center;
+}
+
+.al {
+  text-align: left;
+}
+
+.modal__inputDias-presu {
+  display: inline-block;
+  width: 20px;
+  margin-right: 10px;
+  margin-bottom: 20px;
 }
 
 .modal__item-desc,
@@ -987,14 +1035,15 @@ legend {
 }
 
 /* @MEDIA*/
-
 @media (hover:hover) {
   .main-menu__link:hover {
-    color: var(--text-negro);
+    /* height: 50px;
+    border: 3px solid var(--text-negro); */
+    border-bottom: 3px solid var(--text-ssp);
   }
 
   .social__link:hover {
-    color: var(--text-negro);
+    border-bottom: 3px solid var(--text-ssp);
   }
 
   .moda__close:hover {
@@ -1002,17 +1051,141 @@ legend {
     background-color: #fff;
   }
 
+  .footer a:hover {
+    text-decoration: underline;
+    color: var(--text-negro);
+  }
+}
+
+@media screen and (min-width: 360px) {
+  .tabla__show-36 {
+    display: table-cell;
+  }
+
+  .div__clientes,
+  .vehDatos__clientes {
+    min-width: 350px;
+    max-width: 350px;
+    /* margin-left: auto;
+    margin-right: auto; */
+  }
+
+  .client {
+    max-width: 150px;
+    min-width: 150px;
+    text-align: left;
+  }
+
+  /* ventanas modal*/
+  .modal__container-clienV {
+    max-width: 340px;
+    min-width: 340px;
+  }
+
+  .V__cliente {
+    max-width: 340px;
+    min-width: 340px;
+  }
+
+  .modal__container-clieUsr {
+    max-width: 350px;
+    min-width: 350px;
+  }
+
+
+  .modal__container-clieUsr,
+  .RepTit__clientes,
+  .RVDatos__clientes,
+  .PRepTit__clientes,
+  .PRVDatos__clientes {
+    max-width: 340px;
+    min-width: 340px;
+  }
+
+}
+
+@media screen and (min-width: 480px) {
+  .tabla__show-48 {
+    display: table-cell;
+  }
+
+  .div__reparaciones {
+    max-width: 396px;
+    max-width: 396px;
+  }
+
+  .div__presupuestos {
+    max-width: 465px;
+    max-width: 465px;
+  }
+
+  .div__clientes,
+  .vehDatos__clientes,
+  .modal__container-clieUsr {
+    max-width: 470px;
+    min-width: 470px;
+  }
+
+  /* ventanas modal*/
+  .consultas__patentes,
+  .modal__container-clienV,
+  .V__cliente,
+  .modal__container-clieUsr,
+  .RepTit__clientes,
+  .RVDatos__clientes,
+  .PRepTit__clientes,
+  .PRVDatos__clientes {
+    max-width: 460px;
+    min-width: 460px;
+  }
+
 }
 
 @media screen and (min-width: 600px) {
-  .main-nav {
-    z-index: 10;
+  .main-menu__item {
+    padding: 1em;
   }
 
-  .main-section {
-    height: auto;
-    padding-top: 10px;
-    padding-bottom: 30px;
+  .tabla__show-60 {
+    display: table-cell;
+  }
+
+  .div__presupuestos {
+    max-width: 582px;
+    max-width: 582px;
+  }
+
+  .div__reparaciones {
+    max-width: 512px;
+    max-width: 512px;
+  }
+
+  .div__clientes,
+  .vehDatos__clientes {
+    min-width: 590px;
+    max-width: 590px;
+    /* margin-left: auto;
+    margin-right: auto; */
+  }
+
+  /* ventanas modal*/
+  .modal__container-clienV {
+    max-width: 580px;
+    min-width: 580px;
+  }
+
+  .V__cliente {
+    max-width: 5800px;
+    min-width: 580px;
+  }
+
+  .consultas__patentes,
+  .RepTit__clientes,
+  .RVDatos__clientes,
+  .PRepTit__clientes,
+  .PRVDatos__clientes {
+    max-width: 580px;
+    min-width: 580px;
   }
 
   .main-descripcion {
@@ -1043,6 +1216,11 @@ legend {
     max-width: 540px;
   }
 
+  .desc__60 {
+    display: block;
+  }
+
+
 }
 
 /* TABLET */
@@ -1051,16 +1229,11 @@ legend {
     padding-bottom: 60px;
   }
 
-  .toggle-menu {
-    display: none;
-  }
-
-  .linea {
-    display: none;
-  }
-
-  .main-logo {
-    display: none;
+  .main-menu-social {
+    /* position: fixed; */
+    display: flex;
+    width: 100px;
+    padding-left: 30px;
   }
 
   .main-nav {
@@ -1068,39 +1241,55 @@ legend {
   }
 
   .main-menu {
-    position: fixed;
-    width: 100%;
-    height: 40px;
-    flex-direction: row;
-    align-content: center;
-    align-items: center;
-    transform: translateY(0);
-    font-size: 12px;
-    font-weight: 600;
+    margin-left: calc((100vw - 700px) / 2);
+    width: 600px;
   }
 
-  .main-menu__link {
-    padding: 10px;
+  .tabla__show-76 {
+    display: table-cell;
   }
 
-  .main-menu__link i {
-    display: none;
+  .div__presupuestos {
+    max-width: 698px;
+    max-width: 698px;
+
   }
 
-  .social {
-    width: auto;
-    margin: 10px 10px;
-    margin-top: 10px;
+  .div__reparaciones {
+    max-width: 744px;
+    max-width: 744px;
   }
 
-  .main-section {
-    /* position: relative; */
-    /* top: 40px; */
-    width: 100%;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 40px;
+  .div__clientes,
+  .vehDatos__clientes {
+    max-width: 750px;
+    max-width: 750px;
+    /* margin-left: auto;
+    margin-right: auto; */
+  }
+
+  /* ventanas modal*/
+  .modal__container-clienV {
+    max-width: 748px;
+    min-width: 748px;
+  }
+
+  .V__cliente {
+    max-width: 748px;
+    min-width: 748px;
+  }
+
+  .RepTit__clientes,
+  .RVDatos__clientes,
+  .PRepTit__clientes,
+  .PRVDatos__clientes {
+    max-width: 748px;
+    min-width: 748px;
+  }
+
+  .consultas__patentes {
+    max-width: 748px;
+    min-width: 748px;
   }
 
   .form__clientes {
@@ -1134,4 +1323,221 @@ legend {
   .contact-form * {
     max-width: 768px;
   }
+
+  /* .tabla__show {
+    display: table-cell;
+  } */
+
+}
+
+@media screen and (min-width: 1024px) {
+  .tabla__show-102 {
+    display: table-cell;
+  }
+
+  .div__presupuestos {
+    max-width: 804px;
+    min-width: 804px;
+  }
+
+  .div__reparaciones {
+    max-width: 946px;
+    max-width: 946px;
+  }
+
+  .div__clientes,
+  .vehDatos__clientes {
+    max-width: 1014px;
+    max-width: 1014px;
+    /* margin-left: auto;
+    margin-right: auto; */
+  }
+
+  /* ventanas modal*/
+  .modal__container-clienV {
+    max-width: 914px;
+    min-width: 914px;
+  }
+
+  .V__cliente {
+    max-width: 914px;
+    min-width: 914px;
+  }
+
+  .RepTit__clientes,
+  .RVDatos__clientes,
+  .PRepTit__clientes,
+  .PRVDatos__clientes {
+    max-width: 914px;
+    min-width: 914px;
+  }
+
+  .consultas__patentes {
+    max-width: 940px;
+    min-width: 940px;
+  }
+
+}
+
+@media screen and (min-width: 1200px) {
+
+  .tabla__show-120 {
+    display: table-cell;
+  }
+
+  .div__reparaciones {
+    max-width: 1111px;
+    max-width: 1111px;
+  }
+
+  .div__clientes,
+  .vehDatos__clientes {
+    max-width: 1190px;
+    max-width: 1190px;
+  }
+
+  /* ventanas modal*/
+  .modal__container-clienV,
+  .V__cliente,
+  .RepTit__clientes,
+  .RVDatos__clientes,
+  .PRepTit__clientes,
+  .PRVDatos__clientes {
+    max-width: 1180px;
+    min-width: 1180px;
+  }
+
+  .consultas__patentes {
+    max-width: 1040px;
+    min-width: 1040px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .main-nav {
+    align-content: center;
+  }
+
+  .main-menu {
+    margin-left: calc((100vw - 1000px) / 2);
+    width: 800px;
+    align-items: center;
+    align-content: center;
+    /* box-shadow: #000; */
+  }
+
+  .main-menu-social {
+    width: 200px;
+    align-items: flex-end;
+    align-content: center;
+  }
+
+  .main-menu-social,
+  .main-menu__item {
+    padding: 1em;
+  }
+
+  .tabla__show {
+    display: table-cell;
+  }
+
+  .div__clientes,
+  .vehDatos__clientes {
+    min-width: 1440px;
+    max-width: 1440px;
+  }
+
+
+  /* .consultas__patentes {
+    max-width: 1040px;
+    min-width: 1040px;
+  } */
+
+  /* ventanas modal*/
+  .modal__container-clienV {
+    max-width: 1300px;
+    min-width: 1300px;
+    width: 90%;
+    max-height: 90%;
+    background-color: rgb(57, 68, 74);
+    padding: 1em;
+  }
+
+  .V__cliente,
+  .RepTit__clientes,
+  .RVDatos__clientes,
+  .PRepTit__clientes,
+  .PRVDatos__clientes {
+    max-width: 1250px;
+    min-width: 1250px;
+  }
+
+
+  .modal__container-clieUsr,
+  .modal__container-usrclie,
+  .modal__container,
+  .modal__container-clie {
+    width: 90%;
+    height: auto;
+    padding: 1em;
+    font-size: 16px;
+  }
+
+  .modal__container-presu {
+    min-width: 500px;
+    max-width: 500px;
+  }
+
+  .modal__container-clie {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .modal__container-clieUsr {
+    width: 100%;
+    min-width: 830px;
+    max-width: 830px;
+  }
+
+  .modal__item {
+    display: inline-block;
+    width: 35%;
+    margin-bottom: 10px;
+  }
+
+  .nombre,
+  .apellido,
+  .dni {
+    max-width: 150px;
+    min-width: 150px;
+  }
+
+  .usuario,
+  .clave {
+    max-width: 100px;
+    min-width: 100px;
+  }
+
+  .modal__title {
+    font-size: 2.5rem;
+  }
+
+  .textarea__presu {
+    height: 150px;
+  }
+
+  .modal__close,
+  .modal__cancel {
+    margin: 10px;
+    padding: 1em 3em;
+    font-weight: 500;
+
+  }
+
+  .modal__cliente-presu,
+  .modal__marcaModelo {
+    width: 200px;
+    text-align: left;
+  }
+
 }
