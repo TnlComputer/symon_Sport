@@ -274,11 +274,7 @@ tablaGenerator.addEventListener("click", (event) => {
     // $total = $repuestos + $mobra;
 
     // $saldo = $total - $senia - $abonado;
-<<<<<<< HEAD
     $saldo = $total - (Number($senia) + Number($abonado));
-=======
-    $saldo = Number($total) - Number($senia) - Number($abonado);
->>>>>>> d867113038a90ff41ba4289e543c6ebf41f391e3
 
     addlinePresu.repuestos_txt.value = $repuestos;
     addlinePresu.mobra_txt.value = $mobra;

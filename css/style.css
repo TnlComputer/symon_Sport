@@ -1232,7 +1232,7 @@ legend {
   .main-menu-social {
     /* position: fixed; */
     display: flex;
-    width: 100px;
+    width: 150px;
     padding-left: 30px;
   }
 
@@ -1250,19 +1250,20 @@ legend {
   }
 
   .div__presupuestos {
+    min-width: 698px;
     max-width: 698px;
-    max-width: 698px;
-
+    /* margin-left: auto;
+    margin-right: auto; */
   }
 
   .div__reparaciones {
-    max-width: 744px;
+    min-width: 744px;
     max-width: 744px;
   }
 
   .div__clientes,
   .vehDatos__clientes {
-    max-width: 750px;
+    min-width: 750px;
     max-width: 750px;
     /* margin-left: auto;
     margin-right: auto; */
@@ -1330,18 +1331,43 @@ legend {
 
 }
 
+@media screen and (min-width: 900px) {
+  .main-menu-social {
+    width: 200px;
+    align-items: flex-end;
+    align-content: center;
+  }
+
+  .main-menu-social,
+  .main-menu__item {
+    padding: 1em;
+  }
+}
+
 @media screen and (min-width: 1024px) {
+  /* .main-menu-social {
+    width: 200px;
+    align-items: flex-end;
+    align-content: center;
+  }
+
+  .main-menu-social,
+  .main-menu__item {
+    padding: 1em;
+  } */
+
   .tabla__show-102 {
     display: table-cell;
   }
 
   .div__presupuestos {
-    max-width: 804px;
-    min-width: 804px;
+    /* width: 1024px; */
+    min-width: 910px;
+    max-width: 910px;
   }
 
   .div__reparaciones {
-    max-width: 946px;
+    min-width: 946px;
     max-width: 946px;
   }
 
@@ -1426,7 +1452,7 @@ legend {
     /* box-shadow: #000; */
   }
 
-  .main-menu-social {
+  /* .main-menu-social {
     width: 200px;
     align-items: flex-end;
     align-content: center;
@@ -1435,7 +1461,7 @@ legend {
   .main-menu-social,
   .main-menu__item {
     padding: 1em;
-  }
+  } */
 
   .tabla__show {
     display: table-cell;
