@@ -5,6 +5,7 @@
 
   $fecha_txt = $_POST['fecha_txt']; 
   $id_vehiculo = $_POST['patente_slc'];
+  // $id_vehiculo = 1;
   $descripcion = $_POST['desc_txt'];
   $repuestos_txt = $_POST['repuestos_txt'];
   $mobra_txt = $_POST['mobra_txt'];
@@ -22,18 +23,40 @@
   // }
 
 
-  $consVeh=$conexionApi->query("SELECT id_cliente, patente FROM vehiculos WHERE id_vehiculo='".$id_vehiculo."' ");
+  // echo "veh ".$id_vehiculo."<br>";
+
+  $consVeh=$conexionApi->query("SELECT id_cliente, patente, marca, modelo, anio FROM vehiculos WHERE id_vehiculo='".$id_vehiculo."' ");
   $fila = mysqli_fetch_array($consVeh);
   $id_cliente=$fila['id_cliente'];
   $patente=$fila['patente'];
+  $marca=$fila['marca'];
+  $modelo=$fila['modelo'];
+  $anio=$fila['anio'];
 
-  // $datos="INSERT INTO presupuestos (fecha_presu, descripcion_presu, usado, patente_presu, mobra_presu,  repuestos_presu, total_presu, senia_presu, abonado_presu, dias_presu, fec_ini_presu, fec_ret_presu,  nro_presu, id_cliente, id_vehiculo) VALUES ('$fecha_txt', '$descripcion', '$usado', '$patente', '$mobra_txt', '$repuestos_txt', '$total_txt','$senia_txt', '$abonado_txt', '$dias_txt', '$fecIni_txt', '$fecRet_txt', '$nro_presu', '$id_cliente', '$id_vehiculo' )";
-  $datos="INSERT INTO presupuestos (fecha_presu, descripcion_presu, usado, patente_presu, mobra_presu,  repuestos_presu, total_presu, senia_presu, abonado_presu, dias_presu, fec_ini_presu, fec_ret_presu,  nro_presu, id_cliente, id_vehiculo) VALUES ('$fecha_txt', '$descripcion', '$usado', '$patente', '$mobra_txt', '$repuestos_txt', '$total_txt','$senia_txt', '$abonado_txt', '$dias_txt', '$nro_presu', '$id_cliente', '$id_vehiculo' )";
+  // echo "clie ".$id_cliente."<br>";
+  $consClie=$conexionApi->query("SELECT empresa_nyp, mail FROM clientes WHERE id_cliente='".$id_cliente."' ");
+  $filaClie = mysqli_fetch_array($consClie);
+  $nombre_cliente=$filaClie['empresa_nyp'];
+  $email_cliente=$filaClie['mail'];
+
+  $datos="INSERT INTO presupuestos (fecha_presu, descripcion_presu, usado, patente_presu, mobra_presu,  repuestos_presu, total_presu, senia_presu, abonado_presu, dias_presu, id_cliente, id_vehiculo) VALUES ('$fecha_txt', '$descripcion', '0', '$patente', '$mobra_txt', '$repuestos_txt', '$total_txt','$senia_txt', '$abonado_txt', '$dias_txt',  '$id_cliente', '$id_vehiculo' )";
   $conexionApi->query($datos); 
 
+   $newId=mysqli_insert_id($conexionApi);
+    // var_dump($datos);
+    //  var_dump($newId);
+    // echo "nombre ".$nombre_cliente."<br>";
+    // echo "email ".$email_cliente."<br>";
+    // echo "modelo ".$modelo."<br>";
+    // echo "marca ".$marca."<br>";
+    // echo "año ".$anio."<br>";
+    // var_dump($datos);
+    
 if(!empty($datos)){
-  echo json_encode('200');
+  echo json_encode($newId);
  }else{
   echo json_encode('400');
  }   
+
+exit
 ?>

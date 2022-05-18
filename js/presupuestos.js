@@ -86,8 +86,8 @@ async function loadPresupuestos() {
       } else {
         $repuestos = Number(el.repuestos_presu);
       }
-      console.log("REPU", el.repuestos_presu);
-      console.log($repuestos);
+      // console.log("REPU", el.repuestos_presu);
+      // console.log($repuestos);
 
       // $mobra = el.mobra_presu;
       if (
@@ -109,9 +109,9 @@ async function loadPresupuestos() {
         // console.log("$senia", $senia);
       } else {
         $senia = Number(el.senia_presu);
-        console.log("el.senia", el.senia_presu);
+        // console.log("el.senia", el.senia_presu);
       }
-      console.log("el.senia", el.senia_presu);
+      // console.log("el.senia", el.senia_presu);
       if (
         el.abonado_presu === "NaN" ||
         el.abonado_presu === "undefined" ||
@@ -196,10 +196,13 @@ tablaGenerator.addEventListener("click", (event) => {
     if (dataadLP === "400") {
       alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos del Presupuesto</div>`;
     } else {
+      // console.log(dataadLP);
+      sendMailPresu(dataadLP);
       addlinePresu.reset();
       modal.classList.remove("modal--show");
-      consPresuDatos.innerHTML = ``;
-      loadPresupuestos();
+      // consPresuDatos.innerHTML = ``;
+      // loadPresupuestos();
+      // document.location.href = "presupuestos.html";
     }
   });
 
@@ -270,11 +273,11 @@ tablaGenerator.addEventListener("click", (event) => {
       $abonado = Number(event.target.dataset.abonado_presu);
     }
 
-    $total = Number($repuestos) + Number($mobra);
-    // $total = $repuestos + $mobra;
+    // $total = Number($repuestos) + Number($mobra);
+    $total = $repuestos + $mobra;
 
-    // $saldo = $total - $senia - $abonado;
-    $saldo = $total - (Number($senia) + Number($abonado));
+    $saldo = $total - $senia - $abonado;
+    // $saldo = $total - (Number($senia) + Number($abonado));
 
     addlinePresu.repuestos_txt.value = $repuestos;
     addlinePresu.mobra_txt.value = $mobra;
@@ -319,6 +322,25 @@ function loadPatentes(evptt) {
         patenteSlc.innerHTML = $options;
       }
     });
+}
+
+async function sendMailPresu(datosMP) {
+  // console.log(dataadLP);
+  let formData = new FormData();
+  formData.append("id", datosMP);
+
+  const opciones = {
+    method: "POST",
+    body: formData,
+  };
+  respMP = await fetch("php/send_PresuMail.php", opciones);
+  dataMP = await respMP.json();
+
+  if (dataMP === "400") {
+    console.log("Error", dataMP);
+  } else {
+    console.log("ok", dataMP);
+  }
 }
 
 // function calcular(repuestos, mobra) {

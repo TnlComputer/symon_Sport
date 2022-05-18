@@ -20,6 +20,10 @@
         
         $conexionApi->query($datos); 
       }
+
+
+      //  Rutina envio mail con el usuario ingresado al mail del cliente
+
       // var_dump($idCliente);
       // var_dump($nroreg);
       // var_dump($datos);
