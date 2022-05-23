@@ -74,7 +74,6 @@ async function loadPresupuestos() {
       let $repuestos = 0;
       let $mobra = 0;
       let $senia = 0;
-      let $abonado = 0;
 
       // $repuestos = Number(el.repuestos_presu);
       if (
@@ -99,6 +98,15 @@ async function loadPresupuestos() {
       } else {
         $mobra = Number(el.mobra_presu);
       }
+      if (
+        el.total_presu === "NaN" ||
+        el.total_presu === "undefined" ||
+        el.total_presu === "null"
+      ) {
+        $total = 0;
+      } else {
+        $total = 0;
+      }
 
       if (
         el.senia_presu === "NaN" ||
@@ -117,20 +125,25 @@ async function loadPresupuestos() {
         el.abonado_presu === "undefined" ||
         el.abonado_presu === "null"
       ) {
-        $abonado = 0;
+        $saldo = 0;
       } else {
-        $abonado = Number(el.abonado_presu);
+        $saldo = 0;
       }
 
-      $total = Number($repuestos) + Number($mobra);
-      // $total = $repuestos + $mobra;
+      // console.log("Repuestos ", $repuestos);
+      // console.log("Mano Obra ", $mobra);
+      // console.log("senia ", $senia);
+      // console.log("Total ", $total);
+      // console.log("Saldo ", $saldo);
+      // $total = Number($repuestos) + Number($mobra);
+      $total = $repuestos + $mobra;
+      // console.log("Total-1 ", $total);
 
-      // $saldo = $total - $senia - $abonado;
-      $saldo = $total - (Number($senia) + Number($abonado));
+      $saldo = $repuestos + $mobra - $senia;
+      // $saldo = $total - (Number($senia) + Number($abonado));
+      // console.log("Saldo-1 ", $saldo);
 
-      templatePresu.querySelector(
-        ".monto__p"
-      ).textContent = `$ ${el.total_presu}`;
+      templatePresu.querySelector(".monto__p").textContent = `$ ${$total}`;
       templatePresu.querySelector(".saldo__p").textContent = $saldo;
       templatePresu.querySelector(".descript__p").textContent =
         el.descripcion_presu;
@@ -182,6 +195,18 @@ tablaGenerator.addEventListener("click", (event) => {
         body: datosALP,
       };
       respLP = await fetch("php/addlp.php", opciones);
+      dataadLP = await respLP.json();
+      if (dataadLP === "400") {
+        alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos del Presupuesto</div>`;
+      } else {
+        // console.log(dataadLP);
+        sendMailPresu(dataadLP);
+        addlinePresu.reset();
+        modal.classList.remove("modal--show");
+        // consPresuDatos.innerHTML = ``;
+        loadPresupuestos();
+        // document.location.href = "presupuestos.html";
+      }
     } else {
       const datosELP = new FormData(addlinePresu);
 
@@ -191,18 +216,19 @@ tablaGenerator.addEventListener("click", (event) => {
       };
       respLP = await fetch("php/actlp.php", opciones);
       ealp.target.id_cliente_txt.value = "";
-    }
-    dataadLP = await respLP.json();
-    if (dataadLP === "400") {
-      alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos del Presupuesto</div>`;
-    } else {
-      // console.log(dataadLP);
-      sendMailPresu(dataadLP);
-      addlinePresu.reset();
-      modal.classList.remove("modal--show");
-      // consPresuDatos.innerHTML = ``;
-      // loadPresupuestos();
-      // document.location.href = "presupuestos.html";
+
+      dataadLP = await respLP.json();
+      if (dataadLP === "400") {
+        alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos del Presupuesto</div>`;
+      } else {
+        // console.log(dataadLP);
+        // sendMailPresu(dataadLP);
+        addlinePresu.reset();
+        modal.classList.remove("modal--show");
+        // consPresuDatos.innerHTML = ``;
+        loadPresupuestos();
+        // document.location.href = "presupuestos.html";
+      }
     }
   });
 
@@ -252,12 +278,21 @@ tablaGenerator.addEventListener("click", (event) => {
     }
 
     if (
+      event.total_presu === "NaN" ||
+      event.total_presu === "undefined" ||
+      event.total_presu === "null"
+    ) {
+      $total = 0;
+    } else {
+      $total = 0;
+    }
+
+    if (
       event.target.dataset.senia_presu === "NaN" ||
       event.target.dataset.senia_presu === "undefined" ||
       event.target.dataset.senia_presu === "null"
     ) {
       $senia = 0;
-      // console.log("$senia", $senia);
     } else {
       $senia = Number(event.target.dataset.senia_presu);
       // console.log("el.senia", el.senia_presu);
@@ -270,14 +305,21 @@ tablaGenerator.addEventListener("click", (event) => {
     ) {
       $abonado = 0;
     } else {
-      $abonado = Number(event.target.dataset.abonado_presu);
+      $abonado = 0;
     }
 
+    console.log("Repuestos ", $repuestos);
+    console.log("Mano Obra ", $mobra);
+    console.log("senia ", $senia);
+    console.log("Total ", $total);
+    console.log("Saldo ", $saldo);
     // $total = Number($repuestos) + Number($mobra);
     $total = $repuestos + $mobra;
+    console.log("Total-1 ", $total);
 
-    $saldo = $total - $senia - $abonado;
+    $saldo = $repuestos + $mobra - $senia;
     // $saldo = $total - (Number($senia) + Number($abonado));
+    console.log("Saldo-1 ", $saldo);
 
     addlinePresu.repuestos_txt.value = $repuestos;
     addlinePresu.mobra_txt.value = $mobra;
@@ -325,7 +367,9 @@ function loadPatentes(evptt) {
 }
 
 async function sendMailPresu(datosMP) {
-  // console.log(dataadLP);
+  console.log(datosMP);
+  // datosMP.preventDefault();
+
   let formData = new FormData();
   formData.append("id", datosMP);
 
@@ -338,8 +382,10 @@ async function sendMailPresu(datosMP) {
 
   if (dataMP === "400") {
     console.log("Error", dataMP);
+    datosMP = "";
   } else {
     console.log("ok", dataMP);
+    datosMP = "";
   }
 }
 

@@ -44,6 +44,8 @@ const lprvdclie = document.querySelector(".line__PRVCDtabla");
 // alertas
 const alertas = document.querySelector("modal__alert");
 const alertasV = document.getElementById("modal__alertV");
+const alertasUC = document.getElementById("modal__alertUC");
+
 async function loadClientes() {
   datosClie.innerHTML = ``;
   fetch("php/clientes.php")
@@ -181,14 +183,19 @@ utclie.addEventListener("click", async (eUserClientes) => {
     agregoUserCliente.id_cliente_txt.value =
       eUserClientes.target.dataset.id_cliente;
   }
+
   if (eUserClientes.target.matches(".cerrar__UC")) {
     eUserClientes.preventDefault();
     utclie.classList.remove("modal--show");
   }
+  if (eUserClientes.target.matches(".del__UC")) {
+    eUserClientes.preventDefault();
+    loadDUC(eUserClientes.target.dataset.id_user);
+  }
 
   if (eUserClientes.target.matches(".edit__UC")) {
     eUserClientes.preventDefault();
-    console.log("click edit usuario del cliente");
+    // console.log("click edit usuario del cliente");
     // utclie.classList.remove("modal--show");
 
     agregoUserCliente.id_user_txt.value = eUserClientes.target.dataset.id_user;
@@ -203,6 +210,41 @@ utclie.addEventListener("click", async (eUserClientes) => {
   }
 });
 
+//  Mail Usuario del cliente al Cliente
+utclie.addEventListener("click", (mUserClientes) => {
+  // id = mUserClientes.target.dataset.id_user;
+  mUserClientes.preventDefault();
+  if (mUserClientes.target.matches(".mail__UC")) {
+    // datosMUC = mUserClientes.dataset.value;
+    // console.log("click en mail send");
+    sendMailUC(mUserClientes.target.dataset.id_user);
+  }
+});
+
+async function loadDUC(duc) {
+  // console.log("click Del", duc);
+  // let formData = new FormData();
+  // formData.append("id", datosMP);
+  const datosDUC = duc;
+  let opciones = {
+    method: "POST",
+    body: datosDUC,
+  };
+  respDU = await fetch("php/deluser.php", opciones);
+  datausr = await respDU.json();
+
+  if (datausr === "400") {
+    alertas.innerHTML = `<div class="alert alert-danger" role="alert">El usuario no pudo ser eliminado</div>`;
+    setTimeout(() => {
+      alertas.innerHTML = ``;
+    }, 3000);
+  }
+  // id_user = "";
+
+  modalUsr.classList.remove("modal--show");
+  loadUC(datausr);
+}
+
 agregoUserCliente.addEventListener("reset", (cau) => {
   agregoUserCliente.reset();
   // cau.preventDefault();
@@ -212,7 +254,7 @@ agregoUserCliente.addEventListener("reset", (cau) => {
 agregoUserCliente.addEventListener("submit", async function (auc) {
   auc.preventDefault();
   const datosAUC = new FormData(agregoUserCliente);
-  if (!auc.target.id_cliente_txt.value) {
+  if (!auc.target.id_user_txt.value) {
     let opciones = {
       method: "POST",
       body: datosAUC,
@@ -225,7 +267,7 @@ agregoUserCliente.addEventListener("submit", async function (auc) {
       body: datosEUC,
     };
     respAU = await fetch("php/actuser.php", opciones);
-    // auc.target.id_cliente_txt.value = "";
+    // auc.target.id_user_txt.value = "";
   }
 
   datausr = await respAU.json();
@@ -236,6 +278,9 @@ agregoUserCliente.addEventListener("submit", async function (auc) {
       alertas.innerHTML = ``;
     }, 3000);
   }
+
+  // document.location.href = "clientes.html";
+  agregoUserCliente.reset();
   modalUsr.classList.remove("modal--show");
   loadUC(datausr);
 });
@@ -299,14 +344,14 @@ lvtclie.addEventListener("click", async function (cclie) {
 
 // alta Vehiculos - Botones Aceptar y Cancelar
 agregoVehiculo.addEventListener("submit", async function (vac) {
-  console.log("click submit");
+  // console.log("click submit");
   // console.log(vac);
   vac.preventDefault();
   id = vac.target.id_cliente_txt.value;
   idV = vac.target.id_vehiculo_txt.value;
 
-  console.log("id cliente ", id);
-  console.log("id Vehiculo ", idV);
+  // console.log("id cliente ", id);
+  // console.log("id Vehiculo ", idV);
 
   if (!idV) {
     const datosVAC = new FormData(agregoVehiculo);
@@ -354,6 +399,7 @@ async function loadUC(idcli) {
     let datosUC = idcli;
     // console.log(datosUC);
     utclie.querySelector(".add__UC").dataset.id_cliente = datosUC;
+    // utclie.querySelector(".mail__UC").dataset.id_cliente = datosUC;
     const opciones = {
       method: "POST",
       body: datosUC,
@@ -380,6 +426,8 @@ async function loadUC(idcli) {
         tempUsrClie.querySelector(".edit__UC").dataset.apellido = eluc.apellido;
         tempUsrClie.querySelector(".edit__UC").dataset.dni = eluc.dni;
 
+        tempUsrClie.querySelector(".mail__UC").dataset.id_user = eluc.id_user;
+
         tempUsrClie.querySelector(".usuario__uc").textContent = eluc.usuario;
 
         tempUsrClie.querySelector(".clave__uc").textContent = "**********";
@@ -387,6 +435,7 @@ async function loadUC(idcli) {
         tempUsrClie.querySelector(".nombre__uc").textContent = eluc.nombre;
         tempUsrClie.querySelector(".apellido__uc").textContent = eluc.apellido;
         tempUsrClie.querySelector(".dni__uc").textContent = eluc.dni;
+        tempUsrClie.querySelector(".del__UC").dataset.id_user = eluc.id_user;
 
         const clone = tempUsrClie.cloneNode(true);
         fragUsrClie.appendChild(clone);
@@ -412,7 +461,7 @@ async function loadVC(id) {
   const respuestas = await fetch("php/vehClie.php", opciones);
   const resultados = await respuestas.json();
   if (resultados === "inexistente") {
-    console.log(datosAC);
+    // console.log(datosAC);
     lvdclie.innerHTML = `
         <div class="alert alert-danger" role="alert">
           No hay vehículos del cliente aun cargados
@@ -538,10 +587,10 @@ async function loadPRVC(prc) {
         el.senia_presu === "null"
       ) {
         $senia = 0;
-        console.log("$senia", $senia);
+        // console.log("$senia", $senia);
       } else {
         $senia = Number(el.senia_presu);
-        console.log("el.senia", el.senia_presu);
+        // console.log("el.senia", el.senia_presu);
       }
       // console.log("el.senia", el.senia_presu);
       if (
@@ -580,5 +629,37 @@ async function loadPRVC(prc) {
     lprvtclie.classList.add("show");
     lprvdclie.appendChild(fragPRVDClie);
     // lvdclie.insertBefore(fragVehDClie);
+  }
+}
+
+//  Usuarios clientes - Envio Mail al generar el usuario del Cliente
+async function sendMailUC(datosMUC) {
+  let formData = new FormData();
+  formData.append("id", datosMUC);
+
+  const opciones = {
+    method: "POST",
+    body: formData,
+  };
+  respMUC = await fetch("php/send_UCMail.php", opciones);
+  dataMUC = await respMUC.json();
+  // console.log(dataMUC);
+  // console.log(dataMUC["err"].value);
+  // console.log(dataMUC["message"].value);
+  // error = dataMUC["err"].value;
+  // mensaje = dataMUC["message"].value;
+
+  if (dataMUC.err === "true") {
+    // console.log("Error");
+    alertasUC.innerHTML = `<div class="alert alert-danger" role="alert">${dataMUC.message}</div>`;
+    setTimeout(() => {
+      alertasUC.innerHTML = ``;
+    }, 3000);
+  } else {
+    // console.log("ok");
+    alertasUC.innerHTML = `<div class="alert alert-success" role="alert">${dataMUC.message}</div>`;
+    setTimeout(() => {
+      alertasUC.innerHTML = ``;
+    }, 3000);
   }
 }

@@ -1,5 +1,6 @@
 <?php
  session_start(); 
+ 
  if ($_SESSION) { 
    $datos=$_SESSION['datos']; 
   }else{

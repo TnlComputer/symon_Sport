@@ -151,6 +151,10 @@ formARep.addEventListener("submit", async function (efr) {
         }, 3000);
       } else {
         formARep.reset();
+        mPatente.innerHTML = ``;
+        mMarca.innerHTML = ``;
+        mModelo.innerHTML = ``;
+
         // inputs.forEach((input) => (input.value = ""));
         modal.classList.remove("modal--show");
         // agrego registro a la lista de reparaciones
@@ -161,6 +165,10 @@ formARep.addEventListener("submit", async function (efr) {
 
 /** Limpio campos cargados al oprimir el boton cancelar **/
 formARep.addEventListener("reset", (ecam) => {
+  mPatente.innerHTML = ``;
+  mMarca.innerHTML = ``;
+  mModelo.innerHTML = ``;
+
   formARep.reset();
   // ecam.stopPropagation();
   // ecam.preventDefault();
@@ -174,7 +182,7 @@ presuARSlc.addEventListener("change", (eAR) =>
 
 /** Formulario de datos para agregar**/
 formERep.addEventListener("submit", async function (efer) {
-  efer.preventDefault();
+  // efer.preventDefault();
 
   const datosERep = new FormData(formERep);
   const opciones = {
@@ -193,7 +201,7 @@ formERep.addEventListener("submit", async function (efer) {
     modalE.classList.remove("modal--show");
     // consTrabDatos.innerHTML = ``;
   }
-
+  // document.location.href = "reparaciones.html";
   loadTrabajos();
 });
 
@@ -203,4 +211,5 @@ formERep.addEventListener("reset", (ecame) => {
   // ecame.stopPropagation();
   // ecame.preventDefault();
   modalE.classList.remove("modal--show");
+  // document.location.href = "reparaciones.html";
 });
