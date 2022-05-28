@@ -11,6 +11,14 @@ $km = $_POST['km_txt'];
 $fechaEnt = $_POST['fechaEnt_txt'];
 $factura = $_POST['factura_txt'];
 
+if (empty($_POST['fechaEnt_txt'])){ 
+ $datosU="UPDATE reparaciones SET fecha_trab='".$fecIni."', km='".$km."',  factura='".$factura."',  observaciones='".$obs."' WHERE  id_trabajo='".$reparacion."'";
+
+}else{
+ $datosU="UPDATE reparaciones SET fecha_trab='".$fecIni."', fecha_entrega='".$fechaEnt."', km='".$km."',  factura='".$factura."',  observaciones='".$obs."' WHERE  id_trabajo='".$reparacion."'";
+
+}
+
 // id_trabajo
 // id_cliente
 // id_vehiculo
@@ -22,15 +30,14 @@ $factura = $_POST['factura_txt'];
 // fecha_entrega
 // km
 
-     $datosU="UPDATE reparaciones SET fecha_trab='".$fecIni."', fecha_entrega='".$fechaEnt."', km='".$km."',  factura='".$factura."',  observaciones='".$obs."' WHERE  id_trabajo='".$reparacion."'";
+     
+// $datosU="UPDATE reparaciones SET fecha_trab='".$fecIni."', fecha_entrega='".$fechaEnt."', km='".$km."',  factura='".$factura."',  observaciones='".$obs."' WHERE  id_trabajo='".$reparacion."'";
+    
+$conexionApi->query($datosU);
 
-    $conexionApi->query($datosU);
-
-    // var_dump($datosU);
-      
-    if(!empty($datosU)){
-        echo json_encode( '200');
-      }else{
-        echo json_encode('400');
-      } 
+if(!empty($datosU)){      
+  echo json_encode($datosU);    
+}else{    
+  echo json_encode('400');      
+} 
 ?>

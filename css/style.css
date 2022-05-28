@@ -234,7 +234,11 @@ textarea {
   justify-content: space-around;
   list-style: none;
   padding: 0;
+}
 
+.main-menu__link {
+  width: 48px;
+  height: 48px;
 }
 
 .main-menu-social {

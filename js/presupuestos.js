@@ -199,13 +199,36 @@ tablaGenerator.addEventListener("click", (event) => {
       if (dataadLP === "400") {
         alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos del Presupuesto</div>`;
       } else {
+        let id = dataadLP;
         // console.log(dataadLP);
-        sendMailPresu(dataadLP);
+        // sendMailPresu(id);
+        let formData = new FormData();
+        formData.append("id", id);
+
+        const opciones = {
+          method: "POST",
+          body: formData,
+        };
+        respMP = await fetch("php/send_PresuMail.php", opciones);
+        dataMP = await respMP.json();
+
+        if (dataMP.err === "true") {
+          console.log(dataMP.message);
+          // datosMP = "";
+        } else {
+          console.log(dataMP.message);
+          // datosMP = "";
+        }
+
         addlinePresu.reset();
+        presuMarca.innerHTML = "";
+        presuModelo.innerHTML = "";
+        presuCliente.innerHTML = "";
+
         modal.classList.remove("modal--show");
         // consPresuDatos.innerHTML = ``;
-        loadPresupuestos();
-        // document.location.href = "presupuestos.html";
+        // loadPresupuestos();
+        document.location.href = "presupuestos.html";
       }
     } else {
       const datosELP = new FormData(addlinePresu);
@@ -245,14 +268,12 @@ tablaGenerator.addEventListener("click", (event) => {
     addlinePresu.id_cliente_txt.value = event.target.dataset.id_cliente;
     addlinePresu.id_vehiculo_txt.value = event.target.dataset.id_vehiculo;
     addlinePresu.desc_txt.value = event.target.dataset.descripcion_presu;
-
     let $saldo = 0;
     let $total = 0;
     let $repuestos = 0;
     let $mobra = 0;
     let $senia = 0;
     let $abonado = 0;
-
     // $repuestos = Number(el.repuestos_presu);
     if (
       event.target.dataset.repuestos_presu === "NaN" ||
@@ -265,7 +286,6 @@ tablaGenerator.addEventListener("click", (event) => {
     }
     // console.log("REPU", el.repuestos_presu);
     // console.log($repuestos);
-
     // $mobra = el.mobra_presu;
     if (
       event.target.dataset.mobra_presu === "NaN" ||
@@ -276,7 +296,6 @@ tablaGenerator.addEventListener("click", (event) => {
     } else {
       $mobra = Number(event.target.dataset.mobra_presu);
     }
-
     if (
       event.total_presu === "NaN" ||
       event.total_presu === "undefined" ||
@@ -286,7 +305,6 @@ tablaGenerator.addEventListener("click", (event) => {
     } else {
       $total = 0;
     }
-
     if (
       event.target.dataset.senia_presu === "NaN" ||
       event.target.dataset.senia_presu === "undefined" ||
@@ -307,20 +325,17 @@ tablaGenerator.addEventListener("click", (event) => {
     } else {
       $abonado = 0;
     }
-
-    console.log("Repuestos ", $repuestos);
-    console.log("Mano Obra ", $mobra);
-    console.log("senia ", $senia);
-    console.log("Total ", $total);
-    console.log("Saldo ", $saldo);
+    // console.log("Repuestos ", $repuestos);
+    // console.log("Mano Obra ", $mobra);
+    // console.log("senia ", $senia);
+    // console.log("Total ", $total);
+    // console.log("Saldo ", $saldo);
     // $total = Number($repuestos) + Number($mobra);
     $total = $repuestos + $mobra;
-    console.log("Total-1 ", $total);
-
+    // console.log("Total-1 ", $total);
     $saldo = $repuestos + $mobra - $senia;
     // $saldo = $total - (Number($senia) + Number($abonado));
-    console.log("Saldo-1 ", $saldo);
-
+    // console.log("Saldo-1 ", $saldo);
     addlinePresu.repuestos_txt.value = $repuestos;
     addlinePresu.mobra_txt.value = $mobra;
     addlinePresu.total_txt.value = $total;
@@ -328,6 +343,7 @@ tablaGenerator.addEventListener("click", (event) => {
     addlinePresu.abonado_txt.value = $saldo;
     addlinePresu.dias_txt.value = event.target.dataset.dias_presu;
   }
+  // loadPresupuestos();
   // if (event.target.closest(".sumar")) {
   //   calcular(event.target.repuestos_txt.value, event.target.mobra_txt.value);
   //   // addlinePresu.total_txt.value =
@@ -336,6 +352,10 @@ tablaGenerator.addEventListener("click", (event) => {
 
 addlinePresu.addEventListener("reset", (ecam) => {
   addlinePresu.reset();
+  presuMarca.innerHTML = "";
+  presuModelo.innerHTML = "";
+  presuCliente.innerHTML = "";
+
   // ecam.preventDefault();
   modal.classList.remove("modal--show");
 });
@@ -366,28 +386,29 @@ function loadPatentes(evptt) {
     });
 }
 
-async function sendMailPresu(datosMP) {
-  console.log(datosMP);
-  // datosMP.preventDefault();
+// async function sendMailPresu(datosMP) {
+//   console.log(datosMP);
+//   var datosSMP = datosMP;
+//   // datosMP.preventDefault();
 
-  let formData = new FormData();
-  formData.append("id", datosMP);
+//   let formData = new FormData();
+//   formData.append("id", datosSMP);
 
-  const opciones = {
-    method: "POST",
-    body: formData,
-  };
-  respMP = await fetch("php/send_PresuMail.php", opciones);
-  dataMP = await respMP.json();
+//   const opciones = {
+//     method: "POST",
+//     body: formData,
+//   };
+//   respMP = await fetch("php/send_PresuMail.php", opciones);
+//   dataMP = await respMP.json();
 
-  if (dataMP === "400") {
-    console.log("Error", dataMP);
-    datosMP = "";
-  } else {
-    console.log("ok", dataMP);
-    datosMP = "";
-  }
-}
+//   if (dataMP.err === "true") {
+//     console.log(dataMP.message);
+//     // datosMP = "";
+//   } else {
+//     console.log(dataMP.message);
+//     // datosMP = "";
+//   }
+// }
 
 // function calcular(repuestos, mobra) {
 // valor1.addEventListener("change", (evento1) => {

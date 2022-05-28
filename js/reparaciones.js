@@ -138,8 +138,8 @@ formARep.addEventListener("submit", async function (efr) {
 
   const datosARep = new FormData(formARep);
 
-  await fetch("./php/addRep.php", {
-    method: "Post",
+  await fetch("php/addRep.php", {
+    method: "POST",
     body: datosARep,
   })
     .then((resARep) => resARep.json())
@@ -182,14 +182,14 @@ presuARSlc.addEventListener("change", (eAR) =>
 
 /** Formulario de datos para agregar**/
 formERep.addEventListener("submit", async function (efer) {
-  // efer.preventDefault();
+  efer.preventDefault();
 
   const datosERep = new FormData(formERep);
   const opciones = {
     method: "POST",
     body: datosERep,
   };
-  let resERep = await fetch("./php/actrep.php", opciones);
+  let resERep = await fetch("php/actrep.php", opciones);
   let dataER = await resERep.json();
   if (dataER === "400") {
     alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos de las reparación</div>`;
