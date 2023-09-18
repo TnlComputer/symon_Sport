@@ -12,4 +12,3 @@ if(!empty($datos)){
 }else{
     echo json_encode([]);
 }
-?>
