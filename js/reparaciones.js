@@ -80,7 +80,7 @@ tablaGenerator.addEventListener("click", async (event) => {
       // setTimeout(() => {
       //   alertas.innerHTML = ``;
       // }, 6000);
-      document.location.href = "presupuestos.html";
+      document.location.href = "presupuestos.php";
     } else {
       event.preventDefault();
       modal.classList.add("modal--show");

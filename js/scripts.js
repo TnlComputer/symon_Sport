@@ -1,115 +1,106 @@
+/************* Seguridad: token CSRF en todos los envíos ***************/
+// El servidor rechaza cualquier POST sin este token (protege contra envíos desde otros sitios).
+const CSRF = document.querySelector('meta[name="csrf-token"]')?.content || "";
+const fetchOriginal = window.fetch.bind(window);
+window.fetch = (recurso, opciones = {}) => {
+  const metodo = (opciones.method || "GET").toUpperCase();
+  const url = new URL(typeof recurso === "string" ? recurso : recurso.url, location.href);
+  if (metodo !== "GET" && url.origin === location.origin) {
+    const cabeceras = new Headers(opciones.headers || {});
+    cabeceras.set("X-CSRF-Token", CSRF);
+    opciones = { ...opciones, headers: cabeceras, credentials: "same-origin" };
+  }
+  return fetchOriginal(recurso, opciones);
+};
+
 /* Menu */
-// const toggleMenuElement = document.getElementById("toggle-menu");
 const mainMenuElement = document.getElementById("main-menu");
-const ell = document.querySelector(".login");
-const elo = document.querySelector(".logout");
-const elu = document.querySelectorAll(".user");
-const ela = document.querySelectorAll(".adm");
 
 /* Consultas */
 const cPatente = document.getElementById("form_cPat");
-const $vehiculos = document.getElementById("cli-vehiculos");
-const datosPatentes = document.getElementById("temp__datos-patentes");
-
-/* Login */
-const formLogin = document.getElementById("form__login");
 
 /* Alertas de error */
 const respuesta = document.getElementById("respuesta");
 
 /************* MENU oculto o muestro en Moviles ***************/
+const toggleMenuElement = document.getElementById("toggle-menu");
 
-// toggleMenuElement.addEventListener("click", () => {
-//   mainMenuElement.classList.toggle("main-menu--show");
-// });
+const cerrarMenu = () => {
+  mainMenuElement.classList.remove("main-menu--show");
+  toggleMenuElement.setAttribute("aria-expanded", "false");
+  toggleMenuElement.setAttribute("aria-label", "Abrir menú");
+};
 
-/************* Valido y restringimos menues ***************/
-const $pathname = window.location.pathname;
-fetch("./php/valido.php")
-  .then((res) => res.json())
-  .then((dataU) => {
-    // console.log(data);
-    if (dataU === "inexistente") {
-      if (
-        $pathname != "/index.html" &&
-        $pathname != "/contacto.html" &&
-        $pathname != "/login.html"
-      ) {
-        document.location.href = "index.html";
-      }
-    }
-    if (dataU.nivel === "99") {
-      // acceso = "Administrador";
-      for (let i = 0; i < ela.length; i++) {
-        ela[i].classList.remove("none");
-        // console.log(ela[i]);
-      }
-      ell.classList.add("none");
-      elo.classList.remove("none");
-    }
-    if (dataU.nivel === "10") {
-      // acceso = "Usuario";
-      for (let i = 0; i < elu.length; i++) {
-        elu[i].classList.remove("none");
-      }
-      ell.classList.add("none");
-      elo.classList.remove("none");
-    }
+if (toggleMenuElement && mainMenuElement) {
+  toggleMenuElement.addEventListener("click", () => {
+    const abierto = mainMenuElement.classList.toggle("main-menu--show");
+    toggleMenuElement.setAttribute("aria-expanded", String(abierto));
+    toggleMenuElement.setAttribute("aria-label", abierto ? "Cerrar menú" : "Abrir menú");
   });
-// }
 
-elo.addEventListener("click", (e) => {
-  e.preventDefault();
-  fetch("./php/desconecto.php")
-    .then((res) => res.json())
-    .then((data) => {
-      if (data === "inexistente") {
-        for (let i = 0; i < ela.length; i++) {
-          ela[i].classList.add("none");
-        }
-        ell.classList.remove("none");
-        elo.classList.add("none");
-        for (let i = 0; i < elu.length; i++) {
-          elu[i].classList.add("none");
-        }
-      }
-      document.location.href = "login.html";
-    });
+  // cierro el menu al tocar fuera o con Escape
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".main-nav")) cerrarMenu();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") cerrarMenu();
+  });
+}
+
+/************* Mostrar / ocultar contraseña (todos los campos) ***************/
+const OJO_ABIERTO =
+  '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+const OJO_CERRADO =
+  '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.5 10.5 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6A17.6 17.6 0 0 0 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
+
+document.querySelectorAll('input[type="password"]').forEach((input) => {
+  const envoltorio = document.createElement("span");
+  envoltorio.className = "campo-clave";
+  input.parentNode.insertBefore(envoltorio, input);
+  envoltorio.appendChild(input);
+
+  const boton = document.createElement("button");
+  boton.type = "button";
+  boton.className = "campo-clave__ver";
+  boton.setAttribute("aria-label", "Mostrar contraseña");
+  boton.innerHTML = OJO_ABIERTO;
+  boton.addEventListener("click", () => {
+    const mostrar = input.type === "password";
+    input.type = mostrar ? "text" : "password";
+    boton.innerHTML = mostrar ? OJO_CERRADO : OJO_ABIERTO;
+    boton.setAttribute("aria-label", mostrar ? "Ocultar contraseña" : "Mostrar contraseña");
+  });
+  envoltorio.appendChild(boton);
 });
-// }
 
-/************* Login *****************/
-
-if (formLogin) {
-  formLogin.addEventListener("submit", async function (e) {
+/************* Cerrar sesión ***************/
+// El menú (y qué páginas puede ver cada rol) lo arma el servidor.
+document.querySelectorAll("[data-salir]").forEach((enlace) =>
+  enlace.addEventListener("click", async (e) => {
     e.preventDefault();
+    await fetch("./php/desconecto.php", { method: "POST" }).catch(() => {});
+    document.location.href = "login.php";
+  })
+);
 
-    let datos = new FormData(formLogin);
+/************* Menú de la cuenta (escritorio) ***************/
+const cuentaBoton = document.getElementById("cuenta-boton");
+const cuentaMenu = document.getElementById("cuenta-menu");
 
-    await fetch("./php/enviar.php", {
-      method: "POST",
-      body: datos,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data === "inexistente") {
-          respuesta.innerHTML = `
-        <div class="alert alert-danger" role="alert">
-          El usuario o contraseña es erroneo
-        </div>`;
-          setTimeout(() => {
-            respuesta.innerHTML = ``;
-          }, 3000);
-        } else {
-          if (data.nivel === "99") {
-            acceso = "Administrador";
-            document.location.href = "index.html";
-          } else {
-            acceso = "Usuario";
-            document.location.href = "consultas.html";
-          }
-        }
-      });
+if (cuentaBoton && cuentaMenu) {
+  const abrirCuenta = (abrir) => {
+    cuentaMenu.hidden = !abrir;
+    cuentaBoton.setAttribute("aria-expanded", String(abrir));
+  };
+  cuentaBoton.addEventListener("click", () => abrirCuenta(cuentaMenu.hidden));
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".cuenta")) abrirCuenta(false);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !cuentaMenu.hidden) {
+      abrirCuenta(false);
+      cuentaBoton.focus();
+    }
   });
 }
 
@@ -147,13 +138,10 @@ if (cPatente) {
 
           consPatDatos.innerHTML = ``;
           dataP.forEach((ele) => {
-            // templateCons.querySelector(".patente__t").textContent = ele.patente;
             templateCons.querySelector(".fecha__t").textContent =
               ele.fecha_trab;
             templateCons.querySelector(".fecha__e").textContent =
               ele.fecha_entrega;
-            // templateCons.querySelector(".client__t").textContent =
-            //   ele.empresa_nyp;
             templateCons.querySelector(".marca__t").textContent = ele.marca;
             templateCons.querySelector(".modelo__t").textContent = ele.modelo;
             templateCons.querySelector(".km__t").textContent = ele.km;
@@ -163,7 +151,6 @@ if (cPatente) {
               ".total__t"
             ).textContent = `$ ${ele.total_presu}
             `;
-            // templateCons.querySelector(".factu__t").textContent = ele.factura;
             templateCons.querySelector(".descript__t").textContent =
               ele.observaciones;
             const clone = templateCons.cloneNode(true);

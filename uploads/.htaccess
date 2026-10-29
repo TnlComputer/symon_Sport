@@ -1,0 +1,8 @@
+# Fotos subidas por los usuarios: solo imágenes, nunca se ejecuta código acá
+<FilesMatch "\.(?i:php|phtml|phar|pl|py|cgi|sh|html?|js|svg)$">
+  Require all denied
+</FilesMatch>
+<IfModule mod_php.c>
+  php_flag engine off
+</IfModule>
+Options -Indexes -ExecCGI

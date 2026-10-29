@@ -1,22 +1,11 @@
 <?php
-require_once "connections/conexion.php";
-error_reporting(E_ALL ^ E_NOTICE);
+// Datos de un presupuesto para la pantalla de reparaciones (admin). Respuesta: objeto o 'error'
+require_once "admin_lib.php";
 
-$metodo= $_SERVER['REQUEST_METHOD'];
-$resultado = array();
-
-if ($metodo==='POST') {
-      $datos = json_decode(file_get_contents("php://input"), true);
-      $resultado['datos'] = json_encode($datos);
-      $presu=$resultado['datos'];
-
-$cons=$conexionApi->query("SELECT clientes.empresa_nyp, vehiculos.marca, vehiculos.modelo, vehiculos.patente, presupuestos.id_presu 
-FROM presupuestos INNER JOIN clientes ON presupuestos.id_cliente=clientes.id_cliente INNER JOIN vehiculos ON presupuestos.id_vehiculo=vehiculos.id_vehiculo WHERE presupuestos.id_presu='".$presu."'");
-      $datos = mysqli_fetch_array($cons);
-}
-if(!empty($datos)){
-    echo json_encode($datos);
-}else{
-    echo json_encode('error'); 
-}
-?>
+$id = (int)json_decode(file_get_contents("php://input"), true);
+$fila = q("SELECT c.empresa_nyp, v.marca, v.modelo, v.patente, p.id_presu
+  FROM presupuestos p
+  JOIN clientes c ON c.id_cliente = p.id_cliente
+  JOIN vehiculos v ON v.id_vehiculo = p.id_vehiculo
+  WHERE p.id_presu = ?", 'i', $id)[0] ?? null;
+salir($fila ?: 'error');

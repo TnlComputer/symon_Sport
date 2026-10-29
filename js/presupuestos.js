@@ -1,436 +1,441 @@
-const consPresuDatos = document.querySelector(".line__tabla");
-const templatePresu = document.getElementById("template__Presupuestos").content;
-const fragmentPresu = document.createDocumentFragment();
-const tablaGenerator = document.querySelector(".tablagen");
-const addTrabajo = document.querySelector(".form__add");
-const editTrabajo = document.querySelector(".form__edit");
-const delTrabajo = document.querySelector(".form__del");
+/* Presupuestos (administrador): cliente → sus vehículos → trabajo → repuestos → importes */
+const API = "./php/presupuestos_api.php";
+const $ = (id) => document.getElementById(id);
+const editor = $("ps-editor");
+const psAviso = $("ps-aviso");
+let config = { ganancia_repuestos_pct: 30, recargo_mo_repuesto_cliente_pct: 0, lavado_precio: 0, lavado_por_defecto: 1 };
+let items = []; // { id_repuesto, descripcion, cantidad, provisto, precio_unit, costo }
+let avisoTimer;
 
-/** MODAL**/
-const modal = document.querySelector(".modal");
-const closeModal = document.querySelector(".modal__close");
-const cancelModal = document.querySelector(".modal__cancel");
-const patenteSlc = document.getElementById("patente_slc");
-const formAPres = document.getElementById("form__APres");
-const alertas = document.getElementById("modal__alert");
+const pesos = (n) => "$ " + Number(n || 0).toLocaleString("es-AR", { maximumFractionDigits: 2 });
+const num = (v) => {
+  const n = parseFloat(String(v).replace(",", "."));
+  return Number.isFinite(n) ? n : 0;
+};
+const hoyISO = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+};
+const fmtFecha = (iso) => {
+  if (!iso) return "";
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString("es-AR", { day: "numeric", month: "short", year: "numeric" });
+};
+const el = (tag, props = {}, ...hijos) => {
+  const e = Object.assign(document.createElement(tag), props);
+  hijos.forEach((h) => h !== null && h !== undefined && e.append(h));
+  return e;
+};
 
-const presuCliente = document.querySelector(".modal__cliente-presu");
-const presuMarca = document.querySelector(".modal__marca-presu");
-const presuModelo = document.querySelector(".modal__modelo-presu");
+function avisar(msg, error = false) {
+  psAviso.textContent = msg;
+  psAviso.classList.toggle("cf-aviso--error", error);
+  psAviso.hidden = false;
+  clearTimeout(avisoTimer);
+  avisoTimer = setTimeout(() => (psAviso.hidden = true), 4000);
+}
 
-const addlinePresu = document.querySelector(".alp__form");
-const valor1 = document.querySelector(".valor1");
-const valor2 = document.querySelector(".valor2");
-// let inputs = document.querySelectorAll("input");
+async function api(params, cuerpo) {
+  const url = cuerpo ? API : `${API}?${new URLSearchParams(params)}`;
+  const opciones = cuerpo ? { method: "POST", body: cuerpo } : undefined;
+  const res = await fetch(url, opciones);
+  const datos = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(datos.error || "Ocurrió un error");
+  return datos;
+}
 
-async function loadPresupuestos() {
-  consPresuDatos.innerHTML = ``;
-  const respuestas = await fetch("php/presupuestos.php");
-  const resultados = await respuestas.json();
-  if (resultados === "inexistente") {
-    consPresuDatos.innerHTML = `
-        <div class="alert alert-danger" role="alert">
-          No hay presupuestos emitidos
-          </div>`;
-  } else {
-    consPresuDatos.innerHTML = ``;
-    resultados.forEach((el) => {
-      templatePresu.querySelector(".edit__form").dataset.id_presu = el.id_presu;
-      templatePresu.querySelector(".edit__form").dataset.id_vehiculo =
-        el.id_vehiculo;
-      templatePresu.querySelector(".edit__form").dataset.id_cliente =
-        el.id_cliente;
-      templatePresu.querySelector(".edit__form").dataset.empresa_nyp =
-        el.empresa_nyp;
-      templatePresu.querySelector(".edit__form").dataset.patente = el.patente;
-      templatePresu.querySelector(".edit__form").dataset.marca = el.marca;
-      templatePresu.querySelector(".edit__form").dataset.modelo = el.modelo;
-      templatePresu.querySelector(".edit__form").dataset.fecha_presu =
-        el.fecha_presu;
-      templatePresu.querySelector(".edit__form").dataset.total_presu =
-        el.total_presu;
-      templatePresu.querySelector(".edit__form").dataset.descripcion_presu =
-        el.descripcion_presu;
-      templatePresu.querySelector(".edit__form").dataset.repuestos_presu =
-        el.repuestos_presu;
-      templatePresu.querySelector(".edit__form").dataset.mobra_presu =
-        el.mobra_presu;
-      templatePresu.querySelector(".edit__form").dataset.dias_presu =
-        el.dias_presu;
-      templatePresu.querySelector(".edit__form").dataset.senia_presu =
-        el.senia_presu;
-      templatePresu.querySelector(".edit__form").dataset.abonado_presu =
-        el.abonado_presu;
+const formData = (obj) => {
+  const fd = new FormData();
+  Object.entries(obj).forEach(([k, v]) => fd.append(k, v ?? ""));
+  return fd;
+};
 
-      templatePresu.querySelector(".presu__p").textContent = el.id_presu;
-      templatePresu.querySelector(".client__p").textContent = el.empresa_nyp;
-      templatePresu.querySelector(".patente__p").textContent = el.patente;
-      templatePresu.querySelector(".marca__p").textContent = el.marca;
-      templatePresu.querySelector(".modelo__p").textContent = el.modelo;
-      templatePresu.querySelector(".fecha__p").textContent = el.fecha_presu;
+const demorar = (fn, ms = 250) => {
+  let t;
+  return (...a) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...a), ms);
+  };
+};
 
-      let $saldo = 0;
-      let $total = 0;
-      let $repuestos = 0;
-      let $mobra = 0;
-      let $senia = 0;
-
-      // $repuestos = Number(el.repuestos_presu);
-      if (
-        el.repuestos_presu === "NaN" ||
-        el.repuestos_presu === "undefined" ||
-        el.repuestos_presu === "null"
-      ) {
-        $repuestos = 0;
-      } else {
-        $repuestos = Number(el.repuestos_presu);
+/* =================== LISTADO =================== */
+async function cargarListado() {
+  const lista = $("ps-lista");
+  try {
+    const { presupuestos } = await api({ accion: "listar", q: $("ps-q").value.trim() });
+    lista.innerHTML = "";
+    if (!presupuestos.length) {
+      lista.append(el("p", { className: "tn-cargando", textContent: "No hay presupuestos." }));
+      return;
+    }
+    presupuestos.forEach((p) => {
+      const card = el("article", { className: "ps-card" + (Number(p.usado) ? " ps-card--usado" : "") });
+      const cab = el("div", { className: "ps-card__cab" },
+        el("span", { className: "ps-card__num", textContent: `#${p.id_presu}` }),
+        el("span", { className: "tn-placa", textContent: p.patente || "—" }),
+        el("strong", { textContent: p.empresa_nyp || "Sin cliente" }),
+        el("span", { className: "ps-card__fecha", textContent: fmtFecha(p.fecha_presu) }));
+      const desc = el("p", { className: "ps-card__desc", textContent: p.descripcion_presu || "" });
+      const pie = el("div", { className: "ps-card__pie" },
+        el("span", { textContent: [p.marca, p.modelo].filter(Boolean).join(" ") }),
+        el("strong", { className: "ps-card__total", textContent: pesos(p.total_presu) }));
+      const estado = el("div", { className: "ps-card__estado" });
+      estado.append(el("span", { className: "ps-chip" + (Number(p.usado) ? " ps-chip--ok" : ""), textContent: Number(p.usado) ? "En reparación / aprobado" : "Pendiente" }));
+      if (Number(p.lavado_presu) > 0) {
+        const lav = el("button", { type: "button", className: "ps-chip ps-chip--lavado" + (p.lavado_hecho ? " ps-chip--ok" : ""), textContent: p.lavado_hecho ? "Lavado ✓" : "Lavar antes de entregar" });
+        lav.title = "Marcar / desmarcar lavado hecho";
+        lav.addEventListener("click", async (e) => {
+          e.stopPropagation();
+          await api(null, formData({ accion: "lavado_hecho", id: p.id_presu }));
+          cargarListado();
+        });
+        estado.append(lav);
       }
-      // console.log("REPU", el.repuestos_presu);
-      // console.log($repuestos);
-
-      // $mobra = el.mobra_presu;
-      if (
-        el.mobra_presu === "NaN" ||
-        el.mobra_presu === "undefined" ||
-        el.mobra_presu === "null"
-      ) {
-        $mobra = 0;
-      } else {
-        $mobra = Number(el.mobra_presu);
-      }
-      if (
-        el.total_presu === "NaN" ||
-        el.total_presu === "undefined" ||
-        el.total_presu === "null"
-      ) {
-        $total = 0;
-      } else {
-        $total = 0;
-      }
-
-      if (
-        el.senia_presu === "NaN" ||
-        el.senia_presu === "undefined" ||
-        el.senia_presu === "null"
-      ) {
-        $senia = 0;
-        // console.log("$senia", $senia);
-      } else {
-        $senia = Number(el.senia_presu);
-        // console.log("el.senia", el.senia_presu);
-      }
-      // console.log("el.senia", el.senia_presu);
-      if (
-        el.abonado_presu === "NaN" ||
-        el.abonado_presu === "undefined" ||
-        el.abonado_presu === "null"
-      ) {
-        $saldo = 0;
-      } else {
-        $saldo = 0;
-      }
-
-      // console.log("Repuestos ", $repuestos);
-      // console.log("Mano Obra ", $mobra);
-      // console.log("senia ", $senia);
-      // console.log("Total ", $total);
-      // console.log("Saldo ", $saldo);
-      // $total = Number($repuestos) + Number($mobra);
-      $total = $repuestos + $mobra;
-      // console.log("Total-1 ", $total);
-
-      $saldo = $repuestos + $mobra - $senia;
-      // $saldo = $total - (Number($senia) + Number($abonado));
-      // console.log("Saldo-1 ", $saldo);
-
-      templatePresu.querySelector(".monto__p").textContent = `$ ${$total}`;
-      templatePresu.querySelector(".saldo__p").textContent = $saldo;
-      templatePresu.querySelector(".descript__p").textContent =
-        el.descripcion_presu;
-      const clone = templatePresu.cloneNode(true);
-      fragmentPresu.appendChild(clone);
+      card.append(cab, desc, estado, pie);
+      card.tabIndex = 0;
+      card.addEventListener("click", () => abrirPresupuesto(p.id_presu));
+      card.addEventListener("keydown", (e) => e.key === "Enter" && abrirPresupuesto(p.id_presu));
+      lista.append(card);
     });
-    consPresuDatos.appendChild(fragmentPresu);
+  } catch (e) {
+    avisar(e.message, true);
   }
 }
-// consPresuDatos.innerHTML = ``;
-loadPresupuestos();
 
-//agrego un listener unico al contenedor en donde se encuentra el boton de agregar reparación y toda la tabla de los productos
-tablaGenerator.addEventListener("click", (event) => {
-  // console.log(event.target);
+/* =================== EDITOR =================== */
+function mostrarEditor(mostrar) {
+  editor.hidden = !mostrar;
+  $("ps-listado").hidden = mostrar;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
-  // chequeo si se presiono el boton de agregar tarea
-  if (event.target.closest(".add__form")) {
-    event.preventDefault();
-    modal.classList.add("modal--show");
-    loadPatentes();
+function pasos({ cliente, vehiculo }) {
+  $("ps-paso-vehiculo").hidden = !cliente;
+  ["ps-paso-trabajo", "ps-paso-repuestos", "ps-lateral"].forEach((id) => ($(id).hidden = !vehiculo));
+}
+
+function nuevoPresupuesto() {
+  editor.reset();
+  editor.id_presu.value = "";
+  editor.id_cliente.value = "";
+  editor.id_vehiculo.value = "";
+  editor.fecha.value = hoyISO();
+  editor.lavado.value = Number(config.lavado_por_defecto) ? config.lavado_precio : 0;
+  items = [];
+  $("ps-titulo").textContent = "Nuevo presupuesto";
+  $("ps-cliente-elegido").hidden = true;
+  $("ps-cliente-buscar").hidden = false;
+  $("ps-cliente-resultados").innerHTML = "";
+  $("ps-enviar-mail").closest("label").hidden = false;
+  pasos({ cliente: false, vehiculo: false });
+  pintarItems();
+  mostrarEditor(true);
+  $("ps-cliente-q").focus();
+}
+
+async function abrirPresupuesto(id) {
+  try {
+    const d = await api({ accion: "detalle", id });
+    config = d.config;
+    const p = d.presupuesto;
+    editor.reset();
+    editor.id_presu.value = p.id_presu;
+    editor.fecha.value = p.fecha_presu || hoyISO();
+    editor.dias.value = p.dias_presu ?? 10;
+    editor.descripcion.value = p.descripcion_presu || "";
+    // presupuestos viejos no tienen desglose: la mano de obra base es la que figuraba
+    editor.mano_obra.value = p.mobra_base_presu !== null ? num(p.mobra_base_presu) : num(p.mobra_presu);
+    editor.lavado.value = num(p.lavado_presu);
+    editor.senia.value = num(p.senia_presu);
+    items = d.items.map((i) => ({ ...i, cantidad: num(i.cantidad), precio_unit: num(i.precio_unit), costo: num(i.costo_unit) }));
+    // presupuestos viejos: el importe de repuestos sin detalle queda como un ítem
+    if (!items.length && num(p.repuestos_presu) > 0) {
+      items.push({ id_repuesto: null, descripcion: "Repuestos (importe anterior)", cantidad: 1, provisto: "taller", precio_unit: num(p.repuestos_presu), costo: 0 });
+    }
+    $("ps-titulo").textContent = `Presupuesto #${p.id_presu}`;
+    $("ps-enviar-mail").closest("label").hidden = true;
+    await elegirCliente({ id_cliente: p.id_cliente, empresa_nyp: p.empresa_nyp }, p.id_vehiculo);
+    pintarItems();
+    mostrarEditor(true);
+  } catch (e) {
+    avisar(e.message, true);
   }
+}
 
-  /** relleno los campos de Cliente, Marca y Modelo * */
-  patenteSlc.addEventListener("change", (emm) =>
-    loadVehiculos(emm.target.value)
-  );
+/* ---------- 1. Cliente ---------- */
+const buscarClientes = demorar(async () => {
+  const q = $("ps-cliente-q").value.trim();
+  const ul = $("ps-cliente-resultados");
+  ul.innerHTML = "";
+  if (q.length < 2) return;
+  const { clientes } = await api({ accion: "clientes", q });
+  if (!clientes.length) ul.append(el("li", { className: "ps-sin", textContent: "Sin resultados. Cargá el cliente en Clientes." }));
+  clientes.forEach((c) => {
+    const li = el("li", {},
+      el("button", { type: "button", className: "ps-res" },
+        el("strong", { textContent: c.empresa_nyp }),
+        el("small", { textContent: [c.cuit, c.celular, c.mail].filter(Boolean).join(" · ") })));
+    li.firstChild.addEventListener("click", () => elegirCliente(c));
+    ul.append(li);
+  });
+});
+$("ps-cliente-q").addEventListener("input", buscarClientes);
 
-  async function loadVehiculos(datos) {
-    const opciones = {
-      method: "POST",
-      body: datos,
-    };
-    const resp = await fetch("php/patmm.php", opciones);
-    const data = await resp.json();
+async function elegirCliente(c, idVehiculo = null) {
+  editor.id_cliente.value = c.id_cliente;
+  $("ps-cliente-nombre").textContent = c.empresa_nyp;
+  $("ps-cliente-elegido").hidden = false;
+  $("ps-cliente-buscar").hidden = true;
+  editor.id_vehiculo.value = "";
+  pasos({ cliente: true, vehiculo: false });
+  await cargarVehiculos(idVehiculo);
+}
 
-    presuMarca.innerHTML = `${data.marca}`;
-    presuModelo.innerHTML = `${data.modelo}`;
-    presuCliente.innerHTML = `Cliente: ${data.empresa_nyp}`;
+$("ps-cliente-cambiar").addEventListener("click", () => {
+  editor.id_cliente.value = "";
+  editor.id_vehiculo.value = "";
+  $("ps-cliente-elegido").hidden = true;
+  $("ps-cliente-buscar").hidden = false;
+  $("ps-cliente-q").value = "";
+  $("ps-cliente-resultados").innerHTML = "";
+  pasos({ cliente: false, vehiculo: false });
+  $("ps-cliente-q").focus();
+});
+
+/* ---------- 2. Vehículos del cliente ---------- */
+async function cargarVehiculos(elegir = null) {
+  const cont = $("ps-autos");
+  cont.innerHTML = "";
+  const { vehiculos } = await api({ accion: "vehiculos", id_cliente: editor.id_cliente.value });
+  $("ps-nuevo-auto").open = !vehiculos.length;
+  if (!vehiculos.length) cont.append(el("p", { className: "tn-mios__ayuda", textContent: "Este cliente no tiene vehículos. Agregá uno." }));
+  vehiculos.forEach((v) => {
+    const b = el("button", { type: "button", className: "tn-auto ps-auto" },
+      el("span", { className: "tn-placa", textContent: v.patente }),
+      el("strong", { textContent: [v.marca, v.modelo].filter(Boolean).join(" ") || "Vehículo" }),
+      el("small", { textContent: v.anio || "" }));
+    b.addEventListener("click", () => elegirVehiculo(v.id_vehiculo));
+    b.dataset.id = v.id_vehiculo;
+    cont.append(b);
+  });
+  if (elegir) elegirVehiculo(elegir);
+}
+
+function elegirVehiculo(id) {
+  editor.id_vehiculo.value = id;
+  $("ps-autos").querySelectorAll(".ps-auto").forEach((b) => b.classList.toggle("is-elegido", b.dataset.id == id));
+  pasos({ cliente: true, vehiculo: true });
+  calcular();
+}
+
+$("ps-auto-patente").addEventListener("input", (e) => {
+  e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  $("ps-traspaso").hidden = true;
+});
+
+async function agregarVehiculo(confirmarTraspaso = false) {
+  const datos = {
+    accion: "vehiculo",
+    id_cliente: editor.id_cliente.value,
+    patente: $("ps-auto-patente").value,
+    marca: $("ps-auto-marca").value,
+    modelo: $("ps-auto-modelo").value,
+    anio: $("ps-auto-anio").value,
+  };
+  if (confirmarTraspaso) datos.confirmar_traspaso = 1;
+  try {
+    const r = await api(null, formData(datos));
+    if (r.traspaso) {
+      // la patente es de otro cliente: pido confirmación
+      const caja = $("ps-traspaso");
+      caja.innerHTML = "";
+      const btn = el("button", { type: "button", className: "btn btn--accent ag-btn", textContent: "Sí, pasar el vehículo a este cliente" });
+      btn.addEventListener("click", () => agregarVehiculo(true));
+      caja.append(
+        el("p", { textContent: `La patente ${datos.patente} (${[r.marca, r.modelo, r.anio].filter(Boolean).join(" ")}) figura a nombre de ${r.cliente_anterior}.` }),
+        el("p", { textContent: "Si la pasás, deja de aparecer en la lista del cliente anterior y su historial de reparaciones queda con el auto." }),
+        btn);
+      caja.hidden = false;
+      return;
+    }
+    $("ps-traspaso").hidden = true;
+    ["ps-auto-patente", "ps-auto-marca", "ps-auto-modelo", "ps-auto-anio"].forEach((id) => ($(id).value = ""));
+    avisar(r.traspasado ? "Vehículo traspasado al cliente con su historial." : "Vehículo agregado.");
+    await cargarVehiculos(r.id_vehiculo);
+  } catch (e) {
+    avisar(e.message, true);
   }
+}
+$("ps-auto-agregar").addEventListener("click", () => agregarVehiculo(false));
 
-  addlinePresu.addEventListener("submit", async function (ealp) {
-    ealp.preventDefault();
-    if (!ealp.target.id_cliente_txt.value) {
-      const datosALP = new FormData(addlinePresu);
+/* ---------- 4. Repuestos ---------- */
+const buscarRepuestos = demorar(async () => {
+  const q = $("ps-rep-q").value.trim();
+  const ul = $("ps-rep-resultados");
+  ul.innerHTML = "";
+  if (q.length < 2) return;
+  const r = await api({ accion: "repuestos", q });
+  config = r.config;
+  if (!r.repuestos.length) ul.append(el("li", { className: "ps-sin", textContent: "No está en el catálogo. Usá «Agregar un repuesto que no está»." }));
+  r.repuestos.forEach((rep) => {
+    const li = el("li", {},
+      el("button", { type: "button", className: "ps-res" },
+        el("strong", { textContent: rep.descripcion }),
+        el("small", { textContent: `${[rep.codigo, rep.marca].filter(Boolean).join(" · ")}  —  ${pesos(rep.precio)}` })));
+    li.firstChild.addEventListener("click", () => {
+      items.push({ id_repuesto: rep.id_repuesto, descripcion: rep.descripcion, cantidad: 1, provisto: "taller", precio_unit: num(rep.precio), costo: num(rep.costo) });
+      $("ps-rep-q").value = "";
+      ul.innerHTML = "";
+      pintarItems();
+    });
+    ul.append(li);
+  });
+});
+$("ps-rep-q").addEventListener("input", buscarRepuestos);
+$("ps-rep-manual").addEventListener("click", () => {
+  items.push({ id_repuesto: null, descripcion: "", cantidad: 1, provisto: "taller", precio_unit: 0, costo: 0 });
+  pintarItems();
+  const ultimo = $("ps-items").querySelector(".ps-item:last-child input");
+  if (ultimo) ultimo.focus();
+});
 
-      const opciones = {
-        method: "POST",
-        body: datosALP,
-      };
-      respLP = await fetch("php/addlp.php", opciones);
-      dataadLP = await respLP.json();
-      if (dataadLP === "400") {
-        alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos del Presupuesto</div>`;
-      } else {
-        let id = dataadLP;
-        // console.log(dataadLP);
-        // sendMailPresu(id);
-        let formData = new FormData();
-        formData.append("id", id);
+function pintarItems() {
+  const cont = $("ps-items");
+  cont.innerHTML = "";
+  if (!items.length) {
+    cont.append(el("p", { className: "tn-mios__ayuda", textContent: "Sin repuestos (solo mano de obra)." }));
+  }
+  items.forEach((it, i) => {
+    const desc = el("input", { className: "ps-input", value: it.descripcion, placeholder: "Descripción", maxLength: 150 });
+    desc.addEventListener("input", () => (it.descripcion = desc.value));
+    desc.readOnly = !!it.id_repuesto;
 
-        const opciones = {
-          method: "POST",
-          body: formData,
-        };
-        respMP = await fetch("php/send_PresuMail.php", opciones);
-        dataMP = await respMP.json();
+    const cant = el("input", { className: "ps-input ps-cant", type: "number", min: 0.01, step: 1, value: it.cantidad });
+    cant.setAttribute("aria-label", "Cantidad");
+    cant.addEventListener("input", () => { it.cantidad = num(cant.value); calcular(); subtotal.textContent = sub(); });
 
-        if (dataMP.err === "true") {
-          console.log(dataMP.message);
-          // datosMP = "";
-        } else {
-          console.log(dataMP.message);
-          // datosMP = "";
-        }
+    const precio = el("input", { className: "ps-input ps-precio", type: "number", min: 0, step: 100, value: it.precio_unit });
+    precio.setAttribute("aria-label", "Precio unitario");
+    precio.addEventListener("input", () => { it.precio_unit = num(precio.value); calcular(); subtotal.textContent = sub(); });
 
-        addlinePresu.reset();
-        presuMarca.innerHTML = "";
-        presuModelo.innerHTML = "";
-        presuCliente.innerHTML = "";
+    const sub = () => (it.provisto === "cliente" ? "Lo trae el cliente" : pesos(it.cantidad * it.precio_unit));
+    const subtotal = el("span", { className: "ps-subtotal", textContent: sub() });
 
-        modal.classList.remove("modal--show");
-        // consPresuDatos.innerHTML = ``;
-        // loadPresupuestos();
-        document.location.href = "presupuestos.html";
-      }
-    } else {
-      const datosELP = new FormData(addlinePresu);
+    // quién pone el repuesto
+    const grupo = el("div", { className: "ps-provisto", role: "radiogroup" });
+    grupo.setAttribute("aria-label", "Quién pone el repuesto");
+    [["taller", "Lo compra Symon Sport"], ["cliente", "Lo trae el cliente"]].forEach(([valor, texto]) => {
+      const b = el("button", { type: "button", className: "ps-provisto__op" + (it.provisto === valor ? " is-activo" : ""), textContent: texto });
+      b.setAttribute("role", "radio");
+      b.setAttribute("aria-checked", String(it.provisto === valor));
+      b.addEventListener("click", () => { it.provisto = valor; pintarItems(); });
+      grupo.append(b);
+    });
 
-      const opciones = {
-        method: "POST",
-        body: datosELP,
-      };
-      respLP = await fetch("php/actlp.php", opciones);
-      ealp.target.id_cliente_txt.value = "";
+    const quitar = el("button", { type: "button", className: "ps-quitar", textContent: "×", title: "Quitar repuesto" });
+    quitar.setAttribute("aria-label", "Quitar repuesto");
+    quitar.addEventListener("click", () => { items.splice(i, 1); pintarItems(); });
 
-      dataadLP = await respLP.json();
-      if (dataadLP === "400") {
-        alertas.innerHTML = `<div class="alert alert-danger" role="alert"> Error al guardar los datos del Presupuesto</div>`;
-      } else {
-        // console.log(dataadLP);
-        // sendMailPresu(dataadLP);
-        addlinePresu.reset();
-        modal.classList.remove("modal--show");
-        // consPresuDatos.innerHTML = ``;
-        loadPresupuestos();
-        // document.location.href = "presupuestos.html";
-      }
+    precio.disabled = it.provisto === "cliente";
+    cont.append(el("div", { className: "ps-item" + (it.provisto === "cliente" ? " ps-item--cliente" : "") },
+      el("div", { className: "ps-item__fila" }, desc, quitar),
+      el("div", { className: "ps-item__fila" }, el("label", { className: "ps-mini" }, "Cant.", cant), el("label", { className: "ps-mini" }, "Precio unit.", precio), subtotal),
+      grupo));
+  });
+  calcular();
+}
+
+/* ---------- 5. Importes (misma cuenta que el servidor) ---------- */
+function calcular() {
+  let repuestos = 0;
+  let costo = 0;
+  let traeCliente = false;
+  items.forEach((it) => {
+    if (it.provisto === "cliente") traeCliente = true;
+    else {
+      repuestos += it.cantidad * it.precio_unit;
+      costo += it.cantidad * (it.costo || 0);
     }
   });
+  const base = num(editor.mano_obra.value);
+  const lavado = Math.max(0, num(editor.lavado.value));
+  const recargo = traeCliente ? Math.round(base * num(config.recargo_mo_repuesto_cliente_pct)) / 100 : 0;
+  const moCliente = base + recargo + lavado;
+  const total = repuestos + moCliente;
+  const senia = num(editor.senia.value);
 
-  //chequeo si se presiono algun boton de editar tarea
-  if (event.target.closest(".edit__form")) {
-    event.preventDefault();
-    loadPatentes(event.target.dataset.id_vehiculo);
-    data = event.target.dataset.id_presu;
-    // console.log(data);
-    modal.classList.add("modal--show");
-    addlinePresu.fecha_txt.value = event.target.dataset.fecha_presu;
-    loadVehiculos(event.target.dataset.id_vehiculo);
-    addlinePresu.id_presu_txt.value = event.target.dataset.id_presu;
-    addlinePresu.id_cliente_txt.value = event.target.dataset.id_cliente;
-    addlinePresu.id_vehiculo_txt.value = event.target.dataset.id_vehiculo;
-    addlinePresu.desc_txt.value = event.target.dataset.descripcion_presu;
-    let $saldo = 0;
-    let $total = 0;
-    let $repuestos = 0;
-    let $mobra = 0;
-    let $senia = 0;
-    let $abonado = 0;
-    // $repuestos = Number(el.repuestos_presu);
-    if (
-      event.target.dataset.repuestos_presu === "NaN" ||
-      event.target.dataset.repuestos_presu === "undefined" ||
-      event.target.dataset.repuestos_presu === "null"
-    ) {
-      $repuestos = 0;
-    } else {
-      $repuestos = Number(event.target.dataset.repuestos_presu);
-    }
-    // console.log("REPU", el.repuestos_presu);
-    // console.log($repuestos);
-    // $mobra = el.mobra_presu;
-    if (
-      event.target.dataset.mobra_presu === "NaN" ||
-      event.target.dataset.mobra_presu === "undefined" ||
-      event.target.dataset.mobra_presu === "null"
-    ) {
-      $mobra = 0;
-    } else {
-      $mobra = Number(event.target.dataset.mobra_presu);
-    }
-    if (
-      event.total_presu === "NaN" ||
-      event.total_presu === "undefined" ||
-      event.total_presu === "null"
-    ) {
-      $total = 0;
-    } else {
-      $total = 0;
-    }
-    if (
-      event.target.dataset.senia_presu === "NaN" ||
-      event.target.dataset.senia_presu === "undefined" ||
-      event.target.dataset.senia_presu === "null"
-    ) {
-      $senia = 0;
-    } else {
-      $senia = Number(event.target.dataset.senia_presu);
-      // console.log("el.senia", el.senia_presu);
-    }
-    // console.log("el.senia", el.senia_presu);
-    if (
-      event.target.dataset.abonado_presu === "NaN" ||
-      event.target.dataset.abonado_presu === "undefined" ||
-      event.target.dataset.abonado_presu === "null"
-    ) {
-      $abonado = 0;
-    } else {
-      $abonado = 0;
-    }
-    // console.log("Repuestos ", $repuestos);
-    // console.log("Mano Obra ", $mobra);
-    // console.log("senia ", $senia);
-    // console.log("Total ", $total);
-    // console.log("Saldo ", $saldo);
-    // $total = Number($repuestos) + Number($mobra);
-    $total = $repuestos + $mobra;
-    // console.log("Total-1 ", $total);
-    $saldo = $repuestos + $mobra - $senia;
-    // $saldo = $total - (Number($senia) + Number($abonado));
-    // console.log("Saldo-1 ", $saldo);
-    addlinePresu.repuestos_txt.value = $repuestos;
-    addlinePresu.mobra_txt.value = $mobra;
-    addlinePresu.total_txt.value = $total;
-    addlinePresu.senia_txt.value = $senia;
-    addlinePresu.abonado_txt.value = $saldo;
-    addlinePresu.dias_txt.value = event.target.dataset.dias_presu;
-  }
-  // loadPresupuestos();
-  // if (event.target.closest(".sumar")) {
-  //   calcular(event.target.repuestos_txt.value, event.target.mobra_txt.value);
-  //   // addlinePresu.total_txt.value =
-  // }
-});
-
-addlinePresu.addEventListener("reset", (ecam) => {
-  addlinePresu.reset();
-  presuMarca.innerHTML = "";
-  presuModelo.innerHTML = "";
-  presuCliente.innerHTML = "";
-
-  // ecam.preventDefault();
-  modal.classList.remove("modal--show");
-});
-
-// leo lista de patentes para el select
-function loadPatentes(evptt) {
-  fetch("php/patentes.php")
-    .then((respPtt) => respPtt.json())
-    .then((resultPsv) => {
-      if (resultPsv === "error") {
-        alert("No hay vehiculos cargados!!!");
-        setTimeout(() => {
-          alertas.innerHTML = ``;
-        }, 3000);
-      } else {
-        let $options = `<option value="">Elige una Patente</option>`;
-
-        resultPsv.forEach((elPat) => {
-          let seleccionado = "";
-          if (evptt === elPat.id_vehiculo) {
-            seleccionado = "selected";
-          }
-
-          $options += `<option value = "${elPat.id_vehiculo}" ${seleccionado}>${elPat.patente}</option>`;
-        });
-        patenteSlc.innerHTML = $options;
-      }
-    });
+  $("ps-t-repuestos").textContent = pesos(repuestos);
+  $("ps-t-mo").textContent = pesos(moCliente);
+  $("ps-t-total").textContent = pesos(total);
+  $("ps-t-senia").textContent = pesos(senia);
+  $("ps-t-saldo").textContent = pesos(Math.max(0, total - senia));
+  $("ps-i-base").textContent = pesos(base);
+  $("ps-i-recargo").textContent = pesos(recargo) + (traeCliente ? ` (${num(config.recargo_mo_repuesto_cliente_pct)}%)` : "");
+  $("ps-i-lavado").textContent = pesos(lavado);
+  $("ps-i-ganancia").textContent = costo > 0 ? pesos(repuestos - costo) : "—";
 }
+["mano_obra", "lavado", "senia"].forEach((n) => editor[n].addEventListener("input", calcular));
 
-// async function sendMailPresu(datosMP) {
-//   console.log(datosMP);
-//   var datosSMP = datosMP;
-//   // datosMP.preventDefault();
+/* ---------- Guardar ---------- */
+editor.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const error = $("ps-error");
+  error.hidden = true;
+  const sinDescripcion = items.find((it) => !it.descripcion.trim());
+  if (sinDescripcion) {
+    error.textContent = "Completá la descripción de todos los repuestos o quitá los vacíos.";
+    error.hidden = false;
+    return;
+  }
+  const esNuevo = !editor.id_presu.value;
+  const btn = editor.querySelector(".ps-guardar");
+  btn.disabled = true;
+  try {
+    const r = await api(null, formData({
+      accion: "guardar",
+      id_presu: editor.id_presu.value,
+      id_cliente: editor.id_cliente.value,
+      id_vehiculo: editor.id_vehiculo.value,
+      fecha: editor.fecha.value,
+      dias: editor.dias.value,
+      descripcion: editor.descripcion.value,
+      mano_obra: editor.mano_obra.value,
+      lavado: editor.lavado.value,
+      senia: editor.senia.value,
+      items: JSON.stringify(items),
+    }));
+    if (esNuevo && $("ps-enviar-mail").checked) {
+      fetch("php/send_PresuMail.php", { method: "POST", body: formData({ id: r.id }) }).catch(() => {});
+    }
+    avisar(`Presupuesto #${r.id} guardado. Total ${pesos(r.totales.total)}.`);
+    mostrarEditor(false);
+    cargarListado();
+  } catch (err) {
+    error.textContent = err.message;
+    error.hidden = false;
+  } finally {
+    btn.disabled = false;
+  }
+});
 
-//   let formData = new FormData();
-//   formData.append("id", datosSMP);
+$("ps-nuevo").addEventListener("click", nuevoPresupuesto);
+$("ps-cerrar").addEventListener("click", () => mostrarEditor(false));
+$("ps-q").addEventListener("input", demorar(cargarListado, 300));
 
-//   const opciones = {
-//     method: "POST",
-//     body: formData,
-//   };
-//   respMP = await fetch("php/send_PresuMail.php", opciones);
-//   dataMP = await respMP.json();
+// configuración de precios (lavado por defecto, % de recargo)
+const configLista = api({ accion: "repuestos", q: "" }).then((r) => (config = r.config)).catch(() => {});
+cargarListado();
 
-//   if (dataMP.err === "true") {
-//     console.log(dataMP.message);
-//     // datosMP = "";
-//   } else {
-//     console.log(dataMP.message);
-//     // datosMP = "";
-//   }
-// }
-
-// function calcular(repuestos, mobra) {
-// valor1.addEventListener("change", (evento1) => {
-//   const valor1 = evento1.target.value;
-//   console.log(valor1);
-//   addlinePresu.repuestos_txt.value = event.target.dataset.repuestos_presu;
-//   addlinePresu.mobra_txt.value = event.target.dataset.mobra_presu;
-//   if (valor1 != "" || valor2 != "") {
-//     // result = eval(operando1 + operacion + operando2);
-//     let total = Number(valor1) + Number(valor2);
-//   }
-//   addlinePresu.total_txt.value = total;
-// });
-
-// valor2.addEventListener("change", (evento2) => {
-//   const valor2 = evento2.target.value;
-
-//   console.log(valor2);
-//   if (valor1 != "" || valor2 != "") {
-//     // result = eval(operando1 + operacion + operando2);
-//     let total = Number(valor1) + Number(valor2);
-//   }
-//   addlinePresu.total_txt.value = total;
-// });
-// // }
+// ?id=N abre un presupuesto; ?nuevo empieza uno; ?cliente=N[&vehiculo=N] empieza uno para ese cliente (desde su ficha)
+const pedido = new URLSearchParams(location.search);
+if (pedido.get("id")) {
+  abrirPresupuesto(pedido.get("id"));
+} else if (pedido.has("nuevo")) {
+  configLista.then(nuevoPresupuesto);
+} else if (pedido.get("cliente")) {
+  configLista.then(async () => {
+    nuevoPresupuesto();
+    const { clientes } = await api({ accion: "clientes", id: pedido.get("cliente") });
+    if (clientes[0]) elegirCliente(clientes[0], pedido.get("vehiculo"));
+  }).catch((e) => avisar(e.message, true));
+}

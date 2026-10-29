@@ -1,33 +1,25 @@
 <?php
-require "connections/conexion.php";
-error_reporting(E_ALL ^ E_NOTICE);
+// Historial de reparaciones de una patente (solo administradores)
+require_once "auth/lib.php";
 
-// header('Access-Control-Allow-Origin: *');
-// header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
-// header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+if (!esAdmin()) {
+  responderJSON('inexistente', 403);
+}
 
-$metodo= $_SERVER['REQUEST_METHOD'];
-$resultado = array();
+$datos = [];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $patente = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', $_POST['patente_txt'] ?? ''));
 
- if ($metodo==='POST') {
+  $st = $conexionApi->prepare("SELECT clientes.empresa_nyp, vehiculos.marca, vehiculos.modelo, presupuestos.total_presu, reparaciones.*
+    FROM reparaciones
+    LEFT JOIN clientes ON reparaciones.id_cliente = clientes.id_cliente
+    LEFT JOIN vehiculos ON reparaciones.id_vehiculo = vehiculos.id_vehiculo
+    LEFT JOIN presupuestos ON reparaciones.presupuesto = presupuestos.id_presu
+    WHERE reparaciones.patente = ?
+    ORDER BY reparaciones.fecha_trab DESC");
+  $st->bind_param('s', $patente);
+  $st->execute();
+  $datos = $st->get_result()->fetch_all(MYSQLI_ASSOC);
+}
 
-      $datos = json_decode(file_get_contents("php://input"), true);
-      
-      $patente = $_POST['patente_txt'];
-
-      $cons="SELECT clientes.empresa_nyp, vehiculos.marca, vehiculos.modelo, presupuestos.total_presu, reparaciones.* FROM reparaciones INNER JOIN clientes ON reparaciones.id_cliente=clientes.id_cliente INNER JOIN vehiculos ON reparaciones.patente=vehiculos.patente INNER JOIN presupuestos ON reparaciones.presupuesto=presupuestos.id_presu WHERE reparaciones.patente='".$patente."'  ORDER BY reparaciones.fecha_trab DESC";
-
-
-        $resultado = mysqli_query($conexionApi,$cons);
-        $datos = mysqli_fetch_all($resultado,MYSQLI_ASSOC);
-  }
-
-      // var_dump($datos); // hasta aca llegan bien todos los datos
-
-      if(!empty($datos)){
-        echo json_encode($datos);
-      }else{
-        echo json_encode('inexistente');
-      }
-
-?>
+responderJSON($datos ?: 'inexistente');

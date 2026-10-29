@@ -1,17 +1,10 @@
 <?php
-require_once "connections/conexion.php";
-error_reporting(E_ALL ^ E_NOTICE);
+// Listado de reparaciones (admin). Respuesta: lista o 'inexistente'
+require_once "admin_lib.php";
 
-      $cons="SELECT clientes.empresa_nyp, vehiculos.marca, vehiculos.modelo, reparaciones.* 
-      FROM reparaciones INNER JOIN clientes ON reparaciones.id_cliente=clientes.id_cliente INNER JOIN vehiculos ON reparaciones.patente=vehiculos.patente ORDER BY reparaciones.fecha_trab DESC";
-        $resultado = mysqli_query($conexionApi,$cons);
-        $datos = mysqli_fetch_all($resultado,MYSQLI_ASSOC);
-
-        // var_dump($datos);
-
-if(!empty($datos)){
-    echo json_encode($datos);
-}else{
-    echo json_encode('inexistente');
-}
-?>
+$datos = q("SELECT c.empresa_nyp, v.marca, v.modelo, r.*
+  FROM reparaciones r
+  LEFT JOIN clientes c ON c.id_cliente = r.id_cliente
+  LEFT JOIN vehiculos v ON v.id_vehiculo = r.id_vehiculo
+  ORDER BY r.fecha_trab DESC");
+salir($datos ?: 'inexistente');

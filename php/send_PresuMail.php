@@ -1,183 +1,46 @@
 <?php
-  require_once "connections/conexion.php";
-  error_reporting(E_ALL ^ E_NOTICE);
-   session_start(); 
+// Envía el presupuesto por mail al cliente (admin). Respuesta: { err, message }
+// El lavado y el recargo NO se nombran: están incluidos en la mano de obra.
+require_once "admin_lib.php";
 
-//  $metodo= $_SERVER['REQUEST_METHOD'];
-// $id = json_decode(file_get_contents("php://input"), true);
+$id = (int)($_POST['id'] ?? 0);
+$p = q("SELECT p.*, c.empresa_nyp, c.mail, v.patente, v.marca, v.modelo, v.anio
+  FROM presupuestos p
+  JOIN clientes c ON c.id_cliente = p.id_cliente
+  JOIN vehiculos v ON v.id_vehiculo = p.id_vehiculo
+  WHERE p.id_presu = ? AND p.baja IS NULL", 'i', $id)[0] ?? null;
 
-  $id = $_POST['id'];
-//   $id = 86;
-// echo "<br>ID: ".$id."<br>";
+if (!$p || !filter_var($p['mail'], FILTER_VALIDATE_EMAIL)) {
+  salir(['err' => 'true', 'message' => 'El cliente no tiene un mail válido cargado.']);
+}
 
-  $consPre=$conexionApi->query("SELECT * FROM presupuestos WHERE id_presu='".$id."' ");
-  $filaP = mysqli_fetch_array($consPre);
-  $id_cliente=$filaP['id_cliente'];
-  // $fecha_presu=$filaP['fecha_presu'];
-  $id_vehiculo=$filaP['id_vehiculo'];
-  $mobra=$filaP['mobra_presu'];
-  $repuestos=$filaP['repuestos_presu'];
-  $total=$filaP['total_presu'];
-  $dias=$filaP['dias_presu'];
-  $descripcion=$filaP['descripcion_presu'];
+$items = q("SELECT descripcion, cantidad, provisto, precio_unit FROM presupuestos_items
+  WHERE id_presu = ? AND baja IS NULL ORDER BY id_item", 'i', $id);
 
-	$fecPre	=$filaP['fecha_presu'];
-	$fechaPr=explode("-",$fecPre,3);
-	$fecha_presu =($fechaPr[2]."-".$fechaPr[1]."-".$fechaPr[0]);  		
-  $consVeh=$conexionApi->query("SELECT patente, marca, modelo, anio FROM vehiculos WHERE id_vehiculo='".$id_vehiculo."' ");
-  $fila = mysqli_fetch_array($consVeh);
-  $patente=$fila['patente'];
-  $marca=$fila['marca'];
-  $modelo=$fila['modelo'];
-  $anio=$fila['anio'];
+$pesos = fn($n) => '$ ' . number_format((float)$n, 0, ',', '.');
+$filas = '';
+foreach ($items as $it) {
+  $cant = rtrim(rtrim(number_format((float)$it['cantidad'], 2, ',', '.'), '0'), ',');
+  $importe = $it['provisto'] === 'cliente' ? 'Aportado por el cliente' : $pesos($it['cantidad'] * $it['precio_unit']);
+  $filas .= '<tr><td style="padding:6px 0;border-bottom:1px solid #eee">' . e($cant) . ' × ' . e($it['descripcion'])
+    . '</td><td style="padding:6px 0;border-bottom:1px solid #eee;text-align:right">' . e($importe) . '</td></tr>';
+}
 
-  // echo "clie ".$id_cliente."<br>";
-  $consClie=$conexionApi->query("SELECT empresa_nyp, mail FROM clientes WHERE id_cliente='".$id_cliente."' ");
-  $filaClie = mysqli_fetch_array($consClie);
-  $nombre_cliente=$filaClie['empresa_nyp'];
-  $email_cliente=$filaClie['mail'];
+$fecha = $p['fecha_presu'] ? date('d/m/Y', strtotime($p['fecha_presu'])) : '';
+$vehiculo = trim($p['marca'] . ' ' . $p['modelo'] . ' ' . $p['anio']);
+$texto = 'Hola ' . e($p['empresa_nyp']) . ', te enviamos el presupuesto <b>#' . (int)$p['id_presu'] . '</b> del ' . e($fecha)
+  . ' para tu vehículo <b>' . e($p['patente']) . '</b> (' . e($vehiculo) . ').</p>'
+  . '<p style="white-space:pre-line">' . e($p['descripcion_presu']) . '</p>'
+  . ($filas ? '<table style="width:100%;border-collapse:collapse;margin:12px 0">' . $filas . '</table>' : '')
+  . '<table style="width:100%;border-collapse:collapse;margin-top:8px">'
+  . '<tr><td>Repuestos</td><td style="text-align:right">' . $pesos($p['repuestos_presu']) . '</td></tr>'
+  . '<tr><td>Mano de obra</td><td style="text-align:right">' . $pesos($p['mobra_presu']) . '</td></tr>'
+  . '<tr><td style="padding-top:6px;border-top:1px solid #ccc"><b>Total</b></td><td style="padding-top:6px;border-top:1px solid #ccc;text-align:right"><b>' . $pesos($p['total_presu']) . '</b></td></tr>'
+  . ((float)$p['senia_presu'] > 0 ? '<tr><td>Seña</td><td style="text-align:right">' . $pesos($p['senia_presu']) . '</td></tr>'
+    . '<tr><td>Saldo</td><td style="text-align:right">' . $pesos($p['abonado_presu']) . '</td></tr>' : '')
+  . '</table><p style="color:#777;font-size:13px">Presupuesto válido por ' . (int)$p['dias_presu'] . ' días.';
 
-  $to = $email_cliente;
-  $subject_mail="Presupuestos Vehículo ".$patente;
-  $message= "
-<!DOCTYPE html>
-<html lang='es'>
-
-<head>
-  <meta charset='UTF-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-  <title>Mensaje</title>
-</head>
-
-<body>
-  <div style='width:100%'>
-    <div style=' overflow:hidden; max-width:100%; background-color: #48494a; margin:0 auto'>
-      <div style='overflow:hidden; width:80%; border-radius:3px; margin:30px auto; text-align:center'>
-        <table
-          style='table-layout:auto; overflow:hidden; background-color: white; width:600px; text-align:center;  border-radius:3px; padding: 20px'
-          ;'>
-          <tr>
-            <td colspan='4' style='margin:0 auto;'>
-              <img src='https://symonsport.com.ar/assets/img/logo_ssp150_trans.png'>
-            </td>
-          </tr>
-          <tr>
-            <td style='text-align: left;margin:20px 30px;line-height:18px; padding: 20px 0;'>Fecha</td>
-            <td style='text-align: left;margin:12px 30px;line-height:18px; padding: 20px 0;'>$fecha_presu</td>
-            <td style='text-align: right; margin:12px 30px;line-height:18px; padding: 20px 0;'>Presupuesto</td>
-            <td style='text-align: left;margin:12px 30px;line-height:18px'>$id</td>
-          </tr>
-          <tr>
-            <td style='text-align:left;margin:12px 30px;line-height:18px; padding: 20px 0;'>Cliente</td>
-            <td style='text-align:left;margin:12px 30px;line-height:18px; padding: 20px 0;'>$nombre_cliente</td>
-          </tr>
-          <tr>
-            <td style='text-align:left;margin:12px 30px;line-height:18px'>
-              Patente</td>
-            <td style='text-align:left;margin:12px 30px;line-height:18px'>
-              Marca </td>
-            <td style='text-align:left;margin:12px 30px;line-height:18px'>
-              Modelo </td>
-            <td style='text-align:left;margin:12px 30px;line-height:18px'>
-              Año
-            </td>
-          </tr>
-          <tr>
-            <td style='text-align:left;margin:12px 30px;line-height:18px'>
-              $patente
-            </td>
-            <td style='text-align:left;margin:12px 30px;line-height:18px'>
-              $marca
-            </td>
-            <td style='text-align:left;margin:12px 30px;line-height:18px'>
-              $modelo
-            </td>
-            <td style='text-align:left;margin:12px 30px;line-height:18px'>
-              $anio
-            </td>
-          </tr>
-          <tr>
-            <td style='text-align:left;margin:12px 30px;line-height:18px; padding: 20px 0;'>
-              Descripción
-            </td>
-          </tr>
-          <tr>
-            <td colspan='4' style='text-align:left; margin:5px 30px; line-height:18px; padding:0 0 20px 0;'>
-              $descripcion aca pongo todo lo del presupuestos con lo que se me ocurre para que salga todo en varias
-              lineas
-              y
-              por lo que estoy poniento todo este texto y no hice un lorem como un boludo
-            </td>
-          </tr>
-        </table>
-        <table
-          style='table-layout:auto; overflow:hidden; background-color: white; width:600px; text-align:center;  border-radius:3px; padding: 20px'
-          ;'>
-          <tr>
-            <td style='text-align:left;margin:12px 30px;line-height:18px'>
-              Respuestos
-            </td>
-            <td style='text-align:left;margin:12px 20px;line-height:18px'>
-              Mano de Obra
-            </td>
-            <td style='text-align:left;margin:12px 30px;line-height:18px'>
-              Total
-            </td>
-          </tr>
-          <tr>
-            <td style='text-align:left;margin:12px 30px;line-height:18px'>
-              $ $repuestos
-            </td>
-            <td style='text-align:left;margin:12px 30px;line-height:18px'>
-              $ $mobra
-            </td>
-            <td style='text-align:left;margin:12px 30px;line-height:18px'>
-              $ $total
-            </td>
-          </tr>
-          <tr>
-            <td colspan='3' style='text-align:left;margin:12px 30px;line-height:18px; padding: 20px ;'>Valido por $dias
-              días</td>
-          </tr>
-          <tr>
-            <td colspan='4'>Sitio web
-              <a href='https://symonsport.com.ar' target='_blank'>https://symonsport.com.ar</a>
-            </td>
-          </tr>
-          <tr>
-            <td colspan='3'
-              style='margin:12px 30px;line-height:18px;overflow:hidden;font-family:Lato,sans-serif;color:#010101;font-size:11px;margin-top:20px;text-align:center;padding: 40px 0 0 0;'>
-              Copyright © Tnlcomputer, Todos los derechos reservados</td>
-          </tr>
-        </table>
-      </div>
-    </div>
-</body>
-
-</html>
- ";
-
-  $headers = "MIME-Version: 1.0" . "\r\n";
-  $headers .= "Content-Type:text/html; charset=UTF-8" . "\r\n";
-  $headers .= "From: Envio Automatico No Responder <no-replay@symonsport.com.ar>" . "\r\n";
-// $headers .= "Cc: tnlcomputer@gmail.com" . "\r\n";
-  $send_mail = mail($to, $subject_mail, $message, $headers);
-
-  if(send_mail){
-    $res = [
-      "err" => false,
-      "message" => "Tus datos han sido enviados"
-    ];
-  }else{
-    $res = [
-      "err" => true,
-      "message" => "Error an enviar tus datos. Intenta nuevamente"
-    ];
-  }
-
-  header("Access-Control-Allow-Origin: https://symonsport.com.ar");
-  header(`Content-type: application/json`);
-  echo json_encode($res);
-  exit;
-  
-  
+$ok = enviarMail($p['mail'], "Presupuesto #{$p['id_presu']} - {$p['patente']} - Symon Sport", 'Tu presupuesto', $texto);
+salir($ok
+  ? ['err' => 'false', 'message' => 'Presupuesto enviado a ' . $p['mail']]
+  : ['err' => 'true', 'message' => 'No se pudo enviar el mail.']);

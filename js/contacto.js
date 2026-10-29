@@ -67,12 +67,14 @@ function contactForm() {
           err.statusText || "Ocurrió un error al enviar, intenta nuevamente";
         $response.innerHTML = `<p>Error ${err.status}: ${message}</p>`;
       })
-      .finally(() =>
+      .finally(() => {
+        $loader.classList.add("none");
+        $response.classList.remove("none");
         setTimeout(() => {
-          $response.classList.remove("none");
+          $response.classList.add("none");
           $response.innerHTML = "";
-        }, 3000)
-      );
+        }, 4000);
+      });
   });
 }
 d.addEventListener("DOMContentLoaded", contactForm);
