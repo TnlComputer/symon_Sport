@@ -111,7 +111,7 @@ function nuevoCliente() {
   $("cl-nombre").textContent = "Nuevo cliente";
   $("cl-contactar").innerHTML = "";
   $("cl-baja-aviso").hidden = true;
-  ["cl-sec-vehiculos", "cl-sec-historial", "cl-sec-presupuestos", "cl-sec-resumen", "cl-sec-usuarios", "cl-dar-baja"]
+  ["cl-sec-sucursales", "cl-sec-vehiculos", "cl-sec-historial", "cl-sec-presupuestos", "cl-sec-resumen", "cl-sec-usuarios", "cl-dar-baja"]
     .forEach((id) => ($(id).hidden = true));
   editarDatos(true);
   $("cl-editar").hidden = true;
@@ -134,7 +134,8 @@ async function abrirCliente(id, { mantenerHistorial = false } = {}) {
   $("cl-baja-aviso").hidden = !deBaja;
   $("cl-dar-baja").hidden = deBaja;
   $("cl-editar").hidden = false;
-  ["cl-sec-vehiculos", "cl-sec-presupuestos", "cl-sec-resumen", "cl-sec-usuarios"].forEach((s) => ($(s).hidden = false));
+  ["cl-sec-sucursales", "cl-sec-vehiculos", "cl-sec-presupuestos", "cl-sec-resumen", "cl-sec-usuarios"].forEach((s) => ($(s).hidden = false));
+  $("cl-nueva-sucursal").hidden = deBaja;
   $("cl-nuevo-auto").hidden = deBaja;
   $("cl-nuevo-usuario").hidden = deBaja;
   $("cl-presu-nuevo").hidden = deBaja;
@@ -143,6 +144,7 @@ async function abrirCliente(id, { mantenerHistorial = false } = {}) {
   editarDatos(false);
   pintarDatos(c);
   pintarResumen(ficha.resumen, ficha.vehiculos.length);
+  pintarSucursales();
   pintarVehiculos();
   pintarPresupuestos();
   pintarUsuarios();
@@ -198,16 +200,119 @@ function pintarResumen(r, autos) {
     .forEach(([t, v]) => dl.append(el("div", {}, el("dt", { textContent: t }), el("dd", { textContent: v }))));
 }
 
+/* ---------- Sucursales ---------- */
+const formSucursal = $("cl-form-sucursal");
+
+function pintarSucursales() {
+  const cont = $("cl-sucursales");
+  const deBaja = !!ficha.cliente.baja;
+  $("cl-suc-ayuda").hidden = ficha.sucursales.length > 0;
+  cont.replaceChildren(...ficha.sucursales.map((s) => {
+    const acciones = el("div", { className: "cl-auto__acciones" });
+    if (!deBaja) {
+      acciones.append(
+        boton("Editar", "au-link", () => editarSucursal(s)),
+        boton("Dar de baja", "au-link cl-peligro", () => bajaSucursal(s)));
+    }
+    return el("article", { className: "cl-usuario" },
+      el("strong", { textContent: s.nombre }),
+      el("span", { textContent: [s.direccion, s.localidad].filter(Boolean).join(", ") || "Sin dirección" }),
+      el("small", { textContent: [s.contacto, s.telefono, `${s.vehiculos} ${Number(s.vehiculos) === 1 ? "vehículo" : "vehículos"}`].filter(Boolean).join(" · ") }),
+      acciones);
+  }));
+  limpiarSucursal();
+  pintarPermisos();
+}
+
+function editarSucursal(s) {
+  ["id_sucursal", "nombre", "direccion", "localidad", "telefono", "contacto"].forEach((k) => (formSucursal[k].value = s[k] ?? ""));
+  $("cl-error-sucursal").hidden = true;
+  $("cl-nueva-sucursal").open = true;
+  formSucursal.nombre.focus();
+}
+
+function limpiarSucursal() {
+  formSucursal.reset();
+  formSucursal.id_sucursal.value = "";
+  $("cl-error-sucursal").hidden = true;
+  $("cl-nueva-sucursal").open = false;
+}
+$("cl-sucursal-cancelar").addEventListener("click", limpiarSucursal);
+
+formSucursal.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const nueva = !formSucursal.id_sucursal.value;
+  const primera = nueva && !ficha.sucursales.length;
+  try {
+    await api(null, formData({ ...Object.fromEntries(new FormData(formSucursal)), accion: "sucursal", id_cliente: ficha.cliente.id_cliente }));
+    avisar(primera
+      ? "Sucursal creada. Asigná cada vehículo a su sucursal y revisá qué sucursales ve cada usuario."
+      : "Sucursal guardada.");
+    abrirCliente(ficha.cliente.id_cliente, { mantenerHistorial: true });
+  } catch (err) {
+    $("cl-error-sucursal").textContent = err.message;
+    $("cl-error-sucursal").hidden = false;
+  }
+});
+
+async function bajaSucursal(s) {
+  if (!confirm(`¿Dar de baja la sucursal ${s.nombre}?\n\nNo se borra nada. Si tiene vehículos, primero pasalos a otra sucursal.`)) return;
+  try {
+    await api(null, formData({ accion: "sucursal_baja", id_sucursal: s.id_sucursal }));
+    avisar(`${s.nombre} quedó dada de baja.`);
+    abrirCliente(ficha.cliente.id_cliente, { mantenerHistorial: true });
+  } catch (e) {
+    avisar(e.message, true);
+  }
+}
+
 /* ---------- Vehículos ---------- */
 function pintarVehiculos() {
   const cont = $("cl-autos");
   cont.innerHTML = "";
   const deBaja = !!ficha.cliente.baja;
-  if (!ficha.vehiculos.length) cont.append(el("p", { className: "ps-sin", textContent: "Todavía no tiene vehículos cargados." }));
+  if (!ficha.vehiculos.length && !ficha.sucursales.length) cont.append(el("p", { className: "ps-sin", textContent: "Todavía no tiene vehículos cargados." }));
+  // sucursal al agregar un vehículo
+  const selAlta = $("cl-auto-sucursal");
+  selAlta.replaceChildren(el("option", { value: "", textContent: "Sin sucursal" }),
+    ...ficha.sucursales.map((s) => el("option", { value: s.id_sucursal, textContent: s.nombre })));
+  $("cl-auto-sucursal-label").hidden = !ficha.sucursales.length;
   $("cl-nuevo-auto").open = !ficha.vehiculos.length && !deBaja;
+
+  // con sucursales: un grupo (título + grilla) por sucursal; sin sucursales: la grilla de siempre
+  const sucursales = ficha.sucursales;
+  cont.classList.toggle("cl-autos--grupos", sucursales.length > 0);
+  const grillas = new Map();
+  if (!sucursales.length) grillas.set(null, cont);
+  [...sucursales.map((s) => [Number(s.id_sucursal), s.nombre]), [null, "Sin sucursal asignada"]].forEach(([id, nombre]) => {
+    if (!sucursales.length) return;
+    const autos = ficha.vehiculos.filter((v) => (v.id_sucursal === null ? null : Number(v.id_sucursal)) === id);
+    if (!autos.length && id === null) return;
+    const grilla = el("div", { className: "cl-autos" });
+    cont.append(el("h4", { className: "cl-grupo", textContent: `${nombre} (${autos.length})` }), grilla);
+    if (!autos.length) grilla.append(el("p", { className: "ps-sin", textContent: "Sin vehículos." }));
+    grillas.set(id, grilla);
+  });
 
   ficha.vehiculos.forEach((v) => {
     const card = el("article", { className: "tn-auto cl-auto" + (v.patente === patenteAbierta ? " is-elegido" : "") });
+    let selectorSucursal = null;
+    if (sucursales.length && !deBaja) {
+      const sel = el("select", { className: "ps-input cl-auto__sucursal" }, el("option", { value: "", textContent: "Sin sucursal" }),
+        ...sucursales.map((s) => el("option", { value: s.id_sucursal, textContent: s.nombre })));
+      sel.value = v.id_sucursal ?? "";
+      sel.setAttribute("aria-label", `Sucursal de ${v.patente}`);
+      sel.addEventListener("change", async () => {
+        try {
+          await api(null, formData({ accion: "vehiculo_sucursal", id_vehiculo: v.id_vehiculo, id_sucursal: sel.value }));
+          avisar(`${v.patente} pasó a ${sel.selectedOptions[0].textContent}.`);
+          abrirCliente(ficha.cliente.id_cliente, { mantenerHistorial: true });
+        } catch (e) {
+          avisar(e.message, true);
+        }
+      });
+      selectorSucursal = el("label", { className: "cl-auto__suc" }, el("span", { textContent: "Sucursal" }), sel);
+    }
     const detalle = [v.anio, v.km_actual ? `${Number(v.km_actual).toLocaleString("es-AR")} km` : ""].filter(Boolean).join(" · ");
     const visitas = Number(v.reparaciones)
       ? `${v.reparaciones} ${Number(v.reparaciones) === 1 ? "reparación" : "reparaciones"} · última ${fmtFecha(v.ultima_visita)}`
@@ -228,8 +333,9 @@ function pintarVehiculos() {
       el("small", { textContent: visitas }),
       v.vendido_cliente ? el("span", { className: "ps-chip", textContent: `El cliente avisó que lo vendió el ${fmtFecha(v.vendido_cliente)}` }) : null,
       Number(v.fotos) ? el("small", { textContent: `${v.fotos} ${Number(v.fotos) === 1 ? "foto" : "fotos"}` }) : null,
+      selectorSucursal,
       acciones].filter(Boolean));
-    cont.append(card);
+    grillas.get(sucursales.length && v.id_sucursal !== null ? Number(v.id_sucursal) : null).append(card);
   });
 
   const ant = $("cl-anteriores");
@@ -271,6 +377,7 @@ async function agregarVehiculo(confirmarTraspaso = false) {
     marca: $("cl-auto-marca").value,
     modelo: $("cl-auto-modelo").value,
     anio: $("cl-auto-anio").value,
+    id_sucursal: $("cl-auto-sucursal").value,
   };
   if (confirmarTraspaso) datos.confirmar_traspaso = 1;
   const btn = $("cl-auto-agregar");
@@ -391,11 +498,11 @@ async function abrirHistorial(patente) {
       clase: r.dueno_anterior ? "cl-linea__item--anterior" : "",
       fecha: r.fecha_trab,
       titulo: r.descripcion_presu || "Reparación",
-      texto: r.observaciones,
-      datos: [r.km ? `${Number(r.km).toLocaleString("es-AR")} km` : "", r.fecha_entrega ? `entregado ${fmtFecha(r.fecha_entrega)}` : "en el taller",
+      texto: r.trabajo_realizado || r.observaciones,
+      datos: [r.km ? `${Number(r.km).toLocaleString("es-AR")} km` : "", r.fecha_entrega ? `entregado ${fmtFecha(r.fecha_entrega)}` : r.listo ? "listo para retirar" : "en el taller",
         r.factura ? `factura ${r.factura}` : "", r.dueno_anterior ? `dueño anterior: ${r.empresa_nyp || "—"}` : ""].filter(Boolean).join(" · "),
       monto: r.total_presu,
-      href: r.presupuesto ? `presupuestos.php?id=${r.presupuesto}` : null,
+      href: `reparaciones.php?id=${r.id_trabajo}`,
     })));
     if (!linea.children.length) linea.append(el("li", { className: "ps-sin", textContent: "Este vehículo todavía no tiene trabajos registrados." }));
     $("cl-sec-historial").hidden = false;
@@ -466,13 +573,40 @@ function pintarUsuarios() {
       el("strong", { textContent: nombre }),
       el("span", { textContent: u.email || u.usuario }),
       el("small", { textContent: estado }),
+      ficha.sucursales.length ? el("small", { className: "cl-usuario__ve", textContent: queVe(u) }) : null,
       acciones));
   });
+}
+
+// texto de qué sucursales ve un usuario
+function queVe(u) {
+  if (Number(u.todas_sucursales)) return "Ve todas las sucursales";
+  const ids = String(u.sucursales || "").split(",").map(Number);
+  const nombres = ficha.sucursales.filter((s) => ids.includes(Number(s.id_sucursal))).map((s) => s.nombre);
+  return nombres.length ? `Ve: ${nombres.join(", ")}` : "No ve ningún vehículo: habilitale alguna sucursal";
+}
+
+// tildes de sucursales en el formulario del usuario
+function pintarPermisos(u = null) {
+  const hay = ficha.sucursales.length > 0;
+  $("cl-u-permisos").hidden = !hay;
+  if (!hay) return;
+  const ids = String(u?.sucursales || "").split(",").map(Number);
+  const todas = formUsuario.todas_sucursales;
+  todas.checked = !!u && !!Number(u.todas_sucursales);
+  $("cl-u-sucursales").replaceChildren(...ficha.sucursales.map((s) =>
+    el("label", { className: "cf-check rp-check cl-check" },
+      el("input", { type: "checkbox", value: s.id_sucursal, checked: ids.includes(Number(s.id_sucursal)), className: "cl-u-suc" }),
+      ` ${s.nombre}`)));
+  const sincronizar = () => $("cl-u-sucursales").querySelectorAll("input").forEach((c) => (c.disabled = todas.checked));
+  todas.onchange = sincronizar;
+  sincronizar();
 }
 
 function editarUsuario(u) {
   formUsuario.reset();
   ["id_user", "nombre", "apellido", "email", "dni"].forEach((k) => (formUsuario[k].value = u[k] ?? ""));
+  pintarPermisos(u);
   formUsuario.enviar_acceso.closest("label").hidden = true;
   $("cl-error-usuario").hidden = true;
   $("cl-nuevo-usuario").open = true;
@@ -485,6 +619,7 @@ function limpiarUsuario() {
   formUsuario.enviar_acceso.closest("label").hidden = false;
   $("cl-error-usuario").hidden = true;
   $("cl-nuevo-usuario").open = false;
+  pintarPermisos();
 }
 
 async function enviarAcceso(u) {
@@ -513,7 +648,9 @@ formUsuario.addEventListener("submit", async (e) => {
   error.hidden = true;
   const datos = Object.fromEntries(new FormData(formUsuario));
   try {
+    const sucursales = [...$("cl-u-sucursales").querySelectorAll("input:checked")].map((c) => c.value).join(",");
     const r = await api(null, formData({ ...datos, accion: "usuario", id_cliente: ficha.cliente.id_cliente,
+      todas_sucursales: formUsuario.todas_sucursales.checked ? 1 : "", sucursales,
       enviar_acceso: formUsuario.enviar_acceso.checked && !datos.id_user ? 1 : "" }));
     let msg = datos.id_user ? "Datos actualizados." : r.vinculado
       ? "Esa persona ya tenía cuenta en la página: quedó vinculada a este cliente."
@@ -577,6 +714,8 @@ $("cl-volver").addEventListener("click", () => {
 $("cl-q").addEventListener("input", demorar(cargarListado, 300));
 $("cl-bajas").addEventListener("change", cargarListado);
 
+const pedidoInicial = new URLSearchParams(location.search);
+if (pedidoInicial.get("q")) $("cl-q").value = pedidoInicial.get("q");
 cargarListado();
-const idInicial = new URLSearchParams(location.search).get("id");
+const idInicial = pedidoInicial.get("id");
 if (idInicial) abrirCliente(idInicial);

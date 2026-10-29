@@ -5,8 +5,9 @@
 // POST accion=extender  id, fecha_fin, hora_fin, motivo_demora   (demora, espera de repuesto, etc.)
 // POST accion=alta      auto que llegó sin turno: id_servicio, fecha, hora_inicio, fecha_fin, hora_fin, nombre, telefono, patente...
 require_once "turnos_lib.php";
+require_once "auth/lib.php";
 
-if (($_SESSION['datos']['rol'] ?? '') !== 'admin') {
+if (!esAdmin()) { // confirma en la base que sigue activo y siendo admin
   responder(['error' => 'No autorizado'], 403);
 }
 

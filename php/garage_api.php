@@ -37,7 +37,7 @@ function texto($nombre, $max)
 function usuario()
 {
   global $idUser;
-  return q("SELECT id_user, usuario, email, nombre, apellido, dni, celular, foto, avatar, id_cliente,
+  return q("SELECT id_user, usuario, email, nombre, apellido, dni, celular, foto, avatar, id_cliente, todas_sucursales,
       (clave_hash IS NOT NULL) AS tiene_clave, (google_id IS NOT NULL) AS con_google,
       (microsoft_id IS NOT NULL) AS con_microsoft, (facebook_id IS NOT NULL) AS con_facebook
     FROM usuarios WHERE id_user = ? AND baja IS NULL", 'i', $idUser)[0] ?? null;
@@ -46,12 +46,31 @@ function usuario()
 $yo = usuario();
 if (!$yo) responderJSON(['error' => 'Tu cuenta no está activa.'], 403);
 $idCliente = (int)$yo['id_cliente']; // se lee de la base: el taller puede vincularlo después de iniciar sesión
+$todasSucursales = (int)$yo['todas_sucursales'];
 
-// el taller confirmó que la patente es de este cliente
+// Vehículos del cliente que este usuario puede ver: todos, o solo los de las sucursales que el admin le tildó.
+// Uso: "... WHERE " . VEHICULO_VISIBLE con los parámetros de visibles() (tipos 'iii')
+const VEHICULO_VISIBLE = "(v.id_cliente = ? AND v.baja IS NULL AND (? = 1 OR EXISTS (SELECT 1 FROM usuarios_sucursales us
+  WHERE us.id_user = ? AND us.id_sucursal = v.id_sucursal AND us.baja IS NULL)))";
+function visibles()
+{
+  global $idCliente, $todasSucursales, $idUser;
+  return [$idCliente, $todasSucursales, $idUser];
+}
+
+// el taller confirmó que la patente es de este cliente (y de una sucursal que puede ver)
 function confirmado($patente)
 {
   global $idCliente;
-  return $idCliente && (bool)q("SELECT 1 FROM vehiculos WHERE patente = ? AND id_cliente = ? AND baja IS NULL", 'si', $patente, $idCliente);
+  return $idCliente && (bool)q("SELECT 1 FROM vehiculos v WHERE v.patente = ? AND " . VEHICULO_VISIBLE, 'siii', $patente, ...visibles());
+}
+
+// el auto es del cliente pero de una sucursal que este usuario no tiene habilitada: para él no existe
+function oculto($patente)
+{
+  global $idCliente;
+  return $idCliente && !confirmado($patente)
+    && q("SELECT 1 FROM vehiculos WHERE patente = ? AND id_cliente = ? AND baja IS NULL", 'si', $patente, $idCliente);
 }
 
 // por qué no puede modificar el auto (null = puede)
@@ -73,7 +92,15 @@ function motivoBloqueo($auto)
 function autoPropio($id)
 {
   global $idUser;
-  return q("SELECT * FROM usuarios_vehiculos WHERE id_vehiculo_usuario = ? AND id_user = ? AND baja IS NULL", 'ii', $id, $idUser)[0] ?? null;
+  $auto = q("SELECT * FROM usuarios_vehiculos WHERE id_vehiculo_usuario = ? AND id_user = ? AND baja IS NULL", 'ii', $id, $idUser)[0] ?? null;
+  return $auto && !oculto($auto['patente']) ? $auto : null;
+}
+
+function sucursalDe($patente)
+{
+  global $idCliente;
+  return q("SELECT s.nombre FROM vehiculos v JOIN clientes_sucursales s ON s.id_sucursal = v.id_sucursal AND s.baja IS NULL
+    WHERE v.patente = ? AND v.id_cliente = ? AND v.baja IS NULL LIMIT 1", 'si', $patente, $idCliente)[0]['nombre'] ?? null;
 }
 
 function autoEditable($id)
@@ -115,21 +142,31 @@ switch ($accion) {
     if ($idCliente) {
       q("INSERT IGNORE INTO usuarios_vehiculos (id_user, patente, marca, modelo, anio)
         SELECT ?, v.patente, NULLIF(v.marca, ''), NULLIF(v.modelo, ''), IF(v.anio REGEXP '^[0-9]{4}$', v.anio, NULL)
-        FROM vehiculos v WHERE v.id_cliente = ? AND v.baja IS NULL", 'ii', $idUser, $idCliente);
+        FROM vehiculos v WHERE " . VEHICULO_VISIBLE, 'iiii', $idUser, ...visibles());
     }
     $autos = q("SELECT uv.id_vehiculo_usuario AS id, uv.patente, uv.foto_portada, COALESCE(f.marca, uv.marca) AS marca,
         COALESCE(f.modelo, uv.modelo) AS modelo, f.version, COALESCE(f.anio, uv.anio) AS anio, f.color,
         GREATEST(COALESCE(f.km_actual, 0), COALESCE(uv.km, 0)) AS km, uv.vendido,
         f.vtv_vencimiento, f.seguro_vencimiento, f.gnc_oblea_vencimiento, f.matafuego_vencimiento,
-        EXISTS (SELECT 1 FROM vehiculos v WHERE v.patente = uv.patente AND v.id_cliente = ? AND v.baja IS NULL) AS confirmado,
+        EXISTS (SELECT 1 FROM vehiculos v WHERE v.patente = uv.patente AND " . VEHICULO_VISIBLE . ") AS confirmado,
+        EXISTS (SELECT 1 FROM vehiculos v WHERE v.patente = uv.patente AND v.id_cliente = ? AND v.baja IS NULL) AS del_cliente,
+        (SELECT s.nombre FROM vehiculos v JOIN clientes_sucursales s ON s.id_sucursal = v.id_sucursal AND s.baja IS NULL
+          WHERE v.patente = uv.patente AND v.id_cliente = ? AND v.baja IS NULL LIMIT 1) AS sucursal,
+        (SELECT IF(r.listo IS NULL, 'taller', 'listo') FROM reparaciones r
+          WHERE r.patente = uv.patente AND r.id_cliente = ? AND r.baja IS NULL AND r.fecha_entrega IS NULL
+          ORDER BY r.id_trabajo DESC LIMIT 1) AS en_taller,
         (SELECT CONCAT(t.fecha, ' ', TIME_FORMAT(t.hora_inicio, '%H:%i')) FROM turnos t
           WHERE t.patente = uv.patente AND t.id_user = uv.id_user AND t.estado IN ('pendiente', 'confirmado')
             AND TIMESTAMP(t.fecha_fin, t.hora_fin) >= NOW() ORDER BY t.fecha LIMIT 1) AS turno
       FROM usuarios_vehiculos uv LEFT JOIN fichas_vehiculo f ON f.patente = uv.patente
       WHERE uv.id_user = ? AND uv.baja IS NULL
-      ORDER BY uv.vendido IS NOT NULL, uv.vendido DESC, uv.creado", 'ii', $idCliente, $idUser);
+      ORDER BY uv.vendido IS NOT NULL, uv.vendido DESC, uv.creado", 'iiiiiii', ...[...visibles(), $idCliente, $idCliente, $idCliente, $idUser]);
+    // los autos de sucursales que no tiene habilitadas no se muestran
+    $autos = array_values(array_filter($autos, fn($a) => $a['confirmado'] || !$a['del_cliente']));
     foreach ($autos as &$a) {
       $a['confirmado'] = (bool)$a['confirmado'];
+      if (!$a['confirmado']) $a['en_taller'] = $a['sucursal'] = null;
+      unset($a['del_cliente']);
       $fotos = fotosVehiculo($db, $a['patente'], $idUser, $a['confirmado']);
       $portada = array_values(array_filter($fotos, fn($f) => (int)$f['id_foto'] === (int)$a['foto_portada']))[0] ?? $fotos[0] ?? null;
       $a['foto'] = $portada['url'] ?? null;
@@ -157,10 +194,11 @@ switch ($accion) {
     if ($esConfirmado) {
       // trabajos del taller; de los dueños anteriores solo qué se hizo (sin nombre, observaciones ni importes)
       $historial = q("SELECT r.fecha_trab AS fecha, r.fecha_entrega, r.km, p.descripcion_presu AS trabajo,
-          IF(r.id_cliente = ?, r.observaciones, NULL) AS observaciones,
+          IF(r.id_cliente = ?, COALESCE(r.trabajo_realizado, r.observaciones), NULL) AS observaciones,
+          CASE WHEN r.fecha_entrega IS NOT NULL THEN 'entregado' WHEN r.listo IS NOT NULL THEN 'listo' ELSE 'taller' END AS estado,
           IF(r.id_cliente = ?, p.total_presu, NULL) AS total, r.id_cliente <> ? AS anterior
         FROM reparaciones r LEFT JOIN presupuestos p ON p.id_presu = r.presupuesto
-        WHERE r.patente = ? ORDER BY r.fecha_trab DESC, r.id_trabajo DESC", 'iiis', $idCliente, $idCliente, $idCliente, $patente);
+        WHERE r.patente = ? AND r.baja IS NULL ORDER BY r.fecha_trab DESC, r.id_trabajo DESC", 'iiis', $idCliente, $idCliente, $idCliente, $patente);
       foreach ($historial as &$h) $h['anterior'] = (bool)$h['anterior'];
       unset($h);
       $presupuestos = q("SELECT p.id_presu, p.fecha_presu, p.dias_presu, p.descripcion_presu, p.repuestos_presu,
@@ -169,7 +207,8 @@ switch ($accion) {
         WHERE v.patente = ? AND p.id_cliente = ? AND p.usado = 0 AND p.baja IS NULL ORDER BY p.id_presu DESC", 'si', $patente, $idCliente);
     }
     responderJSON(['auto' => ['id' => (int)$auto['id_vehiculo_usuario'], 'patente' => $patente, 'vendido' => $auto['vendido'],
-      'descripcion' => $auto['descripcion'], 'confirmado' => $esConfirmado, 'portada' => (int)$auto['foto_portada']],
+      'descripcion' => $auto['descripcion'], 'confirmado' => $esConfirmado, 'portada' => (int)$auto['foto_portada'],
+      'sucursal' => $esConfirmado ? sucursalDe($patente) : null],
       'campos' => camposFichaPublicos(false), 'ficha' => $ficha, 'fotos' => fotosDelAuto($auto), 'max_fotos' => MAX_FOTOS,
       'bloqueo' => motivoBloqueo($auto), 'historial' => $historial, 'presupuestos' => $presupuestos]);
 
@@ -213,6 +252,7 @@ switch ($accion) {
     if (!preg_match('/^[A-Z0-9]{6,8}$/', $patente)) responderJSON(['error' => 'Revisá la patente (ej. AB123CD o ABC123).'], 422);
     $anio = texto('anio', 4);
     if ($anio !== '' && (!preg_match('/^\d{4}$/', $anio) || $anio < 1950 || $anio > date('Y') + 1)) responderJSON(['error' => 'Revisá el año.'], 422);
+    if (oculto($patente)) responderJSON(['error' => 'Ese vehículo es de una sucursal que no tenés habilitada. Pedile acceso al taller.'], 422);
     $existe = q("SELECT id_vehiculo_usuario, baja, vendido FROM usuarios_vehiculos WHERE id_user = ? AND patente = ?", 'is', $idUser, $patente)[0] ?? null;
     if ($existe && $existe['vendido']) responderJSON(['error' => 'Ese auto lo marcaste como vendido.'], 422);
     if ($existe && !$existe['baja']) responderJSON(['error' => 'Ese auto ya está en tu garage.'], 422);

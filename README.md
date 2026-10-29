@@ -54,7 +54,7 @@ No hay dependencias de Composer ni de npm: se sube la carpeta tal cual.
 ### Cliente (rol `usuario`)
 - **Mi garage** (`mi-garage.php`):
   - **Perfil:** foto, nombre, celular, DNI y cambio de contraseña.
-  - **Autos activos:** foto de portada, km, avisos de VTV o seguro vencido o por vencer y turno pendiente.
+  - **Autos activos:** foto de portada, km, sucursal, si está *en el taller* o *listo para retirar*, avisos de VTV o seguro vencido o por vencer y turno pendiente.
   - **Ficha de cada auto:**
     - hasta **10 fotos** propias;
     - datos de identificación, neumáticos y documentación;
@@ -73,16 +73,17 @@ No hay dependencias de Composer ni de npm: se sube la carpeta tal cual.
 | **Configuración de turnos** (`turnos-config.php`) | Servicios y duraciones, horarios, capacidad, bloqueos y feriados (importación automática) |
 | **Presupuestos** (`presupuestos.php`) | Cliente → sus vehículos → trabajo → repuestos → importes. Calcula lo que ve el cliente y el desglose interno, y envía por mail |
 | **Clientes** (`clientes.php`) | Listado con buscador (también por patente) y ficha del cliente (detalle abajo) |
-| **Reparaciones** (`reparaciones.php`) | Ingreso al taller a partir de un presupuesto, entrega y factura |
+| **Reparaciones** (`reparaciones.php`) | Tablero *En el taller → Listo para retirar → Entregado*. Ingreso desde un presupuesto aprobado (km y estado del auto), trabajo realizado, control de entrega (terminado, lavado, aviso por WhatsApp, cobro y factura) y anulación de ingresos cargados por error |
 | **Repuestos** (`repuestos.php`) | Catálogo con costo y % de ganancia, aumentos masivos y precios generales (lavado, recargos) |
-| **Consultas** (`consultas.php`) | Búsqueda de trabajos por patente |
+| **Usuarios** (`usuarios.php`) | Todas las cuentas (clientes y administradores): habilitar / deshabilitar, editar, rol, cliente vinculado, sucursales que ve, reenviar acceso y desbloquear tras intentos fallidos |
 
 La ficha del cliente en **Clientes** reúne:
-- **Vehículos**, con traspaso de patente entre clientes.
+- **Sucursales** (empresas con varias sedes): cada vehículo se asigna a una.
+- **Vehículos**, agrupados por sucursal, con traspaso de patente entre clientes.
 - **Historial por auto**, con los trabajos de dueños anteriores.
 - **Ficha técnica completa y fotos** de cada auto.
 - **Presupuestos** del cliente.
-- **Accesos a Mi garage**, con alta y reenvío del link para elegir contraseña.
+- **Accesos a Mi garage**: un cliente puede tener varios usuarios, cada uno con **tildes de las sucursales que puede ver**. Alta y reenvío del link para elegir contraseña.
 - **Baja lógica** del cliente.
 
 ---
@@ -94,7 +95,7 @@ La ficha del cliente en **Clientes** reúne:
 ├── index.php, turnos.php, contacto.php, login.php, restablecer.php   páginas públicas
 ├── mi-garage.php                                                      cliente con sesión
 ├── clientes.php, presupuestos.php, reparaciones.php, repuestos.php,
-│   consultas.php, turnos-admin.php, turnos-config.php                 panel del taller (admin)
+│   usuarios.php, turnos-admin.php, turnos-config.php                  panel del taller (admin)
 ├── includes/
 │   ├── bootstrap.php     núcleo: sesión segura, cabeceras (CSP, HSTS), CSRF, usuario actual
 │   └── layout.php        <head>, menú según el rol y pie (paginaInicio / paginaFin)
@@ -141,7 +142,9 @@ La ficha del cliente en **Clientes** reúne:
 | SQL | **Solo consultas preparadas.** Los nombres de columna dinámicos salen siempre de listas fijas del código |
 | Contraseñas | `password_hash` / `password_verify`. Las claves viejas en texto plano se encriptan al ingresar o con `php/auth/migrar_claves.php` |
 | Intentos | Límite de ingresos fallidos por cuenta y por IP, y de registros o recuperaciones por IP |
-| Permisos | Cada API controla el rol en el servidor (`esAdmin()`, sesión). El cliente solo ve y toca **sus** autos |
+| Permisos | Cada API controla el rol en el servidor. `esAdmin()` además **confirma en la base** que la cuenta sigue activa y sigue siendo admin: si la deshabilitan o le quitan el rol, pierde el acceso en el siguiente pedido. El cliente solo ve y toca **sus** autos, y solo los de las sucursales que tiene habilitadas |
+| Cuentas protegidas | Una cuenta con `protegido = 1` (la del desarrollador) no aparece en *Usuarios* y nadie la puede editar ni deshabilitar desde el sitio. Para la regla "siempre queda al menos un admin" no cuenta |
+| Errores | En el servidor real, PHP no muestra errores en pantalla (irían rutas internas): van al log. En local sí se ven |
 | Fotos | Se valida que sea JPG, PNG o WEBP y que pese menos de 8 MB. **Se reconvierte a WebP** con GD (así se descarta cualquier contenido que no sea imagen) y se guarda con nombre aleatorio. `uploads/.htaccess` impide ejecutar código ahí |
 | Carpetas internas | `includes/`, `sql/`, `deploy/`, `php/connections/` y archivos ocultos bloqueados por `.htaccess` (y por `router.php` en local) |
 | Secretos | `php/connections/` (base y OAuth) **no se sube a git**. Hay plantillas en `deploy/conexion-ejemplo.php` y `php/auth/config-ejemplo.php` |
@@ -169,6 +172,20 @@ Cuando una patente pasa a otro cliente (**traspaso**):
 - Si la patente figura a nombre de **otra persona**, la puede agregar pero **no editarla**. Tiene que pedirle al taller el traspaso.
 - **Fotos:** ve las suyas y, si el auto está confirmado, las del taller. Las de otros dueños no.
 - **Vendido:** el auto queda en solo lectura (datos, km y fotos). No se puede marcar si tiene un turno pendiente.
+
+### Sucursales y permisos por usuario
+- Un cliente (empresa) puede tener **sucursales**, y cada vehículo se asigna a una (o queda *sin sucursal*).
+- Un cliente puede tener **varios usuarios**. Cada uno tiene:
+  - **"Todas las sucursales"**: ve todo, incluidas las sucursales nuevas y los autos sin sucursal. Es el valor de los usuarios que ya existían, para que nadie pierda acceso.
+  - O **tildes por sucursal**: ve solo los autos de esas sucursales. Un usuario nuevo de un cliente con sucursales arranca **sin ver nada** hasta que se le tilde alguna.
+- Un usuario no puede llegar a un auto de otra sucursal por ningún camino: no le aparece, no lo puede abrir por su número y si carga la patente a mano se le avisa que no la tiene habilitada.
+- Una sucursal con vehículos no se puede dar de baja: primero se pasan a otra.
+
+### Reparaciones
+- Estados: **en el taller** → **listo para retirar** (`listo`) → **entregado** (`fecha_entrega`).
+- `observaciones` es cómo llegó el auto; `trabajo_realizado` es lo que se hizo, y **lo ve el cliente** en Mi garage.
+- Al entregar se registra lo cobrado y la factura. Si falta lavar, no está terminado o se cobra menos que el saldo, se pide confirmación.
+- **Anular un ingreso** (cargado por error) no borra nada: la reparación queda con `baja` y el presupuesto vuelve a pendiente.
 
 ### Quién edita cada dato de la ficha
 El catálogo de campos está en `camposFicha()` (`php/vehiculo_lib.php`). Define grupo, etiqueta, tipo, validación y quién lo edita. El formulario se arma solo a partir de ese catálogo, tanto en Mi garage como en Clientes.
@@ -199,6 +216,9 @@ Los scripts están en `sql/`. **Orden de ejecución en una base nueva o en produ
 | 6 | `presupuestos_v2.sql` | Desglose interno, baja de presupuestos y vehículos, titulares |
 | 7 | `clientes_v2.sql` | Baja lógica de clientes |
 | 8 | `garage_v2.sql` | Celular y foto de perfil, `vendido`, portada y galería `vehiculos_fotos` |
+| 9 | `reparaciones_v2.sql` | Estados de la reparación (`listo`), trabajo realizado, cobro, aviso al cliente y anulación |
+| 10 | `sucursales.sql` | Sucursales de clientes, sucursal de cada vehículo y qué sucursales ve cada usuario |
+| 11 | `usuarios_v2.sql` | Cuentas protegidas (después, marcar la del desarrollador con el `UPDATE` comentado en el script) |
 
 > **Atención:**
 > - `turnos_v2.sql` era solo para una base local vieja. **No usarlo.**
@@ -206,6 +226,7 @@ Los scripts están en `sql/`. **Orden de ejecución en una base nueva o en produ
 
 **Tablas principales:**
 - `clientes` y `vehiculos`: dueños y autos según el taller.
+- `clientes_sucursales` y `usuarios_sucursales`: sedes de cada cliente y qué sedes ve cada usuario.
 - `vehiculos_titulares`: historial de dueños.
 - `usuarios`: cuentas; rol `admin` o `usuario`, vinculadas a un cliente con `id_cliente`.
 - `usuarios_vehiculos`: el garage de cada cuenta.
@@ -259,7 +280,7 @@ Checklist para cuando se migre el hosting o el dominio:
    - Un proveedor sin credenciales queda oculto.
 7. **`.htaccess`:** agregar las reglas de `deploy/htaccess.txt` **debajo** de las del SSL, sin reemplazar el archivo existente. Bloquean carpetas internas, redirigen `.html` → `.php` y activan compresión y caché.
 8. **Carpeta `uploads/`:** tiene que existir, poder escribirse por PHP y conservar su `.htaccess`. PHP necesita **GD con WebP**.
-9. **Admins:** dar rol `admin` a las cuentas del taller (ver [Puesta en marcha en local](#puesta-en-marcha-en-local), paso 4).
+9. **Admins:** dar rol `admin` a las cuentas del taller (ver [Puesta en marcha en local](#puesta-en-marcha-en-local), paso 4) y marcar como `protegido` la cuenta del desarrollador (ver `sql/usuarios_v2.sql`). Desde ahí, el resto de los usuarios se maneja desde la pantalla **Usuarios**.
 10. **Agenda → Configuración:** importar feriados (año actual y siguiente), cargar los no laborables propios y revisar horarios, capacidad y duraciones.
 
 ---
@@ -275,12 +296,13 @@ Todos responden JSON. Los POST requieren el token CSRF, que `js/scripts.js` agre
 | `php/turnos_servicios.php`, `turnos_disponibilidad.php`, `turnos_reservar.php` | público | Servicios, horarios libres, reserva |
 | `php/mis_turnos.php` | sesión | Turnos y autos del usuario, cancelar turno |
 | `php/garage_api.php` | sesión | `datos`, `auto`, `perfil`, `clave`, `foto_perfil`, `auto_agregar`, `auto_guardar`, `auto_km`, `auto_foto`, `auto_portada`, `auto_vendido`, `auto_quitar` |
-| `php/clientes_api.php` | admin | `listar`, `ficha`, `historial`, `guardar`, `baja`/`reactivar`, `vehiculo`, `vehiculo_baja`, `ficha_vehiculo`, `ficha_vehiculo_guardar`, `vehiculo_foto`, `usuario`, `usuario_acceso`, `usuario_baja` |
+| `php/clientes_api.php` | admin | `listar`, `ficha`, `historial`, `guardar`, `baja`/`reactivar`, `vehiculo`, `vehiculo_baja`, `vehiculo_sucursal`, `sucursal`, `sucursal_baja`, `ficha_vehiculo`, `ficha_vehiculo_guardar`, `vehiculo_foto`, `usuario`, `usuario_acceso`, `usuario_baja` |
+| `php/reparaciones_api.php` | admin | `listar`, `detalle`, `pendientes`, `ingresar`, `guardar`, `listo`, `lavado`, `avisado`, `entregar`, `reabrir`, `anular` |
+| `php/usuarios_api.php` | admin | `listar`, `detalle`, `sucursales`, `clientes`, `guardar`, `baja`/`reactivar`, `acceso`, `desbloquear` |
 | `php/presupuestos_api.php` | admin | `listar`, `detalle`, `clientes`, `vehiculos`, `repuestos`, `guardar`, `vehiculo`, `anular`, `lavado_hecho` |
 | `php/send_PresuMail.php` | admin | Envía el presupuesto por mail al cliente |
 | `php/repuestos_admin.php` | admin | Catálogo: `guardar`, `baja`/`reactivar`, `aumento`, `config` |
 | `php/turnos_admin.php`, `turnos_config_admin.php` | admin | Agenda y configuración (servicios, horarios, bloqueos, feriados) |
-| `php/reparaciones.php`, `addRep.php`, `actrep.php`, `psu.php`, `psv.php`, `consultas.php` | admin | Reparaciones y consultas por patente |
 | `php/send_mail.php` | público | Formulario de contacto |
 
 ---
@@ -305,7 +327,7 @@ Todos responden JSON. Los POST requieren el token CSRF, que `js/scripts.js` agre
 
 ## Pendientes conocidos
 
-- **Reparaciones y Consultas** todavía tienen el diseño anterior de tablas. Ya usan consultas preparadas y control de admin.
+- **Agenda y Configuración de turnos** mantienen su diseño propio (ya con el estilo nuevo); falta conectar un turno con el ingreso al taller.
 - **Mi garage:**
   - el cliente ve los presupuestos pendientes, pero todavía no puede **aprobarlos online**;
   - todavía no puede cargar trabajos hechos en otros talleres.

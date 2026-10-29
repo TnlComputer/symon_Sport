@@ -10,7 +10,9 @@
 // POST accion=ficha_vehiculo_guardar, patente -> guarda la ficha (y marca/modelo/año en el vehículo)
 // POST accion=vehiculo_foto, patente, archivo / accion=vehiculo_foto_quitar, id_foto
 // POST accion=vehiculo_baja         -> el vehículo deja de ser del cliente (queda en el historial)
-// POST accion=usuario               -> alta / modificación de un usuario del cliente
+// POST accion=sucursal / sucursal_baja -> sucursales del cliente (empresas con varias sedes)
+// POST accion=vehiculo_sucursal, id_vehiculo, id_sucursal -> a qué sucursal pertenece el vehículo
+// POST accion=usuario               -> alta / modificación de un usuario del cliente (con las sucursales que puede ver)
 // POST accion=usuario_acceso, id    -> le envía el link para elegir contraseña
 // POST accion=usuario_baja, id      -> baja lógica del usuario
 require_once "admin_lib.php";
@@ -40,7 +42,7 @@ switch ($accion) {
         (SELECT GROUP_CONCAT(v.patente ORDER BY v.patente SEPARATOR ' ') FROM vehiculos v
           WHERE v.id_cliente = c.id_cliente AND v.baja IS NULL) AS patentes,
         (SELECT COUNT(*) FROM usuarios u WHERE u.id_cliente = c.id_cliente AND u.baja IS NULL) AS usuarios,
-        (SELECT MAX(r.fecha_trab) FROM reparaciones r WHERE r.id_cliente = c.id_cliente) AS ultima_visita
+        (SELECT MAX(r.fecha_trab) FROM reparaciones r WHERE r.id_cliente = c.id_cliente AND r.baja IS NULL) AS ultima_visita
       FROM clientes c
       WHERE (c.baja IS NULL) <> ? AND (c.empresa_nyp LIKE ? OR c.cuit LIKE ? OR c.celular LIKE ? OR c.telefono LIKE ?
         OR c.mail LIKE ? OR c.contacto LIKE ? OR (? <> '%%' AND EXISTS (SELECT 1 FROM vehiculos v
@@ -51,9 +53,9 @@ switch ($accion) {
     $id = (int)($_GET['id'] ?? 0);
     $c = q("SELECT * FROM clientes WHERE id_cliente = ?", 'i', $id)[0] ?? null; // también los dados de baja
     if (!$c) responder(['error' => 'No existe el cliente.'], 404);
-    $vehiculos = q("SELECT v.id_vehiculo, v.patente, v.marca, v.modelo, v.anio, f.km_actual, f.km_fecha,
-        (SELECT MAX(r.fecha_trab) FROM reparaciones r WHERE r.patente = v.patente) AS ultima_visita,
-        (SELECT COUNT(*) FROM reparaciones r WHERE r.patente = v.patente) AS reparaciones,
+    $vehiculos = q("SELECT v.id_vehiculo, v.patente, v.marca, v.modelo, v.anio, v.id_sucursal, f.km_actual, f.km_fecha,
+        (SELECT MAX(r.fecha_trab) FROM reparaciones r WHERE r.patente = v.patente AND r.baja IS NULL) AS ultima_visita,
+        (SELECT COUNT(*) FROM reparaciones r WHERE r.patente = v.patente AND r.baja IS NULL) AS reparaciones,
         (SELECT f.archivo FROM vehiculos_fotos f WHERE f.patente = v.patente AND f.baja IS NULL ORDER BY f.subida_por = 'taller' DESC, f.id_foto LIMIT 1) AS foto,
         (SELECT COUNT(*) FROM vehiculos_fotos f WHERE f.patente = v.patente AND f.baja IS NULL) AS fotos,
         (SELECT MAX(uv.vendido) FROM usuarios_vehiculos uv JOIN usuarios u ON u.id_user = uv.id_user
@@ -67,29 +69,30 @@ switch ($accion) {
       WHERE v.id_cliente = ? AND v.baja IS NOT NULL
         AND NOT EXISTS (SELECT 1 FROM vehiculos a WHERE a.id_cliente = v.id_cliente AND a.patente = v.patente AND a.baja IS NULL)
       GROUP BY v.patente, v.marca, v.modelo ORDER BY hasta DESC", 'i', $id);
-    $usuarios = q("SELECT id_user, usuario, email, nombre, apellido, dni, ultimo_login,
+    $usuarios = q("SELECT id_user, usuario, email, nombre, apellido, dni, ultimo_login, todas_sucursales,
+        (SELECT GROUP_CONCAT(us.id_sucursal) FROM usuarios_sucursales us WHERE us.id_user = usuarios.id_user AND us.baja IS NULL) AS sucursales,
         (clave_hash IS NOT NULL OR google_id IS NOT NULL OR microsoft_id IS NOT NULL OR facebook_id IS NOT NULL) AS tiene_acceso
       FROM usuarios WHERE id_cliente = ? AND rol = 'usuario' AND baja IS NULL ORDER BY nombre, apellido", 'i', $id);
     $presupuestos = q("SELECT p.id_presu, p.fecha_presu, p.descripcion_presu, p.usado, p.total_presu, v.patente
       FROM presupuestos p LEFT JOIN vehiculos v ON v.id_vehiculo = p.id_vehiculo
       WHERE p.id_cliente = ? AND p.baja IS NULL ORDER BY p.id_presu DESC LIMIT 30", 'i', $id);
     $resumen = q("SELECT
-        (SELECT COUNT(*) FROM reparaciones WHERE id_cliente = ?) AS reparaciones,
+        (SELECT COUNT(*) FROM reparaciones WHERE id_cliente = ? AND baja IS NULL) AS reparaciones,
         (SELECT COUNT(*) FROM presupuestos WHERE id_cliente = ? AND baja IS NULL AND usado = 0) AS pendientes,
         (SELECT COALESCE(SUM(total_presu), 0) FROM presupuestos WHERE id_cliente = ? AND baja IS NULL AND usado = 1) AS trabajado,
-        (SELECT MAX(fecha_trab) FROM reparaciones WHERE id_cliente = ?) AS ultima_visita", 'iiii', $id, $id, $id, $id)[0];
-    responder(['cliente' => $c, 'vehiculos' => $vehiculos, 'anteriores' => $anteriores, 'usuarios' => $usuarios,
+        (SELECT MAX(fecha_trab) FROM reparaciones WHERE id_cliente = ? AND baja IS NULL) AS ultima_visita", 'iiii', $id, $id, $id, $id)[0];
+    responder(['cliente' => $c, 'sucursales' => sucursalesDe($id), 'vehiculos' => $vehiculos, 'anteriores' => $anteriores, 'usuarios' => $usuarios,
       'presupuestos' => $presupuestos, 'resumen' => $resumen]);
 
   case 'historial':
     // todo lo que se le hizo al auto, también con dueños anteriores (el admin ve de quién era)
     $patente = patenteLimpia($_GET['patente'] ?? '');
     $idCliente = (int)($_GET['id_cliente'] ?? 0);
-    $reparaciones = q("SELECT r.id_trabajo, r.fecha_trab, r.fecha_entrega, r.km, r.factura, r.observaciones, r.presupuesto,
+    $reparaciones = q("SELECT r.id_trabajo, r.fecha_trab, r.fecha_entrega, r.km, r.factura, r.observaciones, r.trabajo_realizado, r.listo, r.presupuesto,
         r.id_cliente, c.empresa_nyp, p.descripcion_presu, p.total_presu
       FROM reparaciones r LEFT JOIN clientes c ON c.id_cliente = r.id_cliente
       LEFT JOIN presupuestos p ON p.id_presu = r.presupuesto
-      WHERE r.patente = ? ORDER BY r.fecha_trab DESC, r.id_trabajo DESC", 's', $patente);
+      WHERE r.patente = ? AND r.baja IS NULL ORDER BY r.fecha_trab DESC, r.id_trabajo DESC", 's', $patente);
     $pendientes = q("SELECT p.id_presu, p.fecha_presu, p.descripcion_presu, p.total_presu
       FROM presupuestos p JOIN vehiculos v ON v.id_vehiculo = p.id_vehiculo
       WHERE v.patente = ? AND p.usado = 0 AND p.baja IS NULL ORDER BY p.id_presu DESC", 's', $patente);
@@ -138,9 +141,53 @@ switch ($accion) {
   case 'vehiculo':
     $idCliente = (int)($_POST['id_cliente'] ?? 0);
     if (!clienteActivo($idCliente)) responder(['error' => 'No existe el cliente.'], 404);
+    $idSucursal = (int)($_POST['id_sucursal'] ?? 0);
+    if ($idSucursal && !sucursalDelCliente($idSucursal, $idCliente)) responder(['error' => 'Esa sucursal no es de este cliente.'], 422);
     $r = altaVehiculo($idCliente, $_POST['patente'] ?? '', $_POST['marca'] ?? '', $_POST['modelo'] ?? '',
       $_POST['anio'] ?? '', !empty($_POST['confirmar_traspaso']));
+    if (!empty($r['ok']) && $idSucursal) q("UPDATE vehiculos SET id_sucursal = ? WHERE id_vehiculo = ?", 'ii', $idSucursal, $r['id_vehiculo']);
     responder($r, isset($r['error']) ? 422 : 200);
+
+  case 'vehiculo_sucursal':
+    $idVehiculo = (int)($_POST['id_vehiculo'] ?? 0);
+    $v = q("SELECT id_cliente FROM vehiculos WHERE id_vehiculo = ? AND baja IS NULL", 'i', $idVehiculo)[0] ?? null;
+    if (!$v) responder(['error' => 'No existe el vehículo.'], 404);
+    $idSucursal = (int)($_POST['id_sucursal'] ?? 0) ?: null;
+    if ($idSucursal && !sucursalDelCliente($idSucursal, (int)$v['id_cliente'])) responder(['error' => 'Esa sucursal no es de este cliente.'], 422);
+    q("UPDATE vehiculos SET id_sucursal = ? WHERE id_vehiculo = ?", 'ii', $idSucursal, $idVehiculo);
+    responder(['ok' => true]);
+
+  case 'sucursal':
+    $idSucursal = (int)($_POST['id_sucursal'] ?? 0);
+    $idCliente = (int)($_POST['id_cliente'] ?? 0);
+    $nombre = campo('nombre', 80);
+    if (!clienteActivo($idCliente)) responder(['error' => 'No existe el cliente.'], 404);
+    if ($nombre === '') responder(['error' => 'Falta el nombre de la sucursal.'], 422);
+    if (q("SELECT 1 FROM clientes_sucursales WHERE id_cliente = ? AND nombre = ? AND id_sucursal <> ? AND baja IS NULL", 'isi', $idCliente, $nombre, $idSucursal)) {
+      responder(['error' => 'Ya hay una sucursal con ese nombre.'], 422);
+    }
+    $datos = [$nombre, campo('direccion', 150), campo('localidad', 60), campo('telefono', 30), campo('contacto', 60)];
+    if ($idSucursal) {
+      if (!sucursalDelCliente($idSucursal, $idCliente)) responder(['error' => 'No existe la sucursal.'], 404);
+      q("UPDATE clientes_sucursales SET nombre = ?, direccion = NULLIF(?, ''), localidad = NULLIF(?, ''), telefono = NULLIF(?, ''),
+        contacto = NULLIF(?, '') WHERE id_sucursal = ?", 'sssssi', ...[...$datos, $idSucursal]);
+    } else {
+      q("INSERT INTO clientes_sucursales (id_cliente, nombre, direccion, localidad, telefono, contacto)
+        VALUES (?, ?, NULLIF(?, ''), NULLIF(?, ''), NULLIF(?, ''), NULLIF(?, ''))", 'isssss', $idCliente, ...$datos);
+      $idSucursal = $conexionApi->insert_id;
+    }
+    responder(['ok' => true, 'id' => $idSucursal]);
+
+  case 'sucursal_baja':
+    $idSucursal = (int)($_POST['id_sucursal'] ?? 0);
+    $suc = q("SELECT nombre FROM clientes_sucursales WHERE id_sucursal = ? AND baja IS NULL", 'i', $idSucursal)[0] ?? null;
+    if (!$suc) responder(['error' => 'No existe la sucursal.'], 404);
+    if (q("SELECT 1 FROM vehiculos WHERE id_sucursal = ? AND baja IS NULL", 'i', $idSucursal)) {
+      responder(['error' => 'La sucursal ' . $suc['nombre'] . ' todavía tiene vehículos: pasalos a otra sucursal primero.'], 422);
+    }
+    q("UPDATE clientes_sucursales SET baja = NOW() WHERE id_sucursal = ?", 'i', $idSucursal);
+    q("UPDATE usuarios_sucursales SET baja = NOW() WHERE id_sucursal = ? AND baja IS NULL", 'i', $idSucursal);
+    responder(['ok' => true]);
 
   case 'ficha_vehiculo':
     $patente = patenteLimpia($_GET['patente'] ?? '');
@@ -205,6 +252,7 @@ switch ($accion) {
       $usuario = ($actual['usuario'] === '' || $actual['usuario'] === $actual['email']) ? $email : $actual['usuario'];
       q("UPDATE usuarios SET usuario = ?, email = ?, nombre = ?, apellido = ?, dni = ? WHERE id_user = ?",
         'sssssi', $usuario, $email, $nombre, $apellido, $dni, $idUser);
+      guardarPermisos($idUser, $idCliente);
       responder(['ok' => true, 'id' => $idUser]);
     }
 
@@ -213,12 +261,14 @@ switch ($accion) {
       q("UPDATE usuarios SET id_cliente = ?, nombre = IF(nombre = '' OR nombre IS NULL, ?, nombre),
         apellido = IF(apellido = '' OR apellido IS NULL, ?, apellido), dni = IF(dni = '' OR dni IS NULL, ?, dni)
         WHERE id_user = ?", 'isssi', $idCliente, $nombre, $apellido, $dni, $existente['id_user']);
+      guardarPermisos((int)$existente['id_user'], $idCliente);
       responder(['ok' => true, 'id' => (int)$existente['id_user'], 'vinculado' => true]);
     }
 
     q("INSERT INTO usuarios (usuario, email, nombre, apellido, dni, rol, id_cliente, verificado)
       VALUES (?, ?, ?, ?, ?, 'usuario', ?, 1)", 'sssssi', $email, $email, $nombre, $apellido, $dni, $idCliente);
     $idUser = $conexionApi->insert_id;
+    guardarPermisos($idUser, $idCliente);
     $envio = !empty($_POST['enviar_acceso']) ? enviarAccesoCliente($conexionApi, $idUser) : null;
     responder(['ok' => true, 'id' => $idUser, 'enviado' => $envio[0] ?? null,
       'link_prueba' => ($envio && esLocal()) ? $envio[1] : null]);

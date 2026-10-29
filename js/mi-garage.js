@@ -85,6 +85,8 @@ function pintarAutos() {
   datos.autos.forEach((a) => {
     const chips = el("div", { className: "mg-auto__chips" });
     if (a.confirmado) chips.append(el("span", { className: "ps-chip ps-chip--ok", textContent: "Registrado en el taller" }));
+    if (a.sucursal) chips.append(el("span", { className: "ps-chip", textContent: a.sucursal }));
+    if (a.en_taller) chips.append(el("span", { className: "ps-chip" + (a.en_taller === "listo" ? " ps-chip--ok" : ""), textContent: a.en_taller === "listo" ? "¡Listo para retirar!" : "En el taller" }));
     if (a.turno) chips.append(el("span", { className: "ps-chip ps-chip--lavado", textContent: `Turno ${fmtFecha(a.turno)} ${a.turno.slice(11)} hs` }));
     VENCIMIENTOS.forEach(([campo, nombre]) => {
       if (!a[campo]) return;
@@ -324,7 +326,7 @@ function pintarHistorial() {
     return;
   }
   detalle.historial.forEach((h) => {
-    const datosLinea = [h.km ? kms(h.km) : "", h.fecha_entrega ? `entregado ${fmtFecha(h.fecha_entrega)}` : "en el taller",
+    const datosLinea = [h.km ? kms(h.km) : "", h.fecha_entrega ? `entregado ${fmtFecha(h.fecha_entrega)}` : h.estado === "listo" ? "listo para retirar" : "en el taller",
       h.anterior ? "con el dueño anterior" : ""].filter(Boolean).join(" · ");
     lista.append(el("li", { className: "cl-linea__item" + (h.anterior ? " cl-linea__item--anterior" : "") },
       el("span", { className: "cl-linea__fecha", textContent: fmtFecha(h.fecha) }),

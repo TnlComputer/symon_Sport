@@ -16,12 +16,6 @@ window.fetch = (recurso, opciones = {}) => {
 /* Menu */
 const mainMenuElement = document.getElementById("main-menu");
 
-/* Consultas */
-const cPatente = document.getElementById("form_cPat");
-
-/* Alertas de error */
-const respuesta = document.getElementById("respuesta");
-
 /************* MENU oculto o muestro en Moviles ***************/
 const toggleMenuElement = document.getElementById("toggle-menu");
 
@@ -101,63 +95,5 @@ if (cuentaBoton && cuentaMenu) {
       abrirCuenta(false);
       cuentaBoton.focus();
     }
-  });
-}
-
-/************* Consulto Patente *****************/
-if (cPatente) {
-  const templateCons = document.getElementById("temp__datos-patentes").content;
-  const fragmentCons = document.createDocumentFragment();
-  const consPat = document.querySelector(".tit__tabla");
-  const consPatDatos = document.querySelector(".line__tabla");
-
-  cPatente.addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    let datos = new FormData(cPatente);
-    consPatDatos.innerHTML = ``;
-    consPat.classList.add("none");
-    const opciones = {
-      method: "POST",
-      body: datos,
-    };
-
-    await fetch("./php/consultas.php", opciones)
-      .then((resp) => resp.json())
-      .then((dataP) => {
-        if (dataP === "inexistente") {
-          respuesta.innerHTML = `
-          <div class="alert alert-danger" role="alert">
-          Patente incorrecta
-          </div>`;
-          setTimeout(() => {
-            respuesta.innerHTML = ``;
-          }, 3000);
-        } else {
-          consPat.classList.remove("none");
-
-          consPatDatos.innerHTML = ``;
-          dataP.forEach((ele) => {
-            templateCons.querySelector(".fecha__t").textContent =
-              ele.fecha_trab;
-            templateCons.querySelector(".fecha__e").textContent =
-              ele.fecha_entrega;
-            templateCons.querySelector(".marca__t").textContent = ele.marca;
-            templateCons.querySelector(".modelo__t").textContent = ele.modelo;
-            templateCons.querySelector(".km__t").textContent = ele.km;
-            templateCons.querySelector(".presu__t").textContent =
-              ele.presupuesto;
-            templateCons.querySelector(
-              ".total__t"
-            ).textContent = `$ ${ele.total_presu}
-            `;
-            templateCons.querySelector(".descript__t").textContent =
-              ele.observaciones;
-            const clone = templateCons.cloneNode(true);
-            fragmentCons.appendChild(clone);
-          });
-          consPatDatos.appendChild(fragmentCons);
-        }
-      });
   });
 }

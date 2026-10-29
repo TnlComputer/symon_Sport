@@ -16,7 +16,7 @@ const MENU = [
   ['clientes.php', 'Clientes', 'icons8-contrato-de-trabajo-24.png', 'admin'],
   ['reparaciones.php', 'Reparaciones', 'reparaciones.png', 'admin'],
   ['repuestos.php', 'Repuestos', 'repuestos.svg', 'admin'],
-  ['consultas.php', 'Consultas', 'icons8-barra-de-búsqueda-24.png', 'admin'],
+  ['usuarios.php', 'Usuarios', 'icons8-usuario-de-genero-neutro-24.png', 'admin'],
   ['turnos.php', 'Turnos', 'calendario.svg', 'publico'],
   ['contacto.php', 'Contacto', 'icons8-mensaje-relleno-24.png', 'publico'],
 ];
@@ -47,7 +47,9 @@ function requiereSesion()
 // Páginas solo para administradores: si no es admin, al login (ni se envía el contenido)
 function requiereAdmin()
 {
-  if (rolActual() !== 'admin') {
+  global $conexionApi; // la librería crea la conexión: tiene que quedar global aunque se incluya desde esta función
+  require_once __DIR__ . '/../php/auth/lib.php'; // esAdmin() confirma en la base que sigue activo y siendo admin
+  if (!esAdmin()) {
     $volver = basename(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: 'index.php');
     header('Location: ' . (usuarioActual() ? 'index.php' : 'login.php?volver=' . rawurlencode($volver)));
     exit;

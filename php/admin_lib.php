@@ -96,3 +96,36 @@ function asignarVehiculo($idCliente, $patente, $marca, $modelo, $anio)
     anio = COALESCE(anio, VALUES(anio))", 'sssi', $patente, $marca, $modelo, $anioNum);
   return $id;
 }
+
+/* ---------- Sucursales de clientes y qué sucursales ve cada usuario (Clientes y Usuarios) ---------- */
+function sucursalesDe($idCliente)
+{
+  return q("SELECT s.id_sucursal, s.nombre, s.direccion, s.localidad, s.telefono, s.contacto,
+      (SELECT COUNT(*) FROM vehiculos v WHERE v.id_sucursal = s.id_sucursal AND v.baja IS NULL) AS vehiculos
+    FROM clientes_sucursales s WHERE s.id_cliente = ? AND s.baja IS NULL ORDER BY s.nombre", 'i', $idCliente);
+}
+
+function sucursalDelCliente($idSucursal, $idCliente)
+{
+  return (bool)q("SELECT 1 FROM clientes_sucursales WHERE id_sucursal = ? AND id_cliente = ? AND baja IS NULL", 'ii', $idSucursal, $idCliente);
+}
+
+// Tildes de sucursales del usuario: todas_sucursales (0/1) y sucursales (ids separados por coma).
+// Si el cliente no tiene sucursales, ve todo.
+function guardarPermisos($idUser, $idCliente)
+{
+  $sucursales = array_map(fn($s) => (int)$s['id_sucursal'], sucursalesDe($idCliente));
+  $todas = !$sucursales || !empty($_POST['todas_sucursales']) ? 1 : 0;
+  $elegidas = array_intersect($sucursales, array_map('intval', explode(',', (string)($_POST['sucursales'] ?? ''))));
+  q("UPDATE usuarios SET todas_sucursales = ? WHERE id_user = ?", 'ii', $todas, $idUser);
+  // tildes que quedaron de otro cliente (si se lo cambió de cliente): se dan de baja
+  q("UPDATE usuarios_sucursales SET baja = NOW() WHERE id_user = ? AND baja IS NULL
+    AND id_sucursal NOT IN (SELECT id_sucursal FROM clientes_sucursales WHERE id_cliente = ?)", 'ii', $idUser, $idCliente);
+  foreach ($sucursales as $id) {
+    if (in_array($id, $elegidas, true)) {
+      q("INSERT INTO usuarios_sucursales (id_user, id_sucursal) VALUES (?, ?) ON DUPLICATE KEY UPDATE baja = NULL", 'ii', $idUser, $id);
+    } else {
+      q("UPDATE usuarios_sucursales SET baja = NOW() WHERE id_user = ? AND id_sucursal = ? AND baja IS NULL", 'ii', $idUser, $id);
+    }
+  }
+}

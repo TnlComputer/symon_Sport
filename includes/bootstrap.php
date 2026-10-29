@@ -4,10 +4,17 @@
 if (defined('SSP_BOOT')) return;
 define('SSP_BOOT', true);
 
-const VERSION_ASSETS = '20261108';
+const VERSION_ASSETS = '20261112';
 const SITIO_URL = 'https://symonsport.com.ar';
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
+
+// En el servidor real los errores de PHP van al log, nunca a la pantalla (mostrarían rutas y detalles internos)
+$hostPedido = $_SERVER['HTTP_HOST'] ?? '';
+if (!preg_match('/^(localhost|127\.0\.0\.1)(:\d+)?$/', $hostPedido) && !str_ends_with($hostPedido, '.test')) {
+  ini_set('display_errors', '0');
+  ini_set('log_errors', '1');
+}
 
 function esHttps()
 {

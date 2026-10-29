@@ -3,8 +3,9 @@
 // GET                      -> config, servicios, horarios y bloqueos
 // POST accion=...          -> guardar cambios
 require_once "turnos_lib.php";
+require_once "auth/lib.php";
 
-if (($_SESSION['datos']['rol'] ?? '') !== 'admin') {
+if (!esAdmin()) { // confirma en la base que sigue activo y siendo admin
   responder(['error' => 'No autorizado'], 403);
 }
 

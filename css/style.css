@@ -5320,3 +5320,454 @@ textarea.ps-input {
 .cl-vf-datos-cab .ps-etiqueta {
   margin: 0;
 }
+
+/* =========================================================
+   REPARACIONES (admin): tablero y control de entrega
+   ========================================================= */
+.re-barra {
+  margin-bottom: 20px;
+}
+
+.re-dias {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--lp-muted);
+  font-size: 14px;
+}
+
+.re-dias select {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  background-color: var(--lp-bg-alt);
+  color: var(--white);
+  font-size: 15px;
+  color-scheme: dark;
+}
+
+.re-columnas {
+  display: grid;
+  gap: 16px;
+  align-items: start;
+}
+
+.re-col {
+  padding: 14px;
+  border: 1px solid var(--lp-line);
+  border-top: 4px solid var(--text-terciary);
+  border-radius: 16px;
+  background-color: var(--lp-card);
+}
+
+.re-col--listo {
+  border-top-color: var(--tn-libre);
+}
+
+.re-col--entregado {
+  border-top-color: var(--grafito-hover);
+}
+
+.re-col__titulo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  text-transform: uppercase;
+}
+
+.re-col__titulo span {
+  min-width: 32px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background-color: var(--lp-bg-alt);
+  color: var(--white);
+  font-family: var(--font);
+  font-size: 15px;
+  text-align: center;
+}
+
+.re-lista {
+  display: grid;
+  gap: 10px;
+}
+
+.re-card {
+  border-left-color: var(--text-terciary);
+}
+
+.re-card--listo {
+  border-left-color: var(--tn-libre);
+}
+
+.re-card--entregado {
+  border-left-color: var(--grafito-hover);
+  opacity: 0.8;
+}
+
+.re-card--demorado .ps-card__pie span:first-child {
+  color: var(--text-terciary);
+  font-weight: 700;
+}
+
+.re-card__cliente {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* detalle */
+.re-panel {
+  max-width: var(--ancho-max);
+  margin: 0 auto;
+}
+
+.re-panel .tn-card {
+  max-width: none;
+}
+
+.re-d-sub {
+  margin: -4px 0 16px;
+  color: var(--lp-muted);
+}
+
+.re-d-presu {
+  margin: -6px 0 14px;
+  color: var(--lp-muted);
+  font-size: 14px;
+}
+
+.re-nota {
+  color: var(--lp-muted);
+  font-weight: 400;
+}
+
+.re-pasos {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.re-paso {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+  padding-bottom: 18px;
+}
+
+.re-paso:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: 30px;
+  bottom: 2px;
+  left: 13px;
+  width: 2px;
+  background-color: var(--lp-line);
+}
+
+.re-paso__marca {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.re-paso.is-hecho .re-paso__marca {
+  border-color: var(--tn-libre);
+  background-color: var(--tn-libre);
+}
+
+.re-paso__cuerpo {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+  padding-top: 3px;
+}
+
+.re-paso__cuerpo small {
+  color: var(--lp-muted);
+  font-size: 13px;
+}
+
+.re-cobro {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 16px;
+  width: 100%;
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.re-cobro dt {
+  color: var(--lp-muted);
+}
+
+.re-cobro dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.re-cobro .re-cobro__saldo {
+  padding-top: 4px;
+  border-top: 1px solid var(--lp-line);
+  color: var(--white);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.re-entregar__form {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+}
+
+.re-entregar {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.re-entregado {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+}
+
+.re-zona-baja {
+  display: grid;
+  justify-items: center;
+}
+
+@media screen and (min-width: 1024px) {
+  .re-columnas {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.re-panel form.tn-card {
+  width: 100%;
+  max-width: none;
+  margin: 0 0 16px;
+}
+
+.re-dias span {
+  color: var(--lp-muted);
+}
+
+/* Clientes: sucursales */
+.cl-autos.cl-autos--grupos {
+  display: block;
+}
+
+.cl-grupo {
+  margin: 18px 0 10px;
+  color: var(--lp-muted);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cl-autos--grupos .cl-grupo:first-child {
+  margin-top: 0;
+}
+
+.cl-auto__suc {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  font-size: 12px;
+}
+
+.cl-auto__suc span {
+  color: var(--lp-muted);
+}
+
+.cl-auto__sucursal.ps-input {
+  min-height: 36px;
+  padding: 4px 8px;
+  font-size: 14px;
+}
+
+.cl-sucursales {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.cl-permisos {
+  margin: 4px 0 0;
+  padding: 10px 12px;
+  border: 1px solid var(--lp-line);
+  border-radius: 10px;
+}
+
+.cl-permisos legend {
+  padding: 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.cl-permisos__lista {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+  padding-left: 18px;
+}
+
+.cl-usuario__ve {
+  color: var(--text-terciary) !important;
+}
+
+/* =========================================================
+   USUARIOS (admin)
+   ========================================================= */
+.us-lista {
+  display: grid;
+  gap: 6px;
+}
+
+.us-fila {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  align-items: center;
+  gap: 4px 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--lp-line);
+  border-radius: 12px;
+  background-color: var(--lp-bg-alt);
+  color: var(--white);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.us-fila > :nth-child(n + 3) {
+  grid-column: 2;
+}
+
+.us-fila--baja {
+  opacity: 0.6;
+}
+
+.us-fila__quien {
+  display: grid;
+  min-width: 0;
+}
+
+.us-fila__quien small,
+.us-fila__cliente,
+.us-fila__ingreso {
+  overflow: hidden;
+  color: var(--lp-muted);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.us-avatar {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 50%;
+  background-color: var(--grafito-hover);
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.us-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.us-avatar--grande {
+  width: 64px;
+  height: 64px;
+  font-size: 22px;
+}
+
+.ps-chip.us-chip--admin {
+  border-color: rgba(227, 38, 44, 0.6);
+  background: rgba(227, 38, 44, 0.15);
+  color: #ff9a9d;
+}
+
+.ps-chip.us-chip--baja {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--lp-muted);
+}
+
+.us-editor {
+  max-width: var(--ancho-max);
+  margin: 0 auto;
+}
+
+.us-editor .tn-card,
+.us-editor form.tn-card {
+  width: 100%;
+  max-width: none;
+  margin: 0 0 16px;
+}
+
+.us-editor__quien {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.us-editor__quien .tn-card__title {
+  margin: 0 0 6px;
+}
+
+.us-subtitulo {
+  margin-top: 10px;
+}
+
+.us-rol {
+  justify-self: start;
+}
+
+.us-rol .ps-provisto__op {
+  display: grid;
+  place-items: center;
+  padding: 6px 16px;
+}
+
+.us-acciones {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+@media screen and (min-width: 900px) {
+  .us-fila {
+    grid-template-columns: 40px minmax(200px, 1.4fr) 1fr 160px minmax(180px, 1.2fr);
+  }
+
+  .us-fila > :nth-child(n + 3) {
+    grid-column: auto;
+  }
+}
+
+@media (hover: hover) {
+  .us-fila:hover {
+    border-color: rgba(227, 38, 44, 0.45);
+  }
+}

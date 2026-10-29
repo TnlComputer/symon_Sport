@@ -75,9 +75,21 @@ function iniciarSesion($db, $usuario)
   return $_SESSION['datos'];
 }
 
+// Además del rol guardado en la sesión, confirma en la base que la cuenta sigue activa y sigue siendo admin:
+// si la deshabilitan o le quitan el rol, pierde el acceso en el próximo pedido (no hace falta que cierre sesión).
 function esAdmin()
 {
-  return ($_SESSION['datos']['rol'] ?? '') === ROL_ADMIN;
+  global $conexionApi;
+  static $resultado = null;
+  if ($resultado !== null) return $resultado;
+  if (($_SESSION['datos']['rol'] ?? '') !== ROL_ADMIN) return $resultado = false;
+  $id = (int)$_SESSION['datos']['id_user'];
+  $st = $conexionApi->prepare("SELECT 1 FROM usuarios WHERE id_user = ? AND rol = 'admin' AND baja IS NULL");
+  $st->bind_param('i', $id);
+  $st->execute();
+  $resultado = (bool)$st->get_result()->fetch_row();
+  if (!$resultado) $_SESSION = []; // la sesión ya no corresponde: se cierra
+  return $resultado;
 }
 
 function destinoSegunRol($rol)
@@ -218,8 +230,9 @@ function enviarAccesoCliente($db, $idUser)
   $token = crearToken($db, (int)$u['id_user'], 'recuperar', 72);
   $url = urlSitio() . '/restablecer.php?t=' . $token;
   $h = fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
+  $para = $u['empresa_nyp'] ? " para {$h($u['empresa_nyp'])}" : '';
   enviarMail($destino, 'Tu acceso a Symon Sport', 'Tu acceso a Symon Sport',
-    "Se creó tu acceso para {$h($u['empresa_nyp'])}. Tu usuario es <b>{$h($u['usuario'])}</b>. "
+    "Se creó tu acceso{$para}. Tu usuario es <b>{$h($u['usuario'])}</b>. "
     . 'Elegí tu contraseña con el botón (el enlace vence en 72 horas).', 'Elegir contraseña', $url);
   return [$destino, $url];
 }

@@ -47,6 +47,35 @@ paginaInicio([
 
           <div class="ps-columnas">
             <div class="ps-principal">
+              <!-- SUCURSALES (empresas con varias sedes) -->
+              <section class="tn-card" id="cl-sec-sucursales" hidden>
+                <h3 class="ps-paso__titulo">Sucursales</h3>
+                <p class="cf-ayuda cl-ayuda" id="cl-suc-ayuda">Si es una empresa con varias sedes, cargá sus sucursales: cada
+                  vehículo se asigna a una y cada usuario ve solo las sucursales que le habilites.</p>
+                <div class="cl-sucursales" id="cl-sucursales"></div>
+                <details class="ps-nuevo-auto" id="cl-nueva-sucursal">
+                  <summary>+ Agregar sucursal</summary>
+                  <form class="cl-form" id="cl-form-sucursal" novalidate>
+                    <input type="hidden" name="id_sucursal">
+                    <div class="ps-fila">
+                      <label>Nombre * <input class="ps-input" name="nombre" maxlength="80" placeholder="Ej. Sucursal Centro"
+                          required></label>
+                      <label>Contacto <input class="ps-input" name="contacto" maxlength="60"></label>
+                    </div>
+                    <div class="ps-fila">
+                      <label>Dirección <input class="ps-input" name="direccion" maxlength="150"></label>
+                      <label>Localidad <input class="ps-input" name="localidad" maxlength="60"></label>
+                      <label>Teléfono <input class="ps-input" name="telefono" type="tel" maxlength="30"></label>
+                    </div>
+                    <p class="tn-error" id="cl-error-sucursal" role="alert" hidden></p>
+                    <div class="cl-botones">
+                      <button type="button" class="btn btn--ghost ag-btn" id="cl-sucursal-cancelar">Cancelar</button>
+                      <button type="submit" class="btn btn--primary ag-btn">Guardar sucursal</button>
+                    </div>
+                  </form>
+                </details>
+              </section>
+
               <!-- VEHÍCULOS -->
               <section class="tn-card" id="cl-sec-vehiculos" hidden>
                 <h3 class="ps-paso__titulo">Vehículos</h3>
@@ -59,6 +88,7 @@ paginaInicio([
                     <label>Marca <input class="ps-input" id="cl-auto-marca" maxlength="40"></label>
                     <label>Modelo <input class="ps-input" id="cl-auto-modelo" maxlength="60"></label>
                     <label>Año <input class="ps-input" id="cl-auto-anio" maxlength="4" inputmode="numeric"></label>
+                    <label id="cl-auto-sucursal-label" hidden>Sucursal <select class="ps-input" id="cl-auto-sucursal"></select></label>
                   </div>
                   <div class="ps-traspaso" id="cl-traspaso" hidden></div>
                   <button type="button" class="btn btn--primary ag-btn" id="cl-auto-agregar">Agregar vehículo</button>
@@ -164,6 +194,12 @@ paginaInicio([
                     </div>
                     <label>Mail * <input class="ps-input" name="email" type="email" maxlength="190" required></label>
                     <label>DNI <input class="ps-input" name="dni" maxlength="20" inputmode="numeric"></label>
+                    <fieldset class="cl-permisos" id="cl-u-permisos" hidden>
+                      <legend>Qué sucursales puede ver</legend>
+                      <label class="cf-check rp-check cl-check"><input type="checkbox" name="todas_sucursales" value="1">
+                        Todas (también las nuevas y los vehículos sin sucursal)</label>
+                      <div class="cl-permisos__lista" id="cl-u-sucursales"></div>
+                    </fieldset>
                     <label class="cf-check rp-check cl-check"><input type="checkbox" name="enviar_acceso" checked>
                       Enviarle ahora el mail para elegir su contraseña</label>
                     <p class="tn-error" id="cl-error-usuario" role="alert" hidden></p>
