@@ -1,8 +1,8 @@
 <?php
 require __DIR__ . '/includes/layout.php';
 paginaInicio([
-  'titulo' => 'Nueva contraseña | Symon Sport',
-  'descripcion' => 'Taller Mecánico en San Martín, reparación integral de vehiculos',
+  'titulo' => t('Nueva contraseña') . ' | Symon Sport',
+  'descripcion' => t('Taller Mecánico en San Martín, reparación integral de vehiculos'),
   'pagina' => 'restablecer.php',
   'noindex' => true,
   'fuenteTitulos' => true,
@@ -14,17 +14,17 @@ paginaInicio([
       <div class="lp-container">
         <div class="au-card">
           <img class="au-logo" src="assets/img/logo_symon_sport-200x127.webp" alt="Symon Sport" width="120" height="76">
-          <h1 class="tn-card__title au-titulo">Elegí tu contraseña nueva</h1>
+          <h1 class="tn-card__title au-titulo"><?= e(t('Elegí tu contraseña nueva')) ?></h1>
           <div class="au-aviso" id="au-aviso" role="status" hidden></div>
           <form class="au-form" id="rs-form" novalidate>
-            <label>Contraseña nueva
+            <label><?= e(t('Contraseña nueva')) ?>
               <input type="password" name="clave" autocomplete="new-password" required minlength="8">
-              <small>Mínimo 8 caracteres, con letras y números.</small>
+              <small><?= e(t('Mínimo 8 caracteres, con letras y números.')) ?></small>
             </label>
-            <label>Repetir contraseña
+            <label><?= e(t('Repetir contraseña')) ?>
               <input type="password" name="clave2" autocomplete="new-password" required minlength="8">
             </label>
-            <button type="submit" class="btn btn--accent btn--lg au-submit">Guardar contraseña</button>
+            <button type="submit" class="btn btn--accent btn--lg au-submit"><?= e(t('Guardar contraseña')) ?></button>
           </form>
         </div>
       </div>

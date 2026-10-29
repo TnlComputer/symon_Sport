@@ -12,12 +12,31 @@ function tallerConfig($db)
   return $config;
 }
 
-// Precio al cliente = costo + % de ganancia (el propio del repuesto o el general)
-function precioRepuesto($costo, $gananciaPropia, $config)
+/**
+ * % de ganancia de un repuesto: el propio -> el del rubro -> el del proveedor -> el general.
+ * Devuelve [pct, origen] con origen 'propio' | 'rubro' | 'proveedor' | 'general'.
+ */
+function gananciaRepuesto($fila, $config)
 {
-  $pct = $gananciaPropia !== null && $gananciaPropia !== '' ? (float)$gananciaPropia : (float)$config['ganancia_repuestos_pct'];
-  return round((float)$costo * (1 + $pct / 100), 2);
+  foreach (['ganancia_pct' => 'propio', 'pct_rubro' => 'rubro', 'pct_proveedor' => 'proveedor'] as $campo => $origen) {
+    if (isset($fila[$campo]) && $fila[$campo] !== '') return [(float)$fila[$campo], $origen];
+  }
+  return [(float)$config['ganancia_repuestos_pct'], 'general'];
 }
+
+// Precio al cliente = costo + % de ganancia. $fila: repuesto leído con REPUESTO_SELECT
+function precioRepuesto($fila, $config)
+{
+  return round((float)$fila['costo'] * (1 + gananciaRepuesto($fila, $config)[0] / 100), 2);
+}
+
+// Repuesto con su proveedor y rubro (y los % de cada uno). Uso: REPUESTO_SELECT . " WHERE ..."
+const REPUESTO_SELECT = "SELECT r.id_repuesto, r.codigo, r.descripcion, r.marca, r.costo, r.precio_lista, r.ganancia_pct,
+    r.id_proveedor, r.id_rubro, r.actualizado, r.baja, p.nombre AS proveedor, c.nombre AS rubro,
+    c.ganancia_pct AS pct_rubro, p.ganancia_pct AS pct_proveedor
+  FROM repuestos r
+  LEFT JOIN proveedores p ON p.id_proveedor = r.id_proveedor
+  LEFT JOIN repuestos_rubros c ON c.id_rubro = r.id_rubro";
 
 /**
  * Totales de un presupuesto a partir de sus repuestos y la mano de obra base.

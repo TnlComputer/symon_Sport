@@ -32,7 +32,7 @@ switch ($accion) {
   case 'listar':
     $q = '%' . trim($_GET['q'] ?? '') . '%';
     $filas = consulta($db, "SELECT p.id_presu, p.fecha_presu, p.descripcion_presu, p.usado, p.total_presu, p.senia_presu,
-        p.lavado_presu, p.lavado_hecho, p.id_cliente, p.id_vehiculo, c.empresa_nyp, v.patente, v.marca, v.modelo
+        p.lavado_presu, p.lavado_hecho, p.respuesta_cliente, p.respuesta_fecha, p.respuesta_motivo, p.id_cliente, p.id_vehiculo, c.empresa_nyp, v.patente, v.marca, v.modelo
       FROM presupuestos p
       LEFT JOIN clientes c ON c.id_cliente = p.id_cliente
       LEFT JOIN vehiculos v ON v.id_vehiculo = p.id_vehiculo
@@ -68,10 +68,10 @@ switch ($accion) {
   case 'repuestos':
     $config = tallerConfig($db);
     $q = '%' . trim($_GET['q'] ?? '') . '%';
-    $filas = consulta($db, "SELECT id_repuesto, descripcion, codigo, marca, costo, ganancia_pct FROM repuestos
-      WHERE baja IS NULL AND (descripcion LIKE ? OR codigo LIKE ? OR marca LIKE ?) ORDER BY descripcion LIMIT 15",
-      'sss', $q, $q, $q);
-    foreach ($filas as &$r) $r['precio'] = precioRepuesto($r['costo'], $r['ganancia_pct'], $config);
+    // el mismo repuesto puede estar en la lista de varios proveedores: se muestra de quién es cada uno
+    $filas = consulta($db, REPUESTO_SELECT . " WHERE r.baja IS NULL AND (r.descripcion LIKE ? OR r.codigo LIKE ? OR r.marca LIKE ?)
+      ORDER BY r.descripcion, r.costo LIMIT 25", 'sss', $q, $q, $q);
+    foreach ($filas as &$r) $r['precio'] = precioRepuesto($r, $config);
     responderJSON(['repuestos' => $filas, 'config' => $config]);
 
   case 'vehiculo':
@@ -126,7 +126,9 @@ switch ($accion) {
     if ($id) {
       $st = $db->prepare("UPDATE presupuestos SET fecha_presu = ?, descripcion_presu = ?, patente_presu = ?, mobra_presu = ?,
         repuestos_presu = ?, total_presu = ?, senia_presu = ?, abonado_presu = ?, dias_presu = ?, id_cliente = ?, id_vehiculo = ?,
-        mobra_base_presu = ?, recargo_mo_presu = ?, lavado_presu = ? WHERE id_presu = ? AND baja IS NULL");
+        mobra_base_presu = ?, recargo_mo_presu = ?, lavado_presu = ?,
+        respuesta_cliente = NULL, respuesta_fecha = NULL, respuesta_id_user = NULL, respuesta_motivo = NULL
+        WHERE id_presu = ? AND baja IS NULL"); // si cambia, el cliente lo tiene que volver a aprobar
       $st->bind_param('sssdddddiiidddi', $fecha, $descripcion, $patente, $t['mano_obra_cliente'], $t['repuestos'], $t['total'],
         $senia, $saldo, $dias, $idCliente, $idVehiculo, $t['mano_obra_base'], $t['recargo_mano_obra'], $t['lavado'], $id);
       $st->execute();

@@ -4,7 +4,7 @@ require_once "turnos_lib.php";
 require_once "auth/lib.php"; // para vincular el turno al usuario si tiene sesión iniciada
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  responder(['error' => 'Método no permitido'], 405);
+  responder(['error' => t('Método no permitido')], 405);
 }
 
 $campo = fn($k, $max) => mb_substr(trim($_POST[$k] ?? ''), 0, $max);
@@ -25,24 +25,24 @@ if (!empty($_POST['web'])) {
 }
 
 $errores = [];
-if (!fechaValida($fecha)) $errores[] = 'Elegí una fecha válida.';
-if (!preg_match('/^\d{2}:\d{2}$/', $hora)) $errores[] = 'Elegí un horario.';
-if (mb_strlen($nombre) < 2) $errores[] = 'Ingresá tu nombre.';
-if (!preg_match('/^[0-9 +()-]{8,30}$/', $telefono)) $errores[] = 'Ingresá un teléfono válido.';
-if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) $errores[] = 'El email no es válido.';
-if (!preg_match('/^[A-Z0-9]{6,8}$/', $patente)) $errores[] = 'Ingresá una patente válida (ej. AB123CD).';
+if (!fechaValida($fecha)) $errores[] = t('Elegí una fecha válida.');
+if (!preg_match('/^\d{2}:\d{2}$/', $hora)) $errores[] = t('Elegí un horario.');
+if (mb_strlen($nombre) < 2) $errores[] = t('Ingresá tu nombre.');
+if (!preg_match('/^[0-9 +()-]{8,30}$/', $telefono)) $errores[] = t('Ingresá un teléfono válido.');
+if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) $errores[] = t('El email no es válido.');
+if (!preg_match('/^[A-Z0-9]{6,8}$/', $patente)) $errores[] = t('Ingresá una patente válida (ej. AB123CD).');
 if ($errores) {
   responder(['error' => implode(' ', $errores)], 422);
 }
 
 $servicio = buscarServicio($conexionApi, $idServicio);
 if (!$servicio) {
-  responder(['error' => 'El servicio elegido no existe.'], 422);
+  responder(['error' => t('El servicio elegido no existe.')], 422);
 }
 
 $config = turnosConfig($conexionApi);
 if ($fecha > date('Y-m-d', strtotime("+{$config['dias_max']} days"))) {
-  responder(['error' => 'Esa fecha todavía no está habilitada.'], 422);
+  responder(['error' => t('Esa fecha todavía no está habilitada.')], 422);
 }
 
 // bloqueo general para que dos personas no tomen el mismo lugar a la vez
@@ -83,8 +83,8 @@ try {
 
 if ($turnoExistente) {
   responder([
-    'error' => "La patente $patente ya tiene un turno el {$turnoExistente['fecha']} a las {$turnoExistente['hora']}. "
-      . 'Si necesitás cambiarlo, cancelalo primero o escribinos.',
+    'error' => t('La patente {0} ya tiene un turno el {1} a las {2}.', $patente, $turnoExistente['fecha'], $turnoExistente['hora'])
+      . ' ' . t('Si necesitás cambiarlo, cancelalo primero o escribinos.'),
     'ya_tiene_turno' => true,
   ], 409);
 }
@@ -98,7 +98,7 @@ if ($idTurno && $idUser) {
 }
 
 if (!$idTurno) {
-  responder(['error' => 'Ese horario se acaba de ocupar. Elegí otro, por favor.', 'ocupado' => true], 409);
+  responder(['error' => t('Ese horario se acaba de ocupar. Elegí otro, por favor.'), 'ocupado' => true], 409);
 }
 
 // aviso por mail al taller (si falla, el turno igual queda guardado)

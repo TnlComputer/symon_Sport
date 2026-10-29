@@ -10,14 +10,14 @@ const rsAvisar = (texto, error) => {
 };
 
 if (!/^[a-f0-9]{64}$/.test(rsToken)) {
-  rsAvisar("El enlace no es válido. Pedí uno nuevo desde «¿Olvidaste tu contraseña?».", true);
+  rsAvisar(t("El enlace no es válido. Pedí uno nuevo desde «¿Olvidaste tu contraseña?»."), true);
   rsForm.hidden = true;
 }
 
 rsForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (rsForm.clave.value !== rsForm.clave2.value) {
-    rsAvisar("Las contraseñas no coinciden.", true);
+    rsAvisar(t("Las contraseñas no coinciden."), true);
     return;
   }
   if (!rsForm.checkValidity()) {
@@ -32,8 +32,8 @@ rsForm.addEventListener("submit", async (e) => {
   try {
     const res = await fetch("php/auth/restablecer.php", { method: "POST", body: fd });
     const datos = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(datos.error || "Ocurrió un error.");
-    rsAvisar("¡Listo! Tu contraseña se actualizó.", false);
+    if (!res.ok) throw new Error(datos.error || t("Ocurrió un error."));
+    rsAvisar(t("¡Listo! Tu contraseña se actualizó."), false);
     setTimeout(() => (document.location.href = datos.destino), 1200);
   } catch (err) {
     rsAvisar(err.message, true);

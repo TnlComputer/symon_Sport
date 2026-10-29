@@ -59,11 +59,14 @@ No hay dependencias de Composer ni de npm: se sube la carpeta tal cual.
     - hasta **10 fotos** propias;
     - datos de identificación, neumáticos y documentación;
     - actualización de km;
-    - presupuestos pendientes;
-    - **historial del taller**.
+    - presupuestos pendientes, que puede **aprobar o rechazar** (con comentario opcional) mientras el auto no haya entrado al taller;
+    - **historial**: los trabajos del taller y los que él mismo carga **de otros talleres** (o hechos por él), marcados aparte.
   - **"Lo vendí":** el auto pasa a *Autos que tuve* (chico, al costado, con una cruz) y queda **bloqueado**.
   - Los autos que el taller tiene a nombre de su cliente aparecen solos.
 - **Turnos:** pide y cancela sus turnos.
+
+### Todos
+- **Idioma** español, portugués o inglés (botones ES · PT · EN del encabezado) y **modo claro u oscuro** (botón sol / luna). Se recuerdan en cookies. Las pantallas del taller quedan en castellano.
 
 ### Taller (rol `admin`)
 
@@ -74,8 +77,10 @@ No hay dependencias de Composer ni de npm: se sube la carpeta tal cual.
 | **Presupuestos** (`presupuestos.php`) | Cliente → sus vehículos → trabajo → repuestos → importes. Calcula lo que ve el cliente y el desglose interno, y envía por mail |
 | **Clientes** (`clientes.php`) | Listado con buscador (también por patente) y ficha del cliente (detalle abajo) |
 | **Reparaciones** (`reparaciones.php`) | Tablero *En el taller → Listo para retirar → Entregado*. Ingreso desde un presupuesto aprobado (km y estado del auto), trabajo realizado, control de entrega (terminado, lavado, aviso por WhatsApp, cobro y factura) y anulación de ingresos cargados por error |
-| **Repuestos** (`repuestos.php`) | Catálogo con costo y % de ganancia, aumentos masivos y precios generales (lavado, recargos) |
+| **Repuestos** (`repuestos.php`) | Catálogo; **proveedores** con importación de su **lista de precios** (Excel o CSV); **ganancia por rubro, proveedor o general**; **aumentos** globales, por rubro o por proveedor con vista previa; precios generales (lavado, recargos) |
 | **Usuarios** (`usuarios.php`) | Todas las cuentas (clientes y administradores): habilitar / deshabilitar, editar, rol, cliente vinculado, sucursales que ve, reenviar acceso y desbloquear tras intentos fallidos |
+
+En el menú de arriba quedan las pantallas de todos los días (Agenda, Presupuestos, Clientes, Reparaciones). **Repuestos, Usuarios y Configuración de turnos** están en el menú de la cuenta (el nombre, arriba a la derecha), bajo *Administración*. El encabezado no lleva redes sociales: Facebook y WhatsApp están en el pie y en el botón flotante de WhatsApp. El globo 🌐 abre idioma y tema.
 
 La ficha del cliente en **Clientes** reúne:
 - **Sucursales** (empresas con varias sedes): cada vehículo se asigna a una.
@@ -98,6 +103,8 @@ La ficha del cliente en **Clientes** reúne:
 │   usuarios.php, turnos-admin.php, turnos-config.php                  panel del taller (admin)
 ├── includes/
 │   ├── bootstrap.php     núcleo: sesión segura, cabeceras (CSP, HSTS), CSRF, usuario actual
+│   ├── idioma.php        idioma (t(), cookie ssp_idioma) y tema (cookie ssp_tema)
+│   ├── idiomas/pt|en/    diccionarios de traducción, uno por sección
 │   └── layout.php        <head>, menú según el rol y pie (paginaInicio / paginaFin)
 ├── php/                  API JSON que consume el JavaScript de cada página
 │   ├── auth/             login, registro, OAuth, recuperación de clave, verificación de mail
@@ -110,7 +117,7 @@ La ficha del cliente en **Clientes** reúne:
 ├── js/                   un archivo por página + scripts.js (común) + ficha-vehiculo.js (compartido)
 ├── css/style.css         estilos de todo el sitio
 ├── assets/img/           logos, íconos, favicon
-├── uploads/              fotos subidas (no está en git, salvo su .htaccess)
+├── uploads/              fotos subidas (no está en git, salvo su .htaccess); las quitadas pasan a uploads/baja/
 ├── sql/                  scripts de creación / migración de la base
 ├── deploy/               reglas para el .htaccess del hosting y plantilla de conexión
 └── router.php            enrutador SOLO para desarrollo local (php -S)
@@ -126,6 +133,8 @@ La ficha del cliente en **Clientes** reúne:
 - **API JSON.** El JavaScript de cada página llama a `php/*.php` con `fetch`. Las APIs nuevas reciben una `accion` (por GET o POST) y responden JSON. Ante un error devuelven `{ "error": "mensaje para mostrar" }` con un código HTTP 4xx.
 - **Sin JavaScript ni estilos dentro del HTML.** Es lo que permite una CSP estricta (`script-src 'self'`). Todo va en `js/` y `css/`.
 - **Direcciones viejas.** Las `.html` anteriores redirigen con 301 a su `.php`, así no se pierde lo indexado por Google.
+- **Idiomas.** El texto en castellano es la clave: `t('Reservar turno')` en PHP y en JS (la función de JS está en `js/scripts.js`). Si falta la traducción se muestra el castellano. Las traducciones van en `includes/idiomas/pt/*.php` y `includes/idiomas/en/*.php` (un archivo por sección, que devuelve `['texto' => 'traducción']`); el layout le pasa al JS el diccionario del idioma elegido como JSON. Fechas y números con `LOCALE` (JS) o `IDIOMA_LOCALE` (PHP).
+- **Modo claro / oscuro.** Los colores de `css/style.css` se definen con `light-dark(claro, oscuro)` y el tema lo decide `color-scheme` (`<html data-tema="claro">`). Oscuro por defecto. Encabezado, pie y banner de inicio son siempre oscuros. Texto sobre rojo, verde o fotos: `var(--on-accent)`; texto común: `var(--fg)`.
 - **Caché de CSS/JS.** Se sirven con `?v=VERSION_ASSETS` (constante en `includes/bootstrap.php`). **Subila cada vez que cambies CSS o JS** para que los navegadores tomen la versión nueva.
 
 ---
@@ -156,7 +165,7 @@ La ficha del cliente en **Clientes** reúne:
 ### Nunca se borra nada: baja lógica
 Usuarios, clientes, vehículos, presupuestos, repuestos y fotos **no se eliminan**: se marcan con la columna `baja` (fecha) y se ocultan. Así se conserva el historial y se puede reactivar.
 
-En las fotos, el registro queda pero **el archivo se elimina del disco**, para que una foto quitada no siga publicada.
+En las fotos, el registro queda y el archivo **se mueve a `uploads/baja/`**: deja de estar publicado (esa carpeta no se sirve) pero se puede recuperar.
 
 ### La historia va con el auto (por patente)
 La ficha técnica, el historial, los km y las fotos se guardan **por patente**, no por cliente.
@@ -172,6 +181,8 @@ Cuando una patente pasa a otro cliente (**traspaso**):
 - Si la patente figura a nombre de **otra persona**, la puede agregar pero **no editarla**. Tiene que pedirle al taller el traspaso.
 - **Fotos:** ve las suyas y, si el auto está confirmado, las del taller. Las de otros dueños no.
 - **Vendido:** el auto queda en solo lectura (datos, km y fotos). No se puede marcar si tiene un turno pendiente.
+- **Aprobar presupuestos:** guarda `respuesta_cliente` (aprobado / rechazado), fecha, usuario y comentario. Puede cambiar de opinión hasta que el taller ingresa el auto. Un presupuesto **vencido** no se puede aprobar. **Si el taller modifica el presupuesto, la respuesta se borra** y hay que volver a aprobarlo. El taller lo ve en Presupuestos, Reparaciones (los aprobados salen primero al ingresar) y en la ficha del cliente.
+- **Trabajos de otros talleres:** van a `fichas_historial` con `realizado_por = 'otro_taller'` (o `'cliente'`), quién los cargó, fecha, km, taller y costo. Los ve quien los cargó y el taller (en el historial del auto, en Clientes). Solo quien los cargó los puede quitar (baja).
 
 ### Sucursales y permisos por usuario
 - Un cliente (empresa) puede tener **sucursales**, y cada vehículo se asigna a una (o queda *sin sucursal*).
@@ -192,6 +203,13 @@ El catálogo de campos está en `camposFicha()` (`php/vehiculo_lib.php`). Define
 
 - **Cliente:** identificación (marca, modelo, versión, año, color, VIN, motor), combustible, caja, medidas y presión de neumáticos, y vencimientos (VTV, seguro, GNC, matafuego).
 - **Solo el taller:** lubricentro (aceite, filtros, fluidos), detalles de motor, gomería, batería, frenos y observaciones. El cliente los ve, pero no los cambia.
+
+### Repuestos: listas de proveedores y ganancias
+- **Costo** de un repuesto importado = precio de lista × (1 − bonificación del proveedor) × (1 + IVA del proveedor, si la lista viene sin IVA). Si se cambia la bonificación o el IVA de un proveedor, se recalcula el costo de toda su lista.
+- **Ganancia** (la primera que exista): la **propia** del repuesto → la del **rubro** → la del **proveedor** → la **general**. No se guarda en el repuesto: cambiar un % actualiza al instante todos los precios que lo usan.
+- **Importar una lista** (`php/listas_lib.php` lee .xlsx y .csv sin librerías): reconoce las columnas por los títulos y **recuerda la planilla de cada proveedor**. Los repuestos se reconocen por **código dentro del proveedor**: el mismo repuesto de dos proveedores son dos filas, y en el presupuesto se ve de quién es cada uno. Antes de aplicar, **"Ver qué cambia"** muestra nuevos, actualizados, variación promedio y ejemplos. Se ignoran filas sin descripción o sin precio (títulos, subtotales). Opcional: dar de baja lo que ya no viene en la lista. Los rubros nuevos se crean solos.
+- **Aumentos** (todos, un rubro, un proveedor o ambos) con vista previa. Cambian el costo y el precio de lista.
+- Todo cambio de costo queda en `repuestos_costos` (importación, aumento o edición a mano).
 
 ### Presupuestos: lo que ve el cliente y lo interno
 - El cliente ve **repuestos + mano de obra = total**, más la seña y el saldo.
@@ -219,6 +237,8 @@ Los scripts están en `sql/`. **Orden de ejecución en una base nueva o en produ
 | 9 | `reparaciones_v2.sql` | Estados de la reparación (`listo`), trabajo realizado, cobro, aviso al cliente y anulación |
 | 10 | `sucursales.sql` | Sucursales de clientes, sucursal de cada vehículo y qué sucursales ve cada usuario |
 | 11 | `usuarios_v2.sql` | Cuentas protegidas (después, marcar la del desarrollador con el `UPDATE` comentado en el script) |
+| 12 | `garage_v3.sql` | Respuesta del cliente a los presupuestos (aprobado / rechazado) |
+| 13 | `repuestos_v2.sql` | Proveedores, rubros con % de ganancia, importaciones de listas e historial de costos (pasa los proveedores y categorías de texto que ya había) |
 
 > **Atención:**
 > - `turnos_v2.sql` era solo para una base local vieja. **No usarlo.**
@@ -236,6 +256,7 @@ Los scripts están en `sql/`. **Orden de ejecución en una base nueva o en produ
 - `presupuestos` y `presupuestos_items`.
 - `reparaciones`.
 - `repuestos` y `taller_config`.
+- `proveedores`, `repuestos_rubros`, `repuestos_importaciones` y `repuestos_costos` (historial de cada cambio de costo).
 - `turnos_*`.
 
 ---
@@ -279,7 +300,7 @@ Checklist para cuando se migre el hosting o el dominio:
    - URL de retorno a registrar en cada proveedor: `https://symonsport.com.ar/php/auth/callback.php`.
    - Un proveedor sin credenciales queda oculto.
 7. **`.htaccess`:** agregar las reglas de `deploy/htaccess.txt` **debajo** de las del SSL, sin reemplazar el archivo existente. Bloquean carpetas internas, redirigen `.html` → `.php` y activan compresión y caché.
-8. **Carpeta `uploads/`:** tiene que existir, poder escribirse por PHP y conservar su `.htaccess`. PHP necesita **GD con WebP**.
+8. **Carpeta `uploads/`:** tiene que existir, poder escribirse por PHP y conservar su `.htaccess`, igual que `uploads/baja/` (fotos quitadas; su `.htaccess` impide verlas). PHP necesita **GD con WebP**.
 9. **Admins:** dar rol `admin` a las cuentas del taller (ver [Puesta en marcha en local](#puesta-en-marcha-en-local), paso 4) y marcar como `protegido` la cuenta del desarrollador (ver `sql/usuarios_v2.sql`). Desde ahí, el resto de los usuarios se maneja desde la pantalla **Usuarios**.
 10. **Agenda → Configuración:** importar feriados (año actual y siguiente), cargar los no laborables propios y revisar horarios, capacidad y duraciones.
 
@@ -295,13 +316,13 @@ Todos responden JSON. Los POST requieren el token CSRF, que `js/scripts.js` agre
 | `php/valido.php` / `php/desconecto.php` | sesión | Usuario actual / cerrar sesión (POST) |
 | `php/turnos_servicios.php`, `turnos_disponibilidad.php`, `turnos_reservar.php` | público | Servicios, horarios libres, reserva |
 | `php/mis_turnos.php` | sesión | Turnos y autos del usuario, cancelar turno |
-| `php/garage_api.php` | sesión | `datos`, `auto`, `perfil`, `clave`, `foto_perfil`, `auto_agregar`, `auto_guardar`, `auto_km`, `auto_foto`, `auto_portada`, `auto_vendido`, `auto_quitar` |
+| `php/garage_api.php` | sesión | `datos`, `auto`, `perfil`, `clave`, `foto_perfil`, `auto_agregar`, `auto_guardar`, `auto_km`, `auto_foto`, `auto_portada`, `auto_vendido`, `auto_quitar`, `presu_responder`, `trabajo_agregar`, `trabajo_quitar` |
 | `php/clientes_api.php` | admin | `listar`, `ficha`, `historial`, `guardar`, `baja`/`reactivar`, `vehiculo`, `vehiculo_baja`, `vehiculo_sucursal`, `sucursal`, `sucursal_baja`, `ficha_vehiculo`, `ficha_vehiculo_guardar`, `vehiculo_foto`, `usuario`, `usuario_acceso`, `usuario_baja` |
 | `php/reparaciones_api.php` | admin | `listar`, `detalle`, `pendientes`, `ingresar`, `guardar`, `listo`, `lavado`, `avisado`, `entregar`, `reabrir`, `anular` |
 | `php/usuarios_api.php` | admin | `listar`, `detalle`, `sucursales`, `clientes`, `guardar`, `baja`/`reactivar`, `acceso`, `desbloquear` |
 | `php/presupuestos_api.php` | admin | `listar`, `detalle`, `clientes`, `vehiculos`, `repuestos`, `guardar`, `vehiculo`, `anular`, `lavado_hecho` |
 | `php/send_PresuMail.php` | admin | Envía el presupuesto por mail al cliente |
-| `php/repuestos_admin.php` | admin | Catálogo: `guardar`, `baja`/`reactivar`, `aumento`, `config` |
+| `php/repuestos_admin.php` | admin | `listar`, `maestros`, `guardar`, `baja`/`reactivar`, `config`, `rubro`, `rubro_baja`, `proveedor`, `proveedor_baja`, `aumento` (con `simular`), `lista_leer`, `lista_importar` (con `simular`) |
 | `php/turnos_admin.php`, `turnos_config_admin.php` | admin | Agenda y configuración (servicios, horarios, bloqueos, feriados) |
 | `php/send_mail.php` | público | Formulario de contacto |
 
@@ -309,7 +330,8 @@ Todos responden JSON. Los POST requieren el token CSRF, que `js/scripts.js` agre
 
 ## Convenciones para seguir trabajando
 
-- **Idioma:** código, comentarios, nombres de tablas y columnas, y textos en **español rioplatense**.
+- **Idioma:** código, comentarios, nombres de tablas y columnas, y textos en **español rioplatense**. En las páginas públicas y de cliente, todo texto visible va con `t()` y su traducción en `includes/idiomas/pt|en/`.
+- **Colores:** nunca un color fijo para texto o fondos de contenido; usar las variables (que ya tienen sus dos variantes) o `light-dark()`.
 - **Nunca `DELETE`:** usar la columna `baja` (ver [Reglas del negocio](#reglas-del-negocio)).
 - **Nada de JS o CSS dentro del HTML** (lo bloquea la CSP): todo en `js/` y `css/`.
 - **Página nueva:**
@@ -328,11 +350,9 @@ Todos responden JSON. Los POST requieren el token CSRF, que `js/scripts.js` agre
 ## Pendientes conocidos
 
 - **Agenda y Configuración de turnos** mantienen su diseño propio (ya con el estilo nuevo); falta conectar un turno con el ingreso al taller.
-- **Mi garage:**
-  - el cliente ve los presupuestos pendientes, pero todavía no puede **aprobarlos online**;
-  - todavía no puede cargar trabajos hechos en otros talleres.
+- **Aprobación online:** el taller ve la respuesta del cliente en pantalla, pero todavía no recibe un aviso (mail o WhatsApp) cuando el cliente aprueba.
 - **Recordatorios automáticos** de service y vencimientos por mail o WhatsApp: la base ya tiene el plan de mantenimiento (`fichas_mantenimiento`), pero falta la tarea programada que envía los avisos.
-- **Idiomas** (español, portugués e inglés) y **modo claro / oscuro**: planificado.
+- **Idiomas:** las pantallas del taller (admin) quedan en castellano. Los nombres de los servicios de turnos vienen de la base y no se traducen.
 
 ---
 

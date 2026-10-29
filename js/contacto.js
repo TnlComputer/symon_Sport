@@ -23,7 +23,7 @@ function contactForm() {
       if (pattern && $input.value !== "") {
         //console.log("El input tiene patron");
 
-        let regex = new RegExp(pattern);
+        let regex = new RegExp(pattern, "u");
         return !regex.exec($input.value)
           ? d.getElementById($input.name).classList.add("is-active")
           : d.getElementById($input.name).classList.remove("is-active");
@@ -52,7 +52,8 @@ function contactForm() {
       body: new FormData(e.target),
       mode: "cors",
     })
-      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      // ante un error, el servidor manda el motivo (ya traducido) en "message"
+      .then(async (res) => (res.ok ? res.json() : Promise.reject({ status: res.status, message: (await res.json().catch(() => ({}))).message })))
       .then((json) => {
         // console.log(json);
         $loader.classList.add("none");
@@ -63,9 +64,9 @@ function contactForm() {
       })
       .catch((err) => {
         // console.log(err);
-        let message =
-          err.statusText || "Ocurrió un error al enviar, intenta nuevamente";
-        $response.replaceChildren(Object.assign(document.createElement("p"), { textContent: `Error ${err.status}: ${message}` }));
+        $response.replaceChildren(Object.assign(document.createElement("p"), {
+          textContent: err.message || t("Error {0}: {1}", err.status ?? "", t("Ocurrió un error al enviar, intenta nuevamente")),
+        }));
       })
       .finally(() => {
         $loader.classList.add("none");

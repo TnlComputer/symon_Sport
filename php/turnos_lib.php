@@ -85,7 +85,7 @@ function tramosDelDia($db, $fecha, $intervalo)
   $bloqueos = [];
   foreach ($st->get_result()->fetch_all(MYSQLI_ASSOC) as $b) {
     if ($b['hora_desde'] === null || $b['hora_hasta'] === null) {
-      return $cache[$fecha] = ['abierto' => false, 'motivo' => $b['motivo'] ?: 'Cerrado', 'tramos' => []];
+      return $cache[$fecha] = ['abierto' => false, 'motivo' => $b['motivo'] ?: t('Cerrado'), 'tramos' => []];
     }
     $bloqueos[] = [aMinutos($b['hora_desde']), aMinutos($b['hora_hasta'])];
   }
@@ -96,7 +96,7 @@ function tramosDelDia($db, $fecha, $intervalo)
   $st->execute();
   $franjas = $st->get_result()->fetch_all(MYSQLI_ASSOC);
   if (!$franjas) {
-    return $cache[$fecha] = ['abierto' => false, 'motivo' => 'Cerrado', 'tramos' => []];
+    return $cache[$fecha] = ['abierto' => false, 'motivo' => t('Cerrado'), 'tramos' => []];
   }
 
   $tramos = [];

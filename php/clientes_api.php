@@ -73,7 +73,7 @@ switch ($accion) {
         (SELECT GROUP_CONCAT(us.id_sucursal) FROM usuarios_sucursales us WHERE us.id_user = usuarios.id_user AND us.baja IS NULL) AS sucursales,
         (clave_hash IS NOT NULL OR google_id IS NOT NULL OR microsoft_id IS NOT NULL OR facebook_id IS NOT NULL) AS tiene_acceso
       FROM usuarios WHERE id_cliente = ? AND rol = 'usuario' AND baja IS NULL ORDER BY nombre, apellido", 'i', $id);
-    $presupuestos = q("SELECT p.id_presu, p.fecha_presu, p.descripcion_presu, p.usado, p.total_presu, v.patente
+    $presupuestos = q("SELECT p.id_presu, p.fecha_presu, p.descripcion_presu, p.usado, p.total_presu, p.respuesta_cliente, v.patente
       FROM presupuestos p LEFT JOIN vehiculos v ON v.id_vehiculo = p.id_vehiculo
       WHERE p.id_cliente = ? AND p.baja IS NULL ORDER BY p.id_presu DESC LIMIT 30", 'i', $id);
     $resumen = q("SELECT
@@ -93,14 +93,19 @@ switch ($accion) {
       FROM reparaciones r LEFT JOIN clientes c ON c.id_cliente = r.id_cliente
       LEFT JOIN presupuestos p ON p.id_presu = r.presupuesto
       WHERE r.patente = ? AND r.baja IS NULL ORDER BY r.fecha_trab DESC, r.id_trabajo DESC", 's', $patente);
-    $pendientes = q("SELECT p.id_presu, p.fecha_presu, p.descripcion_presu, p.total_presu
+    $pendientes = q("SELECT p.id_presu, p.fecha_presu, p.descripcion_presu, p.total_presu, p.respuesta_cliente, p.respuesta_motivo
       FROM presupuestos p JOIN vehiculos v ON v.id_vehiculo = p.id_vehiculo
       WHERE v.patente = ? AND p.usado = 0 AND p.baja IS NULL ORDER BY p.id_presu DESC", 's', $patente);
     $titulares = q("SELECT t.id_cliente, c.empresa_nyp, t.desde, t.hasta FROM vehiculos_titulares t
       LEFT JOIN clientes c ON c.id_cliente = t.id_cliente
       WHERE t.patente = ? AND t.baja IS NULL ORDER BY t.desde DESC", 's', $patente);
+    // lo que cargaron los clientes desde Mi garage (trabajos de otros talleres o hechos por ellos)
+    $otros = q("SELECT h.fecha, h.km, h.descripcion, h.detalle, h.realizado_por, h.taller_nombre, h.costo,
+        TRIM(CONCAT(COALESCE(u.nombre, ''), ' ', COALESCE(u.apellido, ''))) AS quien
+      FROM fichas_historial h LEFT JOIN usuarios u ON u.id_user = h.id_user_carga
+      WHERE h.patente = ? AND h.realizado_por <> 'symon' AND h.baja IS NULL ORDER BY h.fecha DESC", 's', $patente);
     foreach ($reparaciones as &$r) $r['dueno_anterior'] = (int)$r['id_cliente'] !== $idCliente;
-    responder(['reparaciones' => $reparaciones, 'pendientes' => $pendientes, 'titulares' => $titulares]);
+    responder(['reparaciones' => $reparaciones, 'pendientes' => $pendientes, 'otros' => $otros, 'titulares' => $titulares]);
 
   case 'guardar':
     $id = (int)($_POST['id_cliente'] ?? 0);

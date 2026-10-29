@@ -3,17 +3,17 @@
 require_once "lib.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  responderJSON(['error' => 'Método no permitido'], 405);
+  responderJSON(['error' => t('Método no permitido')], 405);
 }
 
 $identificador = mb_strtolower(trim($_POST['email'] ?? $_POST['user_txt'] ?? ''));
 $clave = (string)($_POST['clave'] ?? $_POST['pass_txt'] ?? '');
 
 if ($identificador === '' || $clave === '') {
-  responderJSON(['error' => 'Ingresá tu mail y contraseña.'], 422);
+  responderJSON(['error' => t('Ingresá tu mail y contraseña.')], 422);
 }
 if (demasiadosIntentos($conexionApi, $identificador)) {
-  responderJSON(['error' => 'Demasiados intentos. Esperá unos minutos y volvé a probar.'], 429);
+  responderJSON(['error' => t('Demasiados intentos. Esperá unos minutos y volvé a probar.')], 429);
 }
 
 // se puede ingresar con el mail o con el usuario del sistema anterior
@@ -39,12 +39,12 @@ if ($usuario) {
 
 if (!$ok) {
   registrarIntentoFallido($conexionApi, $identificador);
-  responderJSON(['error' => 'El mail o la contraseña no son correctos.'], 401);
+  responderJSON(['error' => t('El mail o la contraseña no son correctos.')], 401);
 }
 
 if (!(int)$usuario['verificado']) {
   responderJSON([
-    'error' => 'Todavía no confirmaste tu mail. Revisá tu casilla (y el correo no deseado).',
+    'error' => t('Todavía no confirmaste tu mail. Revisá tu casilla (y el correo no deseado).'),
     'sin_verificar' => true,
   ], 403);
 }

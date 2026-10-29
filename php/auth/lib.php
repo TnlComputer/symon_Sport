@@ -182,9 +182,9 @@ function enviarMail($para, $asunto, $titulo, $texto, $boton = null, $url = null)
   $h = fn($v) => htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
   $btn = $boton && $url
     ? "<p style='margin:28px 0'><a href='{$h($url)}' style='background:#e3262c;color:#fff;padding:12px 24px;border-radius:999px;text-decoration:none;font-weight:bold'>{$h($boton)}</a></p>
-       <p style='font-size:12px;color:#777'>Si el botón no funciona, copiá este enlace:<br>{$h($url)}</p>"
+       <p style='font-size:12px;color:#777'>{$h(t('Si el botón no funciona, copiá este enlace:'))}<br>{$h($url)}</p>"
     : '';
-  $html = "<!DOCTYPE html><html lang='es'><body style='margin:0;background:#f2f2f2;font-family:Arial,sans-serif'>
+  $html = "<!DOCTYPE html><html lang='" . idiomaActual() . "'><body style='margin:0;background:#f2f2f2;font-family:Arial,sans-serif'>
     <div style='max-width:520px;margin:24px auto;background:#fff;border-radius:10px;overflow:hidden'>
       <div style='background:#121416;border-bottom:4px solid #e3262c;padding:16px 24px;color:#fff;font-weight:bold;font-size:18px'>SYMON SPORT</div>
       <div style='padding:24px;color:#222;line-height:1.5'>
@@ -208,9 +208,9 @@ function enviarVerificacion($db, $usuario)
 {
   $token = crearToken($db, (int)$usuario['id_user'], 'verificar', 48);
   $url = urlSitio() . '/php/auth/verificar.php?t=' . $token;
-  enviarMail($usuario['email'], 'Confirmá tu mail - Symon Sport', 'Confirmá tu mail',
-    'Gracias por registrarte. Para activar tu cuenta confirmá tu dirección de mail. El enlace vence en 48 horas.',
-    'Confirmar mail', $url);
+  enviarMail($usuario['email'], t('Confirmá tu mail - Symon Sport'), t('Confirmá tu mail'),
+    e(t('Gracias por registrarte. Para activar tu cuenta confirmá tu dirección de mail. El enlace vence en 48 horas.')),
+    t('Confirmar mail'), $url);
   return $url;
 }
 

@@ -13,6 +13,25 @@ window.fetch = (recurso, opciones = {}) => {
   return fetchOriginal(recurso, opciones);
 };
 
+/************* Idioma ***************/
+// El texto en castellano es la clave: t("Reservar turno"). Con datos: t("Hola, {0}", nombre).
+// El diccionario del idioma elegido lo pone el servidor en <script id="ssp-textos"> (vacío en castellano).
+const TEXTOS = JSON.parse(document.getElementById("ssp-textos")?.textContent || "{}");
+const t = (texto, ...datos) => (TEXTOS[texto] ?? texto).replace(/\{(\d+)\}/g, (_, i) => datos[i] ?? "");
+const IDIOMA = document.documentElement.lang || "es";
+const LOCALE = { es: "es-AR", pt: "pt-BR", en: "en-US" }[IDIOMA] || "es-AR"; // fechas y números
+
+/************* Modo claro / oscuro ***************/
+document.querySelectorAll("[data-tema-elegir]").forEach((boton) =>
+  boton.addEventListener("click", () => {
+    const tema = boton.dataset.temaElegir;
+    if (tema === "claro") document.documentElement.dataset.tema = "claro";
+    else delete document.documentElement.dataset.tema;
+    document.querySelectorAll("[data-tema-elegir]").forEach((b) => b.setAttribute("aria-pressed", String(b === boton)));
+    document.cookie = `ssp_tema=${tema}; path=/; max-age=31536000; samesite=lax${location.protocol === "https:" ? "; secure" : ""}`;
+  })
+);
+
 /* Menu */
 const mainMenuElement = document.getElementById("main-menu");
 
@@ -22,14 +41,14 @@ const toggleMenuElement = document.getElementById("toggle-menu");
 const cerrarMenu = () => {
   mainMenuElement.classList.remove("main-menu--show");
   toggleMenuElement.setAttribute("aria-expanded", "false");
-  toggleMenuElement.setAttribute("aria-label", "Abrir menú");
+  toggleMenuElement.setAttribute("aria-label", t("Abrir menú"));
 };
 
 if (toggleMenuElement && mainMenuElement) {
   toggleMenuElement.addEventListener("click", () => {
     const abierto = mainMenuElement.classList.toggle("main-menu--show");
     toggleMenuElement.setAttribute("aria-expanded", String(abierto));
-    toggleMenuElement.setAttribute("aria-label", abierto ? "Cerrar menú" : "Abrir menú");
+    toggleMenuElement.setAttribute("aria-label", abierto ? t("Cerrar menú") : t("Abrir menú"));
   });
 
   // cierro el menu al tocar fuera o con Escape
@@ -56,13 +75,13 @@ document.querySelectorAll('input[type="password"]').forEach((input) => {
   const boton = document.createElement("button");
   boton.type = "button";
   boton.className = "campo-clave__ver";
-  boton.setAttribute("aria-label", "Mostrar contraseña");
+  boton.setAttribute("aria-label", t("Mostrar contraseña"));
   boton.innerHTML = OJO_ABIERTO;
   boton.addEventListener("click", () => {
     const mostrar = input.type === "password";
     input.type = mostrar ? "text" : "password";
     boton.innerHTML = mostrar ? OJO_CERRADO : OJO_ABIERTO;
-    boton.setAttribute("aria-label", mostrar ? "Ocultar contraseña" : "Mostrar contraseña");
+    boton.setAttribute("aria-label", mostrar ? t("Ocultar contraseña") : t("Mostrar contraseña"));
   });
   envoltorio.appendChild(boton);
 });
@@ -76,6 +95,17 @@ document.querySelectorAll("[data-salir]").forEach((enlace) =>
     document.location.href = "login.php";
   })
 );
+
+/************* Idioma y tema (globo) ***************/
+const ajustes = document.getElementById("ajustes");
+if (ajustes) {
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest("#ajustes")) ajustes.open = false;
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") ajustes.open = false;
+  });
+}
 
 /************* Menú de la cuenta (escritorio) ***************/
 const cuentaBoton = document.getElementById("cuenta-boton");

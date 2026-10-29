@@ -15,12 +15,12 @@ $comentario = mb_substr(trim($_POST['comments'] ?? ''), 0, 1000);
 
 if ($nombre === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || $asunto === '' || $comentario === '') {
   http_response_code(422);
-  echo json_encode(['err' => true, 'message' => 'Completá todos los campos con datos válidos.'], JSON_UNESCAPED_UNICODE);
+  echo json_encode(['err' => true, 'message' => t('Completá todos los campos con datos válidos.')], JSON_UNESCAPED_UNICODE);
   exit;
 }
 if (demasiadasAcciones($conexionApi, 'contacto')) {
   http_response_code(429);
-  echo json_encode(['err' => true, 'message' => 'Recibimos varios mensajes seguidos. Probá de nuevo en unos minutos.'], JSON_UNESCAPED_UNICODE);
+  echo json_encode(['err' => true, 'message' => t('Recibimos varios mensajes seguidos. Probá de nuevo en unos minutos.')], JSON_UNESCAPED_UNICODE);
   exit;
 }
 registrarAccion($conexionApi, 'contacto');
@@ -37,5 +37,5 @@ $texto = 'Mensaje enviado desde el formulario de contacto de la página.</p><ul>
 $ok = enviarMail($destino, 'Contacto web: ' . preg_replace('/[\r\n]+/', ' ', $asunto), 'Nuevo mensaje de contacto', $texto);
 
 echo json_encode($ok
-  ? ['err' => false, 'message' => '¡Gracias! Recibimos tu mensaje y te respondemos a la brevedad.']
-  : ['err' => true, 'message' => 'No pudimos enviar el mensaje. Escribinos por WhatsApp.'], JSON_UNESCAPED_UNICODE);
+  ? ['err' => false, 'message' => t('¡Gracias! Recibimos tu mensaje y te respondemos a la brevedad.')]
+  : ['err' => true, 'message' => t('No pudimos enviar el mensaje. Escribinos por WhatsApp.')], JSON_UNESCAPED_UNICODE);

@@ -98,14 +98,14 @@ switch ($accion) {
   case 'pendientes':
     $q = '%' . trim($_GET['q'] ?? '') . '%';
     responder(['presupuestos' => q("SELECT p.id_presu, p.fecha_presu, p.descripcion_presu, p.total_presu, p.senia_presu,
-        c.empresa_nyp, v.patente, v.marca, v.modelo, f.km_actual
+        p.respuesta_cliente, p.respuesta_motivo, c.empresa_nyp, v.patente, v.marca, v.modelo, f.km_actual
       FROM presupuestos p
       JOIN clientes c ON c.id_cliente = p.id_cliente
       JOIN vehiculos v ON v.id_vehiculo = p.id_vehiculo
       LEFT JOIN fichas_vehiculo f ON f.patente = v.patente
       WHERE p.usado = 0 AND p.baja IS NULL
         AND (c.empresa_nyp LIKE ? OR v.patente LIKE ? OR p.descripcion_presu LIKE ? OR p.id_presu = ?)
-      ORDER BY p.fecha_presu DESC, p.id_presu DESC LIMIT 50", 'sssi', $q, $q, $q, (int)trim($_GET['q'] ?? '0'))]);
+      ORDER BY p.respuesta_cliente = 'aprobado' DESC, p.fecha_presu DESC, p.id_presu DESC LIMIT 50", 'sssi', $q, $q, $q, (int)trim($_GET['q'] ?? '0'))]);
 
   case 'ingresar':
     $idPresu = (int)($_POST['id_presu'] ?? 0);

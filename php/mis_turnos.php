@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $st->bind_param('iiss', $id, $idUser, $email, $email);
       $st->execute();
       if ($st->affected_rows === 0) {
-        responder(['error' => 'No se pudo cancelar ese turno.'], 422);
+        responder(['error' => t('No se pudo cancelar ese turno.')], 422);
       }
       responder(['ok' => true]);
 
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $st->execute();
       responder(['ok' => true]);
   }
-  responder(['error' => 'Acción desconocida'], 400);
+  responder(['error' => t('Acción desconocida')], 400);
 }
 
 $st = $db->prepare("SELECT t.id_turno, t.fecha, TIME_FORMAT(t.hora_inicio, '%H:%i') AS hora_inicio,

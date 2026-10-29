@@ -1,7 +1,7 @@
 <?php
 // Mi garage (usuario con sesión iniciada): su perfil y sus autos
 // GET  accion=datos                  -> perfil + autos activos + autos vendidos
-// GET  accion=auto&id=               -> ficha (con qué campos puede editar), fotos, historial y presupuestos pendientes
+// GET  accion=auto&id=               -> ficha (con qué campos puede editar), fotos, historial, trabajos de otros talleres y presupuestos pendientes
 // POST accion=perfil                 -> nombre, apellido, DNI, celular
 // POST accion=clave                  -> cambio de contraseña (pide la actual si tiene)
 // POST accion=foto_perfil, archivo / accion=foto_perfil_quitar
@@ -12,12 +12,15 @@
 // POST accion=auto_foto_quitar, id, id_foto / accion=auto_portada, id, id_foto
 // POST accion=auto_vendido, id, fecha -> queda en "Autos que tuve" y no se puede modificar más
 // POST accion=auto_quitar, id        -> lo saca del garage (cargado por error; no se borra)
+// POST accion=presu_responder, id, id_presu, respuesta (aprobado|rechazado), motivo
+// POST accion=trabajo_agregar, id, fecha, km, descripcion, realizado_por (otro_taller|cliente), taller, costo, detalle
+// POST accion=trabajo_quitar, id, id_historial -> solo los que cargó él (baja, no se borra)
 require_once "auth/lib.php";
 require_once "vehiculo_lib.php";
 
 $sesion = usuarioActual();
 if (!$sesion) {
-  responderJSON(['error' => 'Iniciá sesión para ver tu garage.'], 401);
+  responderJSON(['error' => t('Iniciá sesión para ver tu garage.')], 401);
 }
 $db = $conexionApi;
 $idUser = (int)$sesion['id_user'];
@@ -44,7 +47,7 @@ function usuario()
 }
 
 $yo = usuario();
-if (!$yo) responderJSON(['error' => 'Tu cuenta no está activa.'], 403);
+if (!$yo) responderJSON(['error' => t('Tu cuenta no está activa.')], 403);
 $idCliente = (int)$yo['id_cliente']; // se lee de la base: el taller puede vincularlo después de iniciar sesión
 $todasSucursales = (int)$yo['todas_sucursales'];
 
@@ -77,14 +80,14 @@ function oculto($patente)
 function motivoBloqueo($auto)
 {
   global $idUser, $idCliente;
-  if ($auto['vendido']) return 'Lo marcaste como vendido: sus datos ya no se pueden modificar.';
+  if ($auto['vendido']) return t('Lo marcaste como vendido: sus datos ya no se pueden modificar.');
   $patente = $auto['patente'];
   $deOtroCliente = q("SELECT 1 FROM vehiculos WHERE patente = ? AND baja IS NULL AND id_cliente <> ?", 'si', $patente, $idCliente);
   $deOtraCuenta = q("SELECT 1 FROM usuarios_vehiculos o JOIN usuarios u ON u.id_user = o.id_user
     WHERE o.patente = ? AND o.id_user <> ? AND o.baja IS NULL AND o.vendido IS NULL
       AND (u.id_cliente IS NULL OR u.id_cliente <> ?)", 'sii', $patente, $idUser, $idCliente);
   if ($deOtroCliente || $deOtraCuenta) {
-    return 'Este auto figura a nombre de otra persona. Si lo compraste, avisale al taller para que lo pase a tu nombre.';
+    return t('Este auto figura a nombre de otra persona. Si lo compraste, avisale al taller para que lo pase a tu nombre.');
   }
   return null;
 }
@@ -106,7 +109,7 @@ function sucursalDe($patente)
 function autoEditable($id)
 {
   $auto = autoPropio($id);
-  if (!$auto) responderJSON(['error' => 'No existe ese auto en tu garage.'], 404);
+  if (!$auto) responderJSON(['error' => t('No existe ese auto en tu garage.')], 404);
   if ($motivo = motivoBloqueo($auto)) responderJSON(['error' => $motivo], 409);
   return $auto;
 }
@@ -118,6 +121,23 @@ function fotosDelAuto($auto)
   $fotos = fotosVehiculo($db, $auto['patente'], $idUser, confirmado($auto['patente']));
   usort($fotos, fn($a, $b) => ((int)$b['id_foto'] === (int)$auto['foto_portada']) <=> ((int)$a['id_foto'] === (int)$auto['foto_portada']));
   return $fotos;
+}
+
+// trabajos que el usuario cargó de otros talleres (o hechos por él); el taller también los ve
+function trabajosPropios($patente)
+{
+  global $idUser;
+  return q("SELECT id_historial, fecha, km, descripcion, detalle, realizado_por, taller_nombre, costo
+    FROM fichas_historial WHERE patente = ? AND id_user_carga = ? AND realizado_por <> 'symon' AND baja IS NULL
+    ORDER BY fecha DESC, id_historial DESC", 'si', $patente, $idUser);
+}
+
+// presupuesto pendiente (sin ingresar al taller) de un auto de este usuario
+function presupuestoPendiente($idPresu, $patente)
+{
+  global $idCliente;
+  return q("SELECT p.id_presu, p.fecha_presu, p.dias_presu FROM presupuestos p JOIN vehiculos v ON v.id_vehiculo = p.id_vehiculo
+    WHERE p.id_presu = ? AND v.patente = ? AND p.id_cliente = ? AND p.usado = 0 AND p.baja IS NULL", 'isi', $idPresu, $patente, $idCliente)[0] ?? null;
 }
 
 function refrescarSesion($yo)
@@ -180,7 +200,7 @@ switch ($accion) {
 
   case 'auto':
     $auto = autoPropio((int)($_GET['id'] ?? 0));
-    if (!$auto) responderJSON(['error' => 'No existe ese auto en tu garage.'], 404);
+    if (!$auto) responderJSON(['error' => t('No existe ese auto en tu garage.')], 404);
     $patente = $auto['patente'];
     $ficha = leerFicha($db, $patente);
     $ficha['marca'] = $ficha['marca'] ?? $auto['marca'];
@@ -201,8 +221,11 @@ switch ($accion) {
         WHERE r.patente = ? AND r.baja IS NULL ORDER BY r.fecha_trab DESC, r.id_trabajo DESC", 'iiis', $idCliente, $idCliente, $idCliente, $patente);
       foreach ($historial as &$h) $h['anterior'] = (bool)$h['anterior'];
       unset($h);
+      foreach ($presupuestos as &$p) $p['vencido'] = (bool)$p['vencido'];
+      unset($p);
       $presupuestos = q("SELECT p.id_presu, p.fecha_presu, p.dias_presu, p.descripcion_presu, p.repuestos_presu,
-          p.mobra_presu, p.total_presu, p.senia_presu
+          p.mobra_presu, p.total_presu, p.senia_presu, p.respuesta_cliente, p.respuesta_fecha, p.respuesta_motivo,
+          (p.dias_presu > 0 AND DATE_ADD(p.fecha_presu, INTERVAL p.dias_presu DAY) < CURDATE()) AS vencido
         FROM presupuestos p JOIN vehiculos v ON v.id_vehiculo = p.id_vehiculo
         WHERE v.patente = ? AND p.id_cliente = ? AND p.usado = 0 AND p.baja IS NULL ORDER BY p.id_presu DESC", 'si', $patente, $idCliente);
     }
@@ -210,14 +233,14 @@ switch ($accion) {
       'descripcion' => $auto['descripcion'], 'confirmado' => $esConfirmado, 'portada' => (int)$auto['foto_portada'],
       'sucursal' => $esConfirmado ? sucursalDe($patente) : null],
       'campos' => camposFichaPublicos(false), 'ficha' => $ficha, 'fotos' => fotosDelAuto($auto), 'max_fotos' => MAX_FOTOS,
-      'bloqueo' => motivoBloqueo($auto), 'historial' => $historial, 'presupuestos' => $presupuestos]);
+      'bloqueo' => motivoBloqueo($auto), 'historial' => $historial, 'otros' => trabajosPropios($patente), 'presupuestos' => $presupuestos]);
 
   case 'perfil':
     $nombre = texto('nombre', 50);
     $celular = texto('celular', 30);
     $dni = preg_replace('/[^0-9]/', '', texto('dni', 20));
-    if ($nombre === '') responderJSON(['error' => 'Falta tu nombre.'], 422);
-    if ($celular !== '' && strlen(preg_replace('/\D/', '', $celular)) < 8) responderJSON(['error' => 'Revisá el celular (con característica).'], 422);
+    if ($nombre === '') responderJSON(['error' => t('Falta tu nombre.')], 422);
+    if ($celular !== '' && strlen(preg_replace('/\D/', '', $celular)) < 8) responderJSON(['error' => t('Revisá el celular (con característica).')], 422);
     q("UPDATE usuarios SET nombre = ?, apellido = ?, dni = ?, celular = NULLIF(?, '') WHERE id_user = ?",
       'ssssi', $nombre, texto('apellido', 50), $dni, $celular, $idUser);
     refrescarSesion(usuario());
@@ -227,10 +250,10 @@ switch ($accion) {
     $nueva = (string)($_POST['nueva'] ?? '');
     if ($yo['tiene_clave']) {
       $hash = q("SELECT clave_hash FROM usuarios WHERE id_user = ?", 'i', $idUser)[0]['clave_hash'];
-      if (!password_verify((string)($_POST['actual'] ?? ''), $hash)) responderJSON(['error' => 'La contraseña actual no es correcta.'], 422);
+      if (!password_verify((string)($_POST['actual'] ?? ''), $hash)) responderJSON(['error' => t('La contraseña actual no es correcta.')], 422);
     }
-    if (!claveValida($nueva)) responderJSON(['error' => 'La contraseña nueva necesita al menos 8 caracteres, con letras y números.'], 422);
-    if ($nueva !== (string)($_POST['repetir'] ?? '')) responderJSON(['error' => 'Las contraseñas nuevas no coinciden.'], 422);
+    if (!claveValida($nueva)) responderJSON(['error' => t('La contraseña nueva necesita al menos 8 caracteres, con letras y números.')], 422);
+    if ($nueva !== (string)($_POST['repetir'] ?? '')) responderJSON(['error' => t('Las contraseñas nuevas no coinciden.')], 422);
     q("UPDATE usuarios SET clave_hash = ?, clave = NULL WHERE id_user = ?", 'si', password_hash($nueva, PASSWORD_DEFAULT), $idUser);
     session_regenerate_id(true);
     responderJSON(['ok' => true]);
@@ -243,19 +266,19 @@ switch ($accion) {
       if ($error) responderJSON(['error' => $error], 422);
     }
     q("UPDATE usuarios SET foto = ? WHERE id_user = ?", 'si', $nueva, $idUser);
-    borrarArchivoFoto($yo['foto']);
+    archivarFoto($yo['foto']);
     refrescarSesion(usuario());
     responderJSON(['ok' => true, 'foto' => urlFoto($nueva) ?: $yo['avatar']]);
 
   case 'auto_agregar':
     $patente = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string)($_POST['patente'] ?? '')));
-    if (!preg_match('/^[A-Z0-9]{6,8}$/', $patente)) responderJSON(['error' => 'Revisá la patente (ej. AB123CD o ABC123).'], 422);
+    if (!preg_match('/^[A-Z0-9]{6,8}$/', $patente)) responderJSON(['error' => t('Revisá la patente (ej. AB123CD o ABC123).')], 422);
     $anio = texto('anio', 4);
-    if ($anio !== '' && (!preg_match('/^\d{4}$/', $anio) || $anio < 1950 || $anio > date('Y') + 1)) responderJSON(['error' => 'Revisá el año.'], 422);
-    if (oculto($patente)) responderJSON(['error' => 'Ese vehículo es de una sucursal que no tenés habilitada. Pedile acceso al taller.'], 422);
+    if ($anio !== '' && (!preg_match('/^\d{4}$/', $anio) || $anio < 1950 || $anio > date('Y') + 1)) responderJSON(['error' => t('Revisá el año.')], 422);
+    if (oculto($patente)) responderJSON(['error' => t('Ese vehículo es de una sucursal que no tenés habilitada. Pedile acceso al taller.')], 422);
     $existe = q("SELECT id_vehiculo_usuario, baja, vendido FROM usuarios_vehiculos WHERE id_user = ? AND patente = ?", 'is', $idUser, $patente)[0] ?? null;
-    if ($existe && $existe['vendido']) responderJSON(['error' => 'Ese auto lo marcaste como vendido.'], 422);
-    if ($existe && !$existe['baja']) responderJSON(['error' => 'Ese auto ya está en tu garage.'], 422);
+    if ($existe && $existe['vendido']) responderJSON(['error' => t('Ese auto lo marcaste como vendido.')], 422);
+    if ($existe && !$existe['baja']) responderJSON(['error' => t('Ese auto ya está en tu garage.')], 422);
     if ($existe) {
       q("UPDATE usuarios_vehiculos SET baja = NULL, marca = COALESCE(NULLIF(?, ''), marca), modelo = COALESCE(NULLIF(?, ''), modelo),
         anio = COALESCE(NULLIF(?, ''), anio) WHERE id_vehiculo_usuario = ?", 'sssi', texto('marca', 60), texto('modelo', 80), $anio, $existe['id_vehiculo_usuario']);
@@ -285,9 +308,9 @@ switch ($accion) {
   case 'auto_km':
     $auto = autoEditable((int)($_POST['id'] ?? 0));
     $km = (int)preg_replace('/\D/', '', (string)($_POST['km'] ?? ''));
-    if ($km < 1 || $km > 2000000) responderJSON(['error' => 'Revisá el kilometraje.'], 422);
+    if ($km < 1 || $km > 2000000) responderJSON(['error' => t('Revisá el kilometraje.')], 422);
     $ultimo = (int)(q("SELECT MAX(km) AS km FROM fichas_km WHERE patente = ? AND baja IS NULL", 's', $auto['patente'])[0]['km'] ?? 0);
-    if ($km < $ultimo) responderJSON(['error' => 'Es menor al último kilometraje registrado (' . number_format($ultimo, 0, ',', '.') . ' km).'], 422);
+    if ($km < $ultimo) responderJSON(['error' => t('Es menor al último kilometraje registrado ({0} km).', idiomaActual() === 'en' ? number_format($ultimo) : number_format($ultimo, 0, ',', '.'))], 422);
     q("INSERT INTO fichas_km (patente, km, fecha, origen, id_user_carga) VALUES (?, ?, CURDATE(), 'cliente', ?)", 'sii', $auto['patente'], $km, $idUser);
     q("INSERT INTO fichas_vehiculo (patente, km_actual, km_fecha) VALUES (?, ?, CURDATE())
       ON DUPLICATE KEY UPDATE km_fecha = IF(km_actual IS NULL OR VALUES(km_actual) >= km_actual, CURDATE(), km_fecha),
@@ -306,7 +329,7 @@ switch ($accion) {
     $idFoto = (int)($_POST['id_foto'] ?? 0);
     // solo las fotos que subió él (las del taller las maneja el taller)
     if (!quitarFotoVehiculo($db, $idFoto, "patente = ? AND id_user = ? AND subida_por = 'cliente'", 'si', $auto['patente'], $idUser)) {
-      responderJSON(['error' => 'Esa foto no se puede quitar.'], 404);
+      responderJSON(['error' => t('Esa foto no se puede quitar.')], 404);
     }
     if ((int)$auto['foto_portada'] === $idFoto) q("UPDATE usuarios_vehiculos SET foto_portada = NULL WHERE id_vehiculo_usuario = ?", 'i', $auto['id_vehiculo_usuario']);
     responderJSON(['ok' => true]);
@@ -314,30 +337,70 @@ switch ($accion) {
   case 'auto_portada':
     $auto = autoEditable((int)($_POST['id'] ?? 0));
     $idFoto = (int)($_POST['id_foto'] ?? 0);
-    if (!in_array($idFoto, array_map(fn($f) => (int)$f['id_foto'], fotosDelAuto($auto)), true)) responderJSON(['error' => 'Esa foto no es de este auto.'], 404);
+    if (!in_array($idFoto, array_map(fn($f) => (int)$f['id_foto'], fotosDelAuto($auto)), true)) responderJSON(['error' => t('Esa foto no es de este auto.')], 404);
     q("UPDATE usuarios_vehiculos SET foto_portada = ? WHERE id_vehiculo_usuario = ?", 'ii', $idFoto, $auto['id_vehiculo_usuario']);
     responderJSON(['ok' => true]);
 
   case 'auto_vendido':
     $auto = autoPropio((int)($_POST['id'] ?? 0));
-    if (!$auto || $auto['vendido']) responderJSON(['error' => 'No existe ese auto en tu garage.'], 404);
+    if (!$auto || $auto['vendido']) responderJSON(['error' => t('No existe ese auto en tu garage.')], 404);
     $fecha = trim((string)($_POST['fecha'] ?? '')) ?: date('Y-m-d');
     $d = DateTime::createFromFormat('Y-m-d', $fecha);
-    if (!$d || $d->format('Y-m-d') !== $fecha) responderJSON(['error' => 'Revisá la fecha de venta.'], 422);
-    if ($fecha > date('Y-m-d')) responderJSON(['error' => 'La fecha de venta no puede ser futura.'], 422);
+    if (!$d || $d->format('Y-m-d') !== $fecha) responderJSON(['error' => t('Revisá la fecha de venta.')], 422);
+    if ($fecha > date('Y-m-d')) responderJSON(['error' => t('La fecha de venta no puede ser futura.')], 422);
     if (q("SELECT 1 FROM turnos WHERE patente = ? AND id_user = ? AND estado IN ('pendiente', 'confirmado')
         AND TIMESTAMP(fecha_fin, hora_fin) >= NOW()", 'si', $auto['patente'], $idUser)) {
-      responderJSON(['error' => 'Este auto tiene un turno pendiente. Cancelalo primero desde Turnos.'], 422);
+      responderJSON(['error' => t('Este auto tiene un turno pendiente. Cancelalo primero desde Turnos.')], 422);
     }
     q("UPDATE usuarios_vehiculos SET vendido = ? WHERE id_vehiculo_usuario = ?", 'si', $fecha, $auto['id_vehiculo_usuario']);
     responderJSON(['ok' => true]);
 
   case 'auto_quitar':
     $auto = autoPropio((int)($_POST['id'] ?? 0));
-    if (!$auto || $auto['vendido']) responderJSON(['error' => 'No existe ese auto en tu garage.'], 404);
-    if (confirmado($auto['patente'])) responderJSON(['error' => 'Este auto está registrado en el taller a tu nombre. Si lo vendiste, marcalo como vendido.'], 422);
+    if (!$auto || $auto['vendido']) responderJSON(['error' => t('No existe ese auto en tu garage.')], 404);
+    if (confirmado($auto['patente'])) responderJSON(['error' => t('Este auto está registrado en el taller a tu nombre. Si lo vendiste, marcalo como vendido.')], 422);
     q("UPDATE usuarios_vehiculos SET baja = NOW() WHERE id_vehiculo_usuario = ?", 'i', $auto['id_vehiculo_usuario']);
+    responderJSON(['ok' => true]);
+
+  case 'presu_responder':
+    $auto = autoEditable((int)($_POST['id'] ?? 0));
+    $respuesta = (string)($_POST['respuesta'] ?? '');
+    if (!in_array($respuesta, ['aprobado', 'rechazado'], true)) responderJSON(['error' => t('Respuesta no válida.')], 422);
+    if (!confirmado($auto['patente'])) responderJSON(['error' => t('No existe ese presupuesto.')], 404);
+    $p = presupuestoPendiente((int)($_POST['id_presu'] ?? 0), $auto['patente']);
+    if (!$p) responderJSON(['error' => t('Ese presupuesto ya no está pendiente.')], 404);
+    if ($respuesta === 'aprobado' && $p['dias_presu'] > 0 && date('Y-m-d', strtotime($p['fecha_presu'] . ' +' . (int)$p['dias_presu'] . ' days')) < date('Y-m-d')) {
+      responderJSON(['error' => t('Este presupuesto está vencido: pedinos uno actualizado.')], 422);
+    }
+    q("UPDATE presupuestos SET respuesta_cliente = ?, respuesta_fecha = NOW(), respuesta_id_user = ?, respuesta_motivo = NULLIF(?, '')
+      WHERE id_presu = ?", 'sisi', $respuesta, $idUser, texto('motivo', 255), $p['id_presu']);
+    responderJSON(['ok' => true]);
+
+  case 'trabajo_agregar':
+    $auto = autoEditable((int)($_POST['id'] ?? 0));
+    $fecha = texto('fecha', 10);
+    $d = DateTime::createFromFormat('Y-m-d', $fecha);
+    if (!$d || $d->format('Y-m-d') !== $fecha) responderJSON(['error' => t('Revisá la fecha.')], 422);
+    if ($fecha > date('Y-m-d')) responderJSON(['error' => t('La fecha no puede ser futura.')], 422);
+    $descripcion = texto('descripcion', 255);
+    if ($descripcion === '') responderJSON(['error' => t('Contanos qué se le hizo.')], 422);
+    $porQuien = ($_POST['realizado_por'] ?? '') === 'cliente' ? 'cliente' : 'otro_taller';
+    $km = (int)preg_replace('/\D/', '', texto('km', 10));
+    if ($km > 2000000) responderJSON(['error' => t('Revisá el kilometraje.')], 422);
+    $costo = str_replace(['.', ','], ['', '.'], texto('costo', 15));
+    if ($costo !== '' && (!is_numeric($costo) || $costo < 0)) responderJSON(['error' => t('Revisá el costo.')], 422);
+    q("INSERT INTO fichas_historial (patente, fecha, km, descripcion, detalle, realizado_por, taller_nombre, costo, id_user_carga)
+      VALUES (?, ?, NULLIF(?, 0), ?, NULLIF(?, ''), ?, NULLIF(?, ''), NULLIF(?, ''), ?)", 'ssisssssi',
+      $auto['patente'], $fecha, $km, $descripcion, texto('detalle', 2000), $porQuien,
+      $porQuien === 'otro_taller' ? texto('taller', 80) : '', $costo, $idUser);
+    responderJSON(['ok' => true]);
+
+  case 'trabajo_quitar':
+    $auto = autoEditable((int)($_POST['id'] ?? 0));
+    $cambios = q("UPDATE fichas_historial SET baja = NOW() WHERE id_historial = ? AND patente = ? AND id_user_carga = ?
+      AND realizado_por <> 'symon' AND baja IS NULL", 'isi', (int)($_POST['id_historial'] ?? 0), $auto['patente'], $idUser);
+    if (!$cambios) responderJSON(['error' => t('Ese trabajo no se puede quitar.')], 404);
     responderJSON(['ok' => true]);
 }
 
-responderJSON(['error' => 'Acción desconocida'], 400);
+responderJSON(['error' => t('Acción desconocida')], 400);

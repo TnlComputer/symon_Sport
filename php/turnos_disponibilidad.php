@@ -8,10 +8,10 @@ $dias = min(14, max(1, (int)($_GET['dias'] ?? 7)));
 
 $servicio = buscarServicio($conexionApi, $idServicio);
 if (!$servicio) {
-  responder(['error' => 'Servicio inexistente'], 400);
+  responder(['error' => t('Servicio inexistente')], 400);
 }
 if (!fechaValida($desde)) {
-  responder(['error' => 'Fecha inválida'], 400);
+  responder(['error' => t('Fecha inválida')], 400);
 }
 
 $config = turnosConfig($conexionApi);
@@ -25,7 +25,7 @@ $resultado = [];
 for ($i = 0; $i < $dias; $i++) {
   $fecha = date('Y-m-d', strtotime("$desde +$i days"));
   if ($fecha > $ultimo) {
-    $resultado[] = ['fecha' => $fecha, 'abierto' => false, 'motivo' => 'Sin agenda', 'slots' => []];
+    $resultado[] = ['fecha' => $fecha, 'abierto' => false, 'motivo' => t('Sin agenda'), 'slots' => []];
     continue;
   }
   $resultado[] = ['fecha' => $fecha] + slotsDelDia($conexionApi, $fecha, minutosServicio($servicio), $config);

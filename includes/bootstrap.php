@@ -4,7 +4,7 @@
 if (defined('SSP_BOOT')) return;
 define('SSP_BOOT', true);
 
-const VERSION_ASSETS = '20261112';
+const VERSION_ASSETS = '20261116';
 const SITIO_URL = 'https://symonsport.com.ar';
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
@@ -75,6 +75,10 @@ if (!headers_sent()) {
   }
 }
 
+/* ---------- Idioma y tema ---------- */
+require_once __DIR__ . '/idioma.php';
+idiomaActual(); // si viene ?idioma=, guarda la cookie antes de que salga contenido
+
 /* ---------- CSRF ---------- */
 // Cada sesión tiene un token; todo envío (POST) debe traerlo en la cabecera X-CSRF-Token
 // (lo agrega solo js/scripts.js) o en el campo "csrf". Así otro sitio no puede hacer
@@ -93,7 +97,7 @@ function verificarCsrf()
   if (!is_string($enviado) || empty($_SESSION['csrf']) || !hash_equals($_SESSION['csrf'], $enviado)) {
     http_response_code(403);
     header('Content-Type: application/json; charset=utf-8');
-    echo json_encode(['error' => 'La sesión venció. Recargá la página e intentá de nuevo.', 'csrf' => true], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['error' => t('La sesión venció. Recargá la página e intentá de nuevo.'), 'csrf' => true], JSON_UNESCAPED_UNICODE);
     exit;
   }
 }

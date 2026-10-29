@@ -157,7 +157,9 @@ async function buscarPresupuestos() {
     lista.replaceChildren(...presupuestos.map((p) => {
       const b = el("button", { type: "button", className: "ps-res" },
         el("strong", {}, `#${p.id_presu} · `, el("span", { className: "tn-placa cl-placa-chica", textContent: p.patente }), ` ${p.empresa_nyp}`),
-        el("small", { textContent: [vehiculo(p), p.descripcion_presu, pesos(p.total_presu)].filter(Boolean).join(" · ") }));
+        el("small", { textContent: [vehiculo(p), p.descripcion_presu, pesos(p.total_presu)].filter(Boolean).join(" · ") }),
+        p.respuesta_cliente ? el("span", { className: "ps-chip " + (p.respuesta_cliente === "aprobado" ? "ps-chip--ok" : "mg-chip--vencido"),
+          textContent: (p.respuesta_cliente === "aprobado" ? "Aprobado por el cliente" : "Rechazado por el cliente") + (p.respuesta_motivo ? `: ${p.respuesta_motivo}` : "") }) : null);
       b.addEventListener("click", () => elegirPresupuesto(p));
       return el("li", {}, b);
     }));

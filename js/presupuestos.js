@@ -81,6 +81,12 @@ async function cargarListado() {
         el("strong", { className: "ps-card__total", textContent: pesos(p.total_presu) }));
       const estado = el("div", { className: "ps-card__estado" });
       estado.append(el("span", { className: "ps-chip" + (Number(p.usado) ? " ps-chip--ok" : ""), textContent: Number(p.usado) ? "En reparación / aprobado" : "Pendiente" }));
+      if (!Number(p.usado) && p.respuesta_cliente) {
+        const chip = el("span", { className: "ps-chip " + (p.respuesta_cliente === "aprobado" ? "ps-chip--ok" : "mg-chip--vencido"),
+          textContent: p.respuesta_cliente === "aprobado" ? "Aprobado por el cliente" : "Rechazado por el cliente" });
+        chip.title = [fmtFecha(p.respuesta_fecha), p.respuesta_motivo].filter(Boolean).join(" · ");
+        estado.append(chip);
+      }
       if (Number(p.lavado_presu) > 0) {
         const lav = el("button", { type: "button", className: "ps-chip ps-chip--lavado" + (p.lavado_hecho ? " ps-chip--ok" : ""), textContent: p.lavado_hecho ? "Lavado ✓" : "Lavar antes de entregar" });
         lav.title = "Marcar / desmarcar lavado hecho";
@@ -281,7 +287,7 @@ const buscarRepuestos = demorar(async () => {
     const li = el("li", {},
       el("button", { type: "button", className: "ps-res" },
         el("strong", { textContent: rep.descripcion }),
-        el("small", { textContent: `${[rep.codigo, rep.marca].filter(Boolean).join(" · ")}  —  ${pesos(rep.precio)}` })));
+        el("small", { textContent: `${[rep.codigo, rep.marca, rep.proveedor].filter(Boolean).join(" · ")}  —  ${pesos(rep.precio)}` })));
     li.firstChild.addEventListener("click", () => {
       items.push({ id_repuesto: rep.id_repuesto, descripcion: rep.descripcion, cantidad: 1, provisto: "taller", precio_unit: num(rep.precio), costo: num(rep.costo) });
       $("ps-rep-q").value = "";

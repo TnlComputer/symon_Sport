@@ -78,8 +78,8 @@ function camposFichaPublicos($esTaller)
 {
   $salida = [];
   foreach (camposFicha() as $campo => [$grupo, $etiqueta, $tipo, $opciones, $cliente]) {
-    $salida[] = ['campo' => $campo, 'grupo' => $grupo, 'etiqueta' => $etiqueta, 'tipo' => explode(':', $tipo)[0],
-      'max' => explode(':', $tipo)[1] ?? null, 'opciones' => $opciones, 'editable' => $esTaller || $cliente];
+    $salida[] = ['campo' => $campo, 'grupo' => t($grupo), 'etiqueta' => t($etiqueta), 'tipo' => explode(':', $tipo)[0],
+      'max' => explode(':', $tipo)[1] ?? null, 'opciones' => $opciones ? array_map('t', $opciones) : $opciones, 'editable' => $esTaller || $cliente];
   }
   return $salida;
 }
@@ -126,17 +126,17 @@ function guardarFicha($db, $patente, array $datos, $esTaller)
       case 'entero':
       case 'decimal':
         $v = str_replace(',', '.', $v);
-        if (!is_numeric($v) || $v < $p[1] || $v > $p[2] || ($p[0] === 'entero' && (int)$v != $v)) return "Revisá: $etiqueta.";
+        if (!is_numeric($v) || $v < $p[1] || $v > $p[2] || ($p[0] === 'entero' && (int)$v != $v)) return t('Revisá: {0}.', t($etiqueta));
         break;
       case 'fecha':
         $d = DateTime::createFromFormat('Y-m-d', $v);
-        if (!$d || $d->format('Y-m-d') !== $v) return "Revisá la fecha: $etiqueta.";
+        if (!$d || $d->format('Y-m-d') !== $v) return t('Revisá la fecha: {0}.', t($etiqueta));
         break;
       case 'si_no':
-        if (!in_array($v, ['0', '1'], true)) return "Revisá: $etiqueta.";
+        if (!in_array($v, ['0', '1'], true)) return t('Revisá: {0}.', t($etiqueta));
         break;
       case 'opcion':
-        if (!array_key_exists($v, $opciones)) return "Revisá: $etiqueta.";
+        if (!array_key_exists($v, $opciones)) return t('Revisá: {0}.', t($etiqueta));
         break;
     }
     $valores[$campo] = $v;
@@ -166,16 +166,16 @@ function guardarFoto($campo, $lado, $cuadrada)
   $f = $_FILES[$campo] ?? null;
   if (!$f || $f['error'] !== UPLOAD_ERR_OK) {
     $grande = $f && in_array($f['error'], [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true);
-    return [null, $grande ? 'La foto es muy pesada (máximo 8 MB).' : 'No llegó la foto. Probá de nuevo.'];
+    return [null, $grande ? t('La foto es muy pesada (máximo 8 MB).') : t('No llegó la foto. Probá de nuevo.')];
   }
-  if ($f['size'] > 8 * 1024 * 1024) return [null, 'La foto es muy pesada (máximo 8 MB).'];
+  if ($f['size'] > 8 * 1024 * 1024) return [null, t('La foto es muy pesada (máximo 8 MB).')];
   $info = @getimagesize($f['tmp_name']);
   if (!$info || !in_array($info[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP], true)) {
-    return [null, 'Usá fotos JPG, PNG o WEBP.'];
+    return [null, t('Usá fotos JPG, PNG o WEBP.')];
   }
-  if ($info[0] * $info[1] > 40000000) return [null, 'La foto tiene demasiada resolución.'];
+  if ($info[0] * $info[1] > 40000000) return [null, t('La foto tiene demasiada resolución.')];
   $img = @imagecreatefromstring(file_get_contents($f['tmp_name']));
-  if (!$img) return [null, 'No se pudo leer la foto.'];
+  if (!$img) return [null, t('No se pudo leer la foto.')];
 
   // fotos del celular: respetar la orientación con la que se sacaron
   if ($info[2] === IMAGETYPE_JPEG && function_exists('exif_read_data')) {
@@ -200,15 +200,16 @@ function guardarFoto($campo, $lado, $cuadrada)
 
   if (!is_dir(DIR_FOTOS)) mkdir(DIR_FOTOS, 0755, true);
   $nombre = bin2hex(random_bytes(16)) . '.webp';
-  if (!imagewebp($salida, DIR_FOTOS . $nombre, 82)) return [null, 'No se pudo guardar la foto.'];
+  if (!imagewebp($salida, DIR_FOTOS . $nombre, 82)) return [null, t('No se pudo guardar la foto.')];
   return [$nombre, null];
 }
 
-// El registro queda (baja lógica), pero el archivo se elimina: si la quitaron, no tiene que seguir publicada
-function borrarArchivoFoto($archivo)
+// El registro queda (baja lógica) y el archivo se conserva en uploads/baja/: deja de estar publicado pero se puede recuperar
+function archivarFoto($archivo)
 {
   if ($archivo && preg_match('/^[a-f0-9]{32}\.webp$/', $archivo) && is_file(DIR_FOTOS . $archivo)) {
-    unlink(DIR_FOTOS . $archivo);
+    if (!is_dir(DIR_FOTOS . 'baja')) mkdir(DIR_FOTOS . 'baja', 0755, true);
+    rename(DIR_FOTOS . $archivo, DIR_FOTOS . 'baja/' . $archivo);
   }
 }
 
@@ -238,7 +239,7 @@ function agregarFotoVehiculo($db, $patente, $idUser, $subidaPor)
   $cantidad = (int)dbq($db, "SELECT COUNT(*) AS n FROM vehiculos_fotos WHERE patente = ? AND baja IS NULL AND "
     . ($subidaPor === 'taller' ? "subida_por = 'taller'" : "id_user = ?"),
     $subidaPor === 'taller' ? 's' : 'si', ...($subidaPor === 'taller' ? [$patente] : [$patente, $idUser]))[0]['n'];
-  if ($cantidad >= MAX_FOTOS) return [null, 'Ya hay ' . MAX_FOTOS . ' fotos de este auto. Quitá alguna para subir otra.'];
+  if ($cantidad >= MAX_FOTOS) return [null, t('Ya hay {0} fotos de este auto. Quitá alguna para subir otra.', MAX_FOTOS)];
   [$archivo, $error] = guardarFoto('archivo', 1600, false);
   if ($error) return [null, $error];
   dbq($db, "INSERT INTO vehiculos_fotos (patente, archivo, subida_por, id_user) VALUES (?, ?, ?, ?)", 'sssi', $patente, $archivo, $subidaPor, $idUser);
@@ -250,6 +251,6 @@ function quitarFotoVehiculo($db, $idFoto, $condicion, $tipos = '', ...$params)
   $foto = dbq($db, "SELECT archivo FROM vehiculos_fotos WHERE id_foto = ? AND baja IS NULL AND $condicion", 'i' . $tipos, $idFoto, ...$params)[0] ?? null;
   if (!$foto) return false;
   dbq($db, "UPDATE vehiculos_fotos SET baja = NOW() WHERE id_foto = ?", 'i', $idFoto);
-  borrarArchivoFoto($foto['archivo']);
+  archivarFoto($foto['archivo']);
   return true;
 }

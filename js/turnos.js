@@ -27,9 +27,9 @@ const sumarDias = (iso, n) => {
   return aISO(f);
 };
 const fmtDiaCorto = (iso) =>
-  aFecha(iso).toLocaleDateString("es-AR", { weekday: "short", day: "numeric" }).replace(".", "");
+  aFecha(iso).toLocaleDateString(LOCALE, { weekday: "short", day: "numeric" }).replace(".", "");
 const fmtDiaLargo = (iso) =>
-  aFecha(iso).toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" });
+  aFecha(iso).toLocaleDateString(LOCALE, { weekday: "long", day: "numeric", month: "long" });
 const fmtDuracion = (min) => {
   const h = Math.floor(min / 60);
   const m = min % 60;
@@ -39,7 +39,7 @@ const fmtDuracion = (min) => {
 const pedirJSON = async (url, opciones) => {
   const res = await fetch(url, opciones);
   const datos = await res.json().catch(() => ({}));
-  if (!res.ok) throw Object.assign(new Error(datos.error || "Error de conexión"), { status: res.status, datos });
+  if (!res.ok) throw Object.assign(new Error(datos.error || t("Error de conexión")), { status: res.status, datos });
   return datos;
 };
 
@@ -57,7 +57,7 @@ async function cargarServicios() {
   try {
     const { servicios } = await pedirJSON("./php/turnos_servicios.php");
     if (!servicios.length) {
-      cont.innerHTML = `<p class="tn-cargando">Por el momento no hay turnos online. Escribinos por WhatsApp.</p>`;
+      cont.innerHTML = `<p class="tn-cargando">${t("Por el momento no hay turnos online. Escribinos por WhatsApp.")}</p>`;
       return;
     }
     cont.innerHTML = "";
@@ -75,7 +75,7 @@ async function cargarServicios() {
       cont.appendChild(btn);
     });
   } catch (e) {
-    cont.innerHTML = `<p class="tn-cargando">No pudimos cargar los turnos. Probá de nuevo o escribinos por WhatsApp.</p>`;
+    cont.innerHTML = `<p class="tn-cargando">${t("No pudimos cargar los turnos. Probá de nuevo o escribinos por WhatsApp.")}</p>`;
   }
 }
 
@@ -97,7 +97,7 @@ function elegirServicio(servicio, btn) {
 /* ---------- PASO 2: calendario ---------- */
 async function cargarSemana() {
   const semana = $tn("tn-semana");
-  semana.innerHTML = `<p class="tn-cargando">Buscando horarios…</p>`;
+  semana.innerHTML = `<p class="tn-cargando">${t("Buscando horarios…")}</p>`;
   $tn("tn-dias").innerHTML = "";
 
   const params = new URLSearchParams({ servicio: tn.servicio.id_servicio, dias: 7 });
@@ -110,7 +110,7 @@ async function cargarSemana() {
     tn.desde = datos.dias[0].fecha;
     pintarSemana(datos.dias);
   } catch (e) {
-    semana.innerHTML = `<p class="tn-cargando">No pudimos cargar los horarios. Probá de nuevo.</p>`;
+    semana.innerHTML = `<p class="tn-cargando">${t("No pudimos cargar los horarios. Probá de nuevo.")}</p>`;
   }
 }
 
@@ -137,7 +137,7 @@ function pintarSemana(dias) {
     tab.setAttribute("role", "tab");
     tab.innerHTML = `<span></span><small></small>`;
     tab.querySelector("span").textContent = fmtDiaCorto(dia.fecha);
-    tab.querySelector("small").textContent = dia.abierto ? (libres ? `${libres} libres` : "Completo") : "Cerrado";
+    tab.querySelector("small").textContent = dia.abierto ? (libres ? (libres === 1 ? t("1 libre") : t("{0} libres", libres)) : t("Completo")) : t("Cerrado");
     if (!libres) tab.classList.add("is-sin-lugar");
     tab.addEventListener("click", () => activarDia(i));
     tabs.appendChild(tab);
@@ -151,7 +151,7 @@ function pintarSemana(dias) {
 
     if (!dia.abierto) {
       cont.innerHTML = `<p class="tn-dia__vacio"></p>`;
-      cont.firstChild.textContent = dia.motivo || "Cerrado";
+      cont.firstChild.textContent = dia.motivo || t("Cerrado");
     } else {
       dia.slots.forEach((s) => {
         const b = document.createElement("button");
@@ -159,14 +159,14 @@ function pintarSemana(dias) {
         b.className = `tn-slot tn-slot--${s.estado}`;
         b.textContent = s.hora;
         if (s.estado === "libre") {
-          b.setAttribute("aria-label", `${fmtDiaLargo(dia.fecha)} a las ${s.hora}, libre`);
+          b.setAttribute("aria-label", t("{0} a las {1}, libre", fmtDiaLargo(dia.fecha), s.hora));
           b.addEventListener("click", () => elegirHorario(dia.fecha, s, b));
           if (tn.elegido && tn.elegido.fecha === dia.fecha && tn.elegido.hora === s.hora) {
             b.classList.add("is-elegido");
           }
         } else {
           b.disabled = true;
-          const txt = { ocupado: "ocupado", no_alcanza: "no alcanza el tiempo para este servicio", pasado: "ya no disponible" };
+          const txt = { ocupado: t("ocupado"), no_alcanza: t("no alcanza el tiempo para este servicio"), pasado: t("ya no disponible") };
           b.title = txt[s.estado] || "";
           b.setAttribute("aria-label", `${s.hora}, ${txt[s.estado]}`);
         }
@@ -181,16 +181,16 @@ function pintarSemana(dias) {
 
 function activarDia(i) {
   tn.diaActivo = i;
-  document.querySelectorAll(".tn-dia-tab").forEach((t, j) => {
-    t.classList.toggle("is-activo", j === i);
-    t.setAttribute("aria-selected", String(j === i));
+  document.querySelectorAll(".tn-dia-tab").forEach((tab, j) => {
+    tab.classList.toggle("is-activo", j === i);
+    tab.setAttribute("aria-selected", String(j === i));
   });
   document.querySelectorAll(".tn-dia").forEach((d, j) => d.classList.toggle("is-activo", j === i));
 }
 
 // texto de retiro estimado solo cuando el auto queda en el taller otro día
 const textoRetiro = (fecha, fechaFin, horaFin) =>
-  fechaFin && fechaFin !== fecha ? `Retiro estimado: ${fmtDiaLargo(fechaFin)} ${horaFin} hs` : "";
+  fechaFin && fechaFin !== fecha ? t("Retiro estimado: {0} {1} hs", fmtDiaLargo(fechaFin), horaFin) : "";
 
 function elegirHorario(fecha, slot, btn) {
   const hora = slot.hora;
@@ -201,7 +201,7 @@ function elegirHorario(fecha, slot, btn) {
   const resumen = $tn("tn-resumen");
   resumen.innerHTML = `<strong></strong><span></span><small></small>`;
   resumen.querySelector("strong").textContent = tn.servicio.nombre;
-  resumen.querySelector("span").textContent = `Ingreso: ${fmtDiaLargo(fecha)} · ${hora} hs`;
+  resumen.querySelector("span").textContent = t("Ingreso: {0} · {1} hs", fmtDiaLargo(fecha), hora);
   resumen.querySelector("small").textContent = textoRetiro(fecha, slot.fecha_fin, slot.hora_fin);
   $tn("tn-error").hidden = true;
   formTurno.hidden = false;
@@ -247,14 +247,16 @@ formTurno.addEventListener("submit", async (e) => {
 
   const btn = $tn("tn-confirmar");
   btn.disabled = true;
-  btn.textContent = "Reservando…";
+  btn.textContent = t("Reservando…");
 
   try {
     const { turno } = await pedirJSON("./php/turnos_reservar.php", { method: "POST", body: datos });
     const retiro = textoRetiro(turno.fecha, turno.fecha_fin, turno.hora_fin);
-    const detalle = `${turno.servicio} — ${fmtDiaLargo(turno.fecha)} a las ${turno.hora_inicio} hs` + (retiro ? `. ${retiro}` : "");
+    const detalle = t("{0} — {1} a las {2} hs", turno.servicio, fmtDiaLargo(turno.fecha), turno.hora_inicio) + (retiro ? `. ${retiro}` : "");
     $tn("tn-ok-detalle").textContent = detalle;
-    const msg = `Hola Symon Sport, reservé un turno online: ${detalle}. Patente ${datos.get("patente")}.`;
+    // el mensaje lo lee el taller: siempre en castellano
+    const diaES = aFecha(turno.fecha).toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" });
+    const msg = `Hola Symon Sport, reservé un turno online: ${turno.servicio} — ${diaES} a las ${turno.hora_inicio} hs. Patente ${datos.get("patente")}.`;
     $tn("tn-ok-wa").href = `https://wa.me/541167993863?text=${encodeURIComponent(msg)}`;
 
     pasoServicio.hidden = true;
@@ -275,7 +277,7 @@ formTurno.addEventListener("submit", async (e) => {
     }
   } finally {
     btn.disabled = false;
-    btn.textContent = "Confirmar turno";
+    btn.textContent = t("Confirmar turno");
   }
 });
 
@@ -290,7 +292,7 @@ function crear(tag, clase, texto) {
 }
 
 const mayuscula = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-const textoTurno = (t) => `${mayuscula(fmtDiaLargo(t.fecha))} · ${t.hora_inicio} hs · ${t.servicio}`;
+const textoTurno = (tu) => `${mayuscula(fmtDiaLargo(tu.fecha))} · ${tu.hora_inicio} hs · ${tu.servicio}`;
 
 async function cargarMisTurnos() {
   let datos;
@@ -303,7 +305,7 @@ async function cargarMisTurnos() {
 
   // datos del usuario en el formulario
   const nombre = datos.usuario.nombre || "";
-  $tn("tn-hola").textContent = nombre ? `Hola, ${nombre.split(" ")[0]}` : "Hola";
+  $tn("tn-hola").textContent = nombre ? t("Hola, {0}", nombre.split(" ")[0]) : t("Hola");
   if (!formTurno.nombre.value) formTurno.nombre.value = nombre;
   if (!formTurno.email.value) formTurno.email.value = datos.usuario.email || "";
   if (!formTurno.telefono.value) formTurno.telefono.value = datos.usuario.telefono || "";
@@ -312,22 +314,22 @@ async function cargarMisTurnos() {
   const lista = $tn("tn-mis-turnos");
   lista.innerHTML = "";
   if (datos.turnos.length) {
-    lista.append(crear("h3", "tn-mios__sub", datos.turnos.length > 1 ? "Tus próximos turnos" : "Tu próximo turno"));
-    datos.turnos.forEach((t) => {
+    lista.append(crear("h3", "tn-mios__sub", datos.turnos.length > 1 ? t("Tus próximos turnos") : t("Tu próximo turno")));
+    datos.turnos.forEach((tu) => {
       const fila = crear("div", "tn-mio");
       const info = crear("div", "tn-mio__info");
-      info.append(crear("strong", "", textoTurno(t)), crear("span", "tn-placa", t.patente));
-      const retiro = textoRetiro(t.fecha, t.fecha_fin, t.hora_fin);
+      info.append(crear("strong", "", textoTurno(tu)), crear("span", "tn-placa", tu.patente));
+      const retiro = textoRetiro(tu.fecha, tu.fecha_fin, tu.hora_fin);
       if (retiro) info.append(crear("small", "", retiro));
-      info.append(crear("small", `tn-mio__estado tn-mio__estado--${t.estado}`, t.estado === "confirmado" ? "Confirmado" : "Pendiente de confirmación"));
-      const cancelar = crear("button", "btn btn--ghost ag-btn", "Cancelar turno");
+      info.append(crear("small", `tn-mio__estado tn-mio__estado--${tu.estado}`, tu.estado === "confirmado" ? t("Confirmado") : t("Pendiente de confirmación")));
+      const cancelar = crear("button", "btn btn--ghost ag-btn", t("Cancelar turno"));
       cancelar.type = "button";
-      cancelar.addEventListener("click", () => cancelarTurno(t));
+      cancelar.addEventListener("click", () => cancelarTurno(tu));
       fila.append(info, cancelar);
       lista.append(fila);
     });
   } else {
-    lista.append(crear("p", "tn-mios__ayuda", "No tenés turnos vigentes."));
+    lista.append(crear("p", "tn-mios__ayuda", t("No tenés turnos vigentes.")));
   }
 
   // vehículos
@@ -336,16 +338,16 @@ async function cargarMisTurnos() {
   $tn("tn-vehiculos-ayuda").hidden = !datos.vehiculos.length;
   datos.vehiculos.forEach((v) => {
     const card = crear("div", "tn-auto" + (v.turno ? " tn-auto--con-turno" : ""));
-    const desc = [v.marca, v.modelo, v.anio].filter(Boolean).join(" ") || v.descripcion || "Vehículo";
+    const desc = [v.marca, v.modelo, v.anio].filter(Boolean).join(" ") || v.descripcion || t("Vehículo");
     card.append(crear("span", "tn-placa", v.patente), crear("strong", "", desc));
     if (v.turno) {
-      card.append(crear("small", "", `Ya tiene turno: ${fmtDiaLargo(v.turno.fecha)} ${v.turno.hora_inicio} hs`));
+      card.append(crear("small", "", t("Ya tiene turno: {0} {1} hs", fmtDiaLargo(v.turno.fecha), v.turno.hora_inicio)));
     } else {
-      const pedir = crear("button", "btn btn--accent ag-btn", "Pedir turno");
+      const pedir = crear("button", "btn btn--accent ag-btn", t("Pedir turno"));
       pedir.type = "button";
       pedir.addEventListener("click", () => {
         formTurno.patente.value = v.patente;
-        formTurno.vehiculo.value = desc === "Vehículo" ? "" : desc;
+        formTurno.vehiculo.value = desc === t("Vehículo") ? "" : desc;
         cont.querySelectorAll(".tn-auto").forEach((c) => c.classList.remove("is-elegido"));
         card.classList.add("is-elegido");
         pasoServicio.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -355,16 +357,16 @@ async function cargarMisTurnos() {
     cont.append(card);
   });
   if (!datos.vehiculos.length) {
-    cont.append(crear("p", "tn-mios__ayuda", "Todavía no tenés vehículos. Se agregan solos cuando pedís tu primer turno."));
+    cont.append(crear("p", "tn-mios__ayuda", t("Todavía no tenés vehículos. Se agregan solos cuando pedís tu primer turno.")));
   }
   misTurnos.hidden = false;
 }
 
-async function cancelarTurno(t) {
-  if (!confirm(`¿Cancelar el turno del ${textoTurno(t)} (${t.patente})?`)) return;
+async function cancelarTurno(tu) {
+  if (!confirm(t("¿Cancelar el turno del {0} ({1})?", textoTurno(tu), tu.patente))) return;
   const fd = new FormData();
   fd.append("accion", "cancelar");
-  fd.append("id", t.id_turno);
+  fd.append("id", tu.id_turno);
   try {
     await pedirJSON("./php/mis_turnos.php", { method: "POST", body: fd });
     cargarMisTurnos();

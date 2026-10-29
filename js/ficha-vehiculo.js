@@ -10,16 +10,16 @@ const FichaVehiculo = (() => {
   const fmtFecha = (iso) => {
     if (!iso) return "";
     const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
-    return new Date(y, m - 1, d).toLocaleDateString("es-AR", { day: "numeric", month: "short", year: "numeric" });
+    return new Date(y, m - 1, d).toLocaleDateString(LOCALE, { day: "numeric", month: "short", year: "numeric" });
   };
 
   // valor para mostrar
   function texto(c, v) {
     if (v === null || v === undefined || v === "") return "";
     if (c.tipo === "opcion") return c.opciones?.[v] ?? v;
-    if (c.tipo === "si_no") return Number(v) ? "Sí" : "No";
+    if (c.tipo === "si_no") return Number(v) ? t("Sí") : t("No");
     if (c.tipo === "fecha") return fmtFecha(v);
-    if (c.tipo === "decimal") return Number(v).toLocaleString("es-AR");
+    if (c.tipo === "decimal") return Number(v).toLocaleString(LOCALE);
     return String(v);
   }
 
@@ -42,7 +42,7 @@ const FichaVehiculo = (() => {
   function control(c, valor) {
     const v = valor ?? "";
     if (c.tipo === "opcion" || c.tipo === "si_no") {
-      const opciones = c.tipo === "si_no" ? { 1: "Sí", 0: "No" } : c.opciones;
+      const opciones = c.tipo === "si_no" ? { 1: t("Sí"), 0: t("No") } : c.opciones;
       const s = el("select", { className: "ps-input", name: c.campo }, el("option", { value: "", textContent: "—" }));
       Object.entries(opciones).forEach(([val, txt]) => s.append(el("option", { value: val, textContent: txt })));
       s.value = String(v);
@@ -99,7 +99,7 @@ const FichaVehiculo = (() => {
     const img = el("img", { alt: "" });
     const pintar = () => {
       img.src = fotos[i].url;
-      img.alt = `Foto ${i + 1} de ${fotos.length}`;
+      img.alt = t("Foto {0} de {1}", i + 1, fotos.length);
       cuenta.textContent = `${i + 1} / ${fotos.length}`;
     };
     const mover = (d) => {
@@ -113,9 +113,9 @@ const FichaVehiculo = (() => {
       b.addEventListener("click", fn);
       return b;
     };
-    visor.replaceChildren(img, cuenta, boton("×", "fv-visor__cerrar", () => visor.close(), "Cerrar"));
+    visor.replaceChildren(img, cuenta, boton("×", "fv-visor__cerrar", () => visor.close(), t("Cerrar")));
     if (fotos.length > 1) {
-      visor.append(boton("‹", "fv-visor__ant", () => mover(-1), "Anterior"), boton("›", "fv-visor__sig", () => mover(1), "Siguiente"));
+      visor.append(boton("‹", "fv-visor__ant", () => mover(-1), t("Anterior")), boton("›", "fv-visor__sig", () => mover(1), t("Siguiente")));
     }
     visor.onkeydown = (e) => {
       if (e.key === "ArrowLeft") mover(-1);
@@ -135,24 +135,24 @@ const FichaVehiculo = (() => {
     const grilla = el("div", { className: "fv-fotos" });
     o.fotos.forEach((f, i) => {
       const fig = el("figure", { className: "fv-foto" + (Number(f.id_foto) === Number(o.portada) ? " is-portada" : "") });
-      const ver = el("button", { type: "button", className: "fv-foto__ver" }, el("img", { src: f.url, alt: `Foto ${i + 1}`, loading: "lazy" }));
+      const ver = el("button", { type: "button", className: "fv-foto__ver" }, el("img", { src: f.url, alt: t("Foto {0}", i + 1), loading: "lazy" }));
       ver.addEventListener("click", () => ampliar(o.fotos, i));
       fig.append(ver);
       const acciones = el("figcaption", { className: "fv-foto__acciones" });
-      if (f.subida_por === "taller") acciones.append(el("span", { className: "fv-foto__chip", textContent: "Taller" }));
+      if (f.subida_por === "taller") acciones.append(el("span", { className: "fv-foto__chip", textContent: t("Taller") }));
       if (o.elegirPortada && i > 0) {
         const b = el("button", { type: "button", className: "fv-foto__accion", textContent: "★" });
-        b.title = "Usar como portada";
-        b.setAttribute("aria-label", "Usar como portada");
+        b.title = t("Usar como portada");
+        b.setAttribute("aria-label", t("Usar como portada"));
         b.addEventListener("click", () => o.elegirPortada(f).then(o.alTerminar).catch((e) => o.avisar(e.message, true)));
         acciones.append(b);
       }
       if (o.puedeQuitar(f)) {
         const b = el("button", { type: "button", className: "fv-foto__accion", textContent: "×" });
-        b.title = "Quitar foto";
-        b.setAttribute("aria-label", "Quitar foto");
+        b.title = t("Quitar foto");
+        b.setAttribute("aria-label", t("Quitar foto"));
         b.addEventListener("click", async () => {
-          if (!confirm("¿Quitar esta foto?")) return;
+          if (!confirm(t("¿Quitar esta foto?"))) return;
           try {
             await o.quitar(f);
             o.alTerminar();
@@ -170,14 +170,14 @@ const FichaVehiculo = (() => {
     if (o.puedeSubir && lugar > 0) {
       const input = el("input", { type: "file", accept: "image/jpeg,image/png,image/webp", multiple: true, className: "sr-only" });
       const sumar = el("label", { className: "fv-fotos__sumar" }, input, el("strong", { textContent: "+" }),
-        el("span", { textContent: o.fotos.length ? "Sumar fotos" : "Subir fotos" }));
+        el("span", { textContent: o.fotos.length ? t("Sumar fotos") : t("Subir fotos") }));
       input.addEventListener("change", async () => {
         const archivos = [...input.files].slice(0, lugar);
-        if (input.files.length > lugar) o.avisar(`Se suben ${lugar} (el máximo es ${o.max} fotos).`, true);
+        if (input.files.length > lugar) o.avisar(t("Se suben {0} (el máximo es {1} fotos).", lugar, o.max), true);
         const estado = sumar.querySelector("span");
         let errores = 0;
         for (let i = 0; i < archivos.length; i++) {
-          estado.textContent = `Subiendo ${i + 1} de ${archivos.length}…`;
+          estado.textContent = t("Subiendo {0} de {1}…", i + 1, archivos.length);
           try {
             await o.subir(archivos[i]);
           } catch (e) {
@@ -185,14 +185,14 @@ const FichaVehiculo = (() => {
             o.avisar(`${archivos[i].name}: ${e.message}`, true);
           }
         }
-        if (!errores && archivos.length) o.avisar(archivos.length === 1 ? "Foto subida." : `${archivos.length} fotos subidas.`);
+        if (!errores && archivos.length) o.avisar(archivos.length === 1 ? t("Foto subida.") : t("{0} fotos subidas.", archivos.length));
         o.alTerminar();
       });
       grilla.append(sumar);
     }
-    if (!o.fotos.length && !(o.puedeSubir && lugar > 0)) grilla.append(el("p", { className: "ps-sin", textContent: "Sin fotos." }));
+    if (!o.fotos.length && !(o.puedeSubir && lugar > 0)) grilla.append(el("p", { className: "ps-sin", textContent: t("Sin fotos.") }));
     cont.append(grilla);
-    if (o.puedeSubir) cont.append(el("p", { className: "fv-ayuda", textContent: `Hasta ${o.max} fotos (JPG, PNG o WEBP, máx. 8 MB cada una).` }));
+    if (o.puedeSubir) cont.append(el("p", { className: "fv-ayuda", textContent: t("Hasta {0} fotos (JPG, PNG o WEBP, máx. 8 MB cada una).", o.max) }));
     return cont;
   }
 

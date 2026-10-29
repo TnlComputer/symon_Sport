@@ -489,8 +489,8 @@ async function abrirHistorial(patente) {
     h.pendientes.forEach((p) => linea.append(itemLinea({
       clase: "cl-linea__item--pendiente",
       fecha: p.fecha_presu,
-      titulo: `Presupuesto #${p.id_presu} pendiente`,
-      texto: p.descripcion_presu,
+      titulo: `Presupuesto #${p.id_presu} ` + ({ aprobado: "aprobado por el cliente", rechazado: "rechazado por el cliente" }[p.respuesta_cliente] || "pendiente"),
+      texto: [p.descripcion_presu, p.respuesta_motivo ? `Comentario del cliente: ${p.respuesta_motivo}` : ""].filter(Boolean).join(" · "),
       monto: p.total_presu,
       href: `presupuestos.php?id=${p.id_presu}`,
     })));
@@ -504,6 +504,17 @@ async function abrirHistorial(patente) {
       monto: r.total_presu,
       href: `reparaciones.php?id=${r.id_trabajo}`,
     })));
+    h.otros.forEach((o) => linea.append(itemLinea({
+      clase: "cl-linea__item--otro",
+      fecha: o.fecha,
+      titulo: o.descripcion,
+      texto: o.detalle,
+      datos: [o.km ? `${Number(o.km).toLocaleString("es-AR")} km` : "", o.realizado_por === "cliente" ? "lo hizo el cliente" : `otro taller${o.taller_nombre ? `: ${o.taller_nombre}` : ""}`,
+        o.quien ? `cargado por ${o.quien}` : ""].filter(Boolean).join(" · "),
+      monto: o.costo,
+    })));
+    // los trabajos (del taller y de otros), del más nuevo al más viejo; los presupuestos pendientes quedan arriba
+    [...linea.children].filter((li) => !li.classList.contains("cl-linea__item--pendiente")).sort((a, b) => (b.dataset.fecha || "").localeCompare(a.dataset.fecha || "")).forEach((li) => linea.append(li));
     if (!linea.children.length) linea.append(el("li", { className: "ps-sin", textContent: "Este vehículo todavía no tiene trabajos registrados." }));
     $("cl-sec-historial").hidden = false;
     pintarVehiculos();
@@ -514,7 +525,7 @@ async function abrirHistorial(patente) {
 }
 
 function itemLinea({ clase = "", fecha, titulo, texto, datos, monto, href }) {
-  return el("li", { className: "cl-linea__item " + clase },
+  const li = el("li", { className: "cl-linea__item " + clase },
     el("span", { className: "cl-linea__fecha", textContent: fmtFecha(fecha) }),
     el("div", { className: "cl-linea__cuerpo" },
       el("strong", { textContent: titulo }),
@@ -523,6 +534,8 @@ function itemLinea({ clase = "", fecha, titulo, texto, datos, monto, href }) {
     el("div", { className: "cl-linea__monto" },
       Number(monto) ? el("span", { textContent: pesos(monto) }) : null,
       href ? el("a", { className: "au-link", href, textContent: "Ver" }) : null));
+  li.dataset.fecha = fecha || "";
+  return li;
 }
 
 function cerrarHistorial() {
@@ -547,7 +560,8 @@ function pintarPresupuestos() {
       el("span", { className: "ps-card__num", textContent: `#${p.id_presu}` }),
       el("span", { className: "tn-placa cl-placa-chica", textContent: p.patente || "—" }),
       el("span", { className: "cl-presu__desc", textContent: p.descripcion_presu || "" }),
-      el("span", { className: "ps-chip" + (Number(p.usado) ? " ps-chip--ok" : ""), textContent: Number(p.usado) ? "Aprobado" : "Pendiente" }),
+      el("span", { className: "ps-chip" + (Number(p.usado) || p.respuesta_cliente === "aprobado" ? " ps-chip--ok" : p.respuesta_cliente === "rechazado" ? " mg-chip--vencido" : ""),
+        textContent: Number(p.usado) ? "Aprobado" : { aprobado: "Aprobado por el cliente", rechazado: "Rechazado por el cliente" }[p.respuesta_cliente] || "Pendiente" }),
       el("strong", { className: "cl-presu__total", textContent: pesos(p.total_presu) })));
   });
 }
