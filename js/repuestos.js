@@ -64,8 +64,8 @@ async function cargar() {
     llenarOpciones("#rp-aumento .rp-sel-categoria", datos.categorias, "Todas");
     llenarOpciones("#rp-aumento .rp-sel-proveedor", datos.proveedores, "Todos");
     llenarOpciones("#rp-filtro-categoria", datos.categorias, "Todas las categorías");
-    document.getElementById("rp-lista-categorias").innerHTML = datos.categorias.map((c) => `<option value="${c.replace(/"/g, "&quot;")}">`).join("");
-    document.getElementById("rp-lista-proveedores").innerHTML = datos.proveedores.map((c) => `<option value="${c.replace(/"/g, "&quot;")}">`).join("");
+    document.getElementById("rp-lista-categorias").replaceChildren(...datos.categorias.map((c) => Object.assign(document.createElement("option"), { value: c })));
+    document.getElementById("rp-lista-proveedores").replaceChildren(...datos.proveedores.map((c) => Object.assign(document.createElement("option"), { value: c })));
 
     pintar(datos.repuestos);
   } catch (e) {

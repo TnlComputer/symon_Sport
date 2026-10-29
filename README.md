@@ -133,7 +133,9 @@ La ficha del cliente en **Clientes** reúne:
 
 | Tema | Cómo se resuelve |
 |---|---|
-| Sesión | Cookie `HttpOnly`, `SameSite=Lax`, `Secure` con HTTPS, modo estricto y id regenerado al ingresar |
+| Sesión | Cookie `HttpOnly`, `SameSite=Lax`, `Secure` con HTTPS, modo estricto, id regenerado al ingresar y **cierre automático tras 2 horas sin uso** (`SESION_INACTIVA_MIN` en `includes/bootstrap.php`) |
+| HTML inyectado | Los datos se muestran con `textContent` o creando nodos, nunca armando HTML con datos de la base o del usuario. Además, la CSP bloquea cualquier script inyectado |
+| Dependencias | **No hay librerías de terceros** (ni npm, ni Composer, ni jQuery/Bootstrap), así que no hay paquetes que actualizar por vulnerabilidades. Lo que sí hay que mantener al día es **la versión de PHP y de MySQL del hosting** |
 | CSRF | Todo POST lleva el token. `js/scripts.js` lo agrega solo a cada `fetch` (cabecera `X-CSRF-Token`) y `bootstrap.php` rechaza el envío si falta |
 | Cabeceras | CSP estricta, HSTS, `X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy` |
 | SQL | **Solo consultas preparadas.** Los nombres de columna dinámicos salen siempre de listas fijas del código |

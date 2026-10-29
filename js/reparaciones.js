@@ -126,9 +126,9 @@ async function loadPresupuestos(datos) {
       if (dataAR === "error") {
         console.log(dataAR);
       } else {
-        mPatente.innerHTML = `${dataAR.patente}`;
-        mMarca.innerHTML = `${dataAR.marca}`;
-        mModelo.innerHTML = `${dataAR.modelo}`;
+        mPatente.textContent = dataAR.patente ?? "";
+        mMarca.textContent = dataAR.marca ?? "";
+        mModelo.textContent = dataAR.modelo ?? "";
       }
     });
 }

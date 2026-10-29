@@ -57,7 +57,7 @@ function contactForm() {
         // console.log(json);
         $loader.classList.add("none");
         $response.classList.remove("none");
-        $response.innerHTML = `<p>${json.message}</p>`;
+        $response.replaceChildren(Object.assign(document.createElement("p"), { textContent: json.message }));
         // console.log(res);
         $form.reset();
       })
@@ -65,7 +65,7 @@ function contactForm() {
         // console.log(err);
         let message =
           err.statusText || "Ocurrió un error al enviar, intenta nuevamente";
-        $response.innerHTML = `<p>Error ${err.status}: ${message}</p>`;
+        $response.replaceChildren(Object.assign(document.createElement("p"), { textContent: `Error ${err.status}: ${message}` }));
       })
       .finally(() => {
         $loader.classList.add("none");

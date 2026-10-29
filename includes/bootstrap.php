@@ -4,7 +4,7 @@
 if (defined('SSP_BOOT')) return;
 define('SSP_BOOT', true);
 
-const VERSION_ASSETS = '20261107';
+const VERSION_ASSETS = '20261108';
 const SITIO_URL = 'https://symonsport.com.ar';
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
@@ -29,6 +29,17 @@ if (session_status() === PHP_SESSION_NONE) {
     'secure' => esHttps(),
   ]);
   session_start();
+}
+
+/* ---------- Vencimiento por inactividad ---------- */
+// Si nadie usa la sesión durante este tiempo, se cierra (ej. la PC del taller quedó abierta)
+const SESION_INACTIVA_MIN = 120;
+if (!empty($_SESSION['datos'])) {
+  if (isset($_SESSION['ultimo_uso']) && time() - $_SESSION['ultimo_uso'] > SESION_INACTIVA_MIN * 60) {
+    $_SESSION = [];
+    session_regenerate_id(true);
+  }
+  $_SESSION['ultimo_uso'] = time();
 }
 
 /* ---------- Cabeceras de seguridad ---------- */
