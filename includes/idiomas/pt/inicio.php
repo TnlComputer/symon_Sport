@@ -75,6 +75,7 @@ return [
   'Es un anhelo de muchos años para quienes formamos parte de Symon Sport generar un espacio donde podamos implementar procesos que nos aseguren crear un nuevo estándar de atención en post venta.' => 'Para quem faz parte da Symon Sport, é um sonho de muitos anos criar um espaço onde possamos implementar processos que nos garantam um novo padrão de atendimento pós-venda.',
   'Un espacio donde manejarnos con cordialidad sea la premisa y la satisfacción de nuestros clientes, la meta.' => 'Um espaço onde a cordialidade seja a premissa e a satisfação dos nossos clientes, a meta.',
   'Equipo Symon Sport' => 'Equipe Symon Sport',
+  'Autos en reparación dentro del taller Symon Sport' => 'Carros em reparo dentro da oficina Symon Sport',
   'Mantenimiento' => 'Manutenção',
   'Consejos para tu auto' => 'Dicas para o seu carro',
   'Neumáticos' => 'Pneus',

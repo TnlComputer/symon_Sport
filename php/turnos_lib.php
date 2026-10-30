@@ -17,7 +17,7 @@ function turnosConfig($db)
 {
   $config = [
     'intervalo_min' => 30,
-    'capacidad' => 1,
+    'capacidad' => 3,
     'dias_max' => 30,
     'anticipacion_min_horas' => 2,
     'email_aviso' => '',

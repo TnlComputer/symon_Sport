@@ -75,6 +75,7 @@ return [
   'Es un anhelo de muchos años para quienes formamos parte de Symon Sport generar un espacio donde podamos implementar procesos que nos aseguren crear un nuevo estándar de atención en post venta.' => 'For all of us at Symon Sport, it has long been our goal to create a place where we can put processes in place that let us set a new standard in after-sales service.',
   'Un espacio donde manejarnos con cordialidad sea la premisa y la satisfacción de nuestros clientes, la meta.' => 'A place where courtesy is the premise and our customers\' satisfaction is the goal.',
   'Equipo Symon Sport' => 'The Symon Sport team',
+  'Autos en reparación dentro del taller Symon Sport' => 'Cars being repaired inside the Symon Sport workshop',
   'Mantenimiento' => 'Maintenance',
   'Consejos para tu auto' => 'Car care tips',
   'Neumáticos' => 'Tires',

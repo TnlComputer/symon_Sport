@@ -229,10 +229,19 @@ HTML,
           <p><?= e(t('Poseemos una gran trayectoria en el mercado automotriz y nuestros logros profesionales están directamente relacionados con el incesante foco en la calidad total.')) ?></p>
           <p><?= e(t('Es un anhelo de muchos años para quienes formamos parte de Symon Sport generar un espacio donde podamos implementar procesos que nos aseguren crear un nuevo estándar de atención en post venta.')) ?></p>
         </div>
-        <blockquote class="lp-quote">
-          <p>“<?= e(t('Un espacio donde manejarnos con cordialidad sea la premisa y la satisfacción de nuestros clientes, la meta.')) ?>”</p>
-          <cite><?= e(t('Equipo Symon Sport')) ?></cite>
-        </blockquote>
+        <div class="lp-about__visual">
+          <figure class="lp-about__foto">
+            <picture>
+              <source srcset="assets/img/taller-autos.webp" type="image/webp">
+              <img src="assets/img/taller-autos.jpg" alt="<?= e(t('Autos en reparación dentro del taller Symon Sport')) ?>"
+                width="1280" height="720" loading="lazy" decoding="async">
+            </picture>
+          </figure>
+          <blockquote class="lp-quote">
+            <p>“<?= e(t('Un espacio donde manejarnos con cordialidad sea la premisa y la satisfacción de nuestros clientes, la meta.')) ?>”</p>
+            <cite><?= e(t('Equipo Symon Sport')) ?></cite>
+          </blockquote>
+        </div>
       </div>
     </section>
 

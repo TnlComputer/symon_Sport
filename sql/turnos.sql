@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS turnos (
 
 INSERT INTO turnos_config (clave, valor, descripcion) VALUES
   ('intervalo_min', '30', 'Cada cuántos minutos se ofrece un horario'),
-  ('capacidad', '1', 'Cuántos vehículos se pueden atender al mismo tiempo'),
+  ('capacidad', '3', 'Cuántos vehículos se pueden atender al mismo tiempo'),
   ('dias_max', '30', 'Hasta cuántos días hacia adelante se puede reservar'),
   ('anticipacion_min_horas', '2', 'Mínimo de horas de anticipación para pedir un turno'),
   ('email_aviso', 'anacoretomarcelo72@gmail.com', 'Mail que recibe el aviso de cada turno nuevo')

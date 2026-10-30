@@ -116,7 +116,7 @@ La ficha del cliente en **Clientes** reúne:
 │   └── *_api.php, ...    endpoints (ver más abajo)
 ├── js/                   un archivo por página + scripts.js (común) + ficha-vehiculo.js (compartido)
 ├── css/style.css         estilos de todo el sitio
-├── assets/img/           logos, íconos, favicon
+├── assets/img/           logos, íconos, favicon y fotos del taller
 ├── uploads/              fotos subidas (no está en git, salvo su .htaccess); las quitadas pasan a uploads/baja/
 ├── sql/                  scripts de creación / migración de la base
 ├── deploy/               reglas para el .htaccess del hosting y plantilla de conexión
@@ -302,7 +302,7 @@ Checklist para cuando se migre el hosting o el dominio:
 7. **`.htaccess`:** agregar las reglas de `deploy/htaccess.txt` **debajo** de las del SSL, sin reemplazar el archivo existente. Bloquean carpetas internas, redirigen `.html` → `.php` y activan compresión y caché.
 8. **Carpeta `uploads/`:** tiene que existir, poder escribirse por PHP y conservar su `.htaccess`, igual que `uploads/baja/` (fotos quitadas; su `.htaccess` impide verlas). PHP necesita **GD con WebP**.
 9. **Admins:** dar rol `admin` a las cuentas del taller (ver [Puesta en marcha en local](#puesta-en-marcha-en-local), paso 4) y marcar como `protegido` la cuenta del desarrollador (ver `sql/usuarios_v2.sql`). Desde ahí, el resto de los usuarios se maneja desde la pantalla **Usuarios**.
-10. **Agenda → Configuración:** importar feriados (año actual y siguiente), cargar los no laborables propios y revisar horarios, capacidad y duraciones.
+10. **Agenda → Configuración:** importar feriados (año actual y siguiente), cargar los no laborables propios y revisar horarios, capacidad (arranca en 3 autos a la vez, según las fotos del taller) y duraciones.
 
 ---
 

@@ -5,4 +5,5 @@
 <IfModule mod_php.c>
   php_flag engine off
 </IfModule>
-Options -Indexes -ExecCGI
+# (sin -ExecCGI: el hosting no permite cambiarlo y da error 500; los scripts ya quedan bloqueados arriba)
+Options -Indexes
