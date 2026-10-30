@@ -21,9 +21,10 @@ Producción: <https://symonsport.com.ar>
 7. [Base de datos](#base-de-datos)
 8. [Puesta en marcha en local](#puesta-en-marcha-en-local)
 9. [Pase a producción](#pase-a-producción)
-10. [Endpoints (API)](#endpoints-api)
-11. [Convenciones para seguir trabajando](#convenciones-para-seguir-trabajando)
-12. [Pendientes conocidos](#pendientes-conocidos)
+10. [Hosting actual](#hosting-actual)
+11. [Endpoints (API)](#endpoints-api)
+12. [Convenciones para seguir trabajando](#convenciones-para-seguir-trabajando)
+13. [Pendientes conocidos](#pendientes-conocidos)
 
 ---
 
@@ -33,7 +34,7 @@ Producción: <https://symonsport.com.ar>
 |---|---|
 | Servidor | PHP **8.0 o superior** (se usa `str_contains`, `str_starts_with`, `match`), probado con 8.3 |
 | Extensiones PHP | `mysqli`, `gd` **con soporte WebP** (fotos), `exif` (opcional: orientación de fotos del celular), `openssl` |
-| Base de datos | MySQL 8 / MariaDB 10.4+ (`utf8mb4`) |
+| Base de datos | MySQL 8 (local) / MariaDB 10.4+ (el hosting usa 10.6) con `utf8mb4` |
 | Web | Apache con `mod_rewrite` (hosting cPanel). En local, el servidor embebido de PHP con `router.php` |
 | Mail | `mail()` de PHP (el del hosting) |
 | Front | HTML + CSS + JavaScript sin frameworks ni build. Una sola hoja `css/style.css` |
@@ -116,7 +117,7 @@ La ficha del cliente en **Clientes** reúne:
 │   └── *_api.php, ...    endpoints (ver más abajo)
 ├── js/                   un archivo por página + scripts.js (común) + ficha-vehiculo.js (compartido)
 ├── css/style.css         estilos de todo el sitio
-├── assets/img/           logos, íconos, favicon y fotos del taller
+├── assets/img/           logos, íconos, favicon y fotos del taller (taller-*.jpg/.webp)
 ├── uploads/              fotos subidas (no está en git, salvo su .htaccess); las quitadas pasan a uploads/baja/
 ├── sql/                  scripts de creación / migración de la base
 ├── deploy/               reglas para el .htaccess del hosting y plantilla de conexión
@@ -304,6 +305,59 @@ Checklist para cuando se migre el hosting o el dominio:
 9. **Admins:** dar rol `admin` a las cuentas del taller (ver [Puesta en marcha en local](#puesta-en-marcha-en-local), paso 4) y marcar como `protegido` la cuenta del desarrollador (ver `sql/usuarios_v2.sql`). Desde ahí, el resto de los usuarios se maneja desde la pantalla **Usuarios**.
 10. **Agenda → Configuración:** importar feriados (año actual y siguiente), cargar los no laborables propios y revisar horarios, capacidad (arranca en 3 autos a la vez, según las fotos del taller) y duraciones.
 
+## Hosting actual
+
+Estado al 29/10/2026: **el sitio y la base ya están en el hosting**, pero el dominio todavía no apunta al servidor.
+
+| Dato | Valor |
+|---|---|
+| Servidor | Hosting de TNL, cuenta `symonsport`, IP `190.7.19.49` |
+| DNS a configurar en el dominio | `ns1.hrdns.info` y `ns2.hrdns.info` |
+| FTP | `ftp.tnlcomputer.com.ar` con TLS (FTPS), usuario `creador@symonsport.com.ar`. La raíz del sitio es `public_html/` |
+| PHP | 8.3, con GD (WebP), mysqli, zip y mail |
+| Base | **MariaDB 10.6**, base `symonsport_db`, usuario `symonsport_admin` (solo `localhost`) |
+| Claves | **No van en el repositorio.** Las tiene el responsable de TNL |
+
+### Ver el sitio antes de que el dominio funcione
+
+La dirección `http://190.7.19.49/~symonsport/` **no funciona**, porque el servidor no tiene habilitado UserDir. Para verlo, agregar al archivo `hosts` de la PC (`C:\Windows\System32\drivers\etc\hosts`, abierto como administrador):
+
+```
+190.7.19.49 symonsport.com.ar
+190.7.19.49 www.symonsport.com.ar
+```
+
+y entrar a `http://symonsport.com.ar` (con `http`, todavía no hay SSL). **Borrar esas líneas cuando el dominio apunte al servidor.**
+
+### Qué se sube y qué no
+
+Se sube todo el repositorio **menos** `sql/`, `deploy/`, `README.md` y `router.php`, que es solo para el servidor local. Archivos que existen **solo en el servidor** y no están en git:
+
+- `php/connections/conexion.php`, armado desde `deploy/conexion-ejemplo.php` con los datos de la base. Desde la web da 403.
+- `.htaccess` de la raíz: son las reglas de `deploy/htaccess.txt`. Cuando se instale el SSL, sus reglas van **arriba** de estas.
+- Las fotos de `uploads/`, que suben los usuarios.
+
+Para comprobar que el hosting quedó igual al repositorio, comparar el MD5 de cada archivo local contra el bajado por FTP.
+
+### Particularidades del hosting
+
+- **MariaDB, no MySQL 8:** un volcado hecho en local (MySQL 8) trae `utf8mb4_0900_ai_ci`, que MariaDB no conoce. Antes de importar, reemplazarlo por `utf8mb4_unicode_ci`.
+- **Sin acceso remoto a cPanel ni a MySQL:** los puertos 2082/2083 están cerrados desde afuera. Para importar la base se subió el volcado por FTP **fuera de `public_html`** y un script PHP temporal, con nombre al azar, que lo ejecutó. Los dos se borraron al terminar.
+- **`Options -ExecCGI` no está permitido** en `.htaccess` y da error 500. Por eso `uploads/.htaccess` usa solo `Options -Indexes`. Los scripts quedan bloqueados igual por el `FilesMatch`.
+- El FTP a veces corta con error 451 o se queda sin responder: reintentar el archivo.
+
+### Datos cargados
+
+Se importó una **copia completa de la base local** (30 tablas), **incluidos los datos de prueba**: clientes, autos y presupuestos ficticios, las listas de Distribuidora Sur y Frenos SA, y los usuarios `@ejemplo.test` (entre ellos `admin.prueba`). Hay que darlos de baja antes de abrir el sitio al público.
+
+### Falta para abrir el sitio
+
+1. Apuntar el dominio a los DNS de arriba.
+2. Instalar el SSL y forzar `https` (reglas arriba de las de `deploy/htaccess.txt`).
+3. OAuth (paso 6 del checklist) e importar los feriados (paso 10).
+4. Dar de baja los datos de prueba.
+5. Borrar en el panel el usuario de base `symonsport_db`, que no se usa y tiene mal escrita la IP permitida.
+
 ---
 
 ## Endpoints (API)
@@ -342,6 +396,7 @@ Todos responden JSON. Los POST requieren el token CSRF, que `js/scripts.js` agre
   - Si es de admin, incluir `php/admin_lib.php` (ya exige el rol) y usar `q()` para consultas preparadas.
   - Responder siempre JSON y, ante un error, `{ error }` con un código 4xx.
 - **Al cambiar CSS o JS**, subir `VERSION_ASSETS` en `includes/bootstrap.php`.
+- **Fotos del taller:** antes de publicarlas, pixelar las patentes de los autos de clientes. Se guardan como `assets/img/taller-*.jpg` + `.webp`. Las originales van a `assets/img/originales/`, que no se sube ni a git ni al hosting.
 - **Base de datos:** cada cambio va en un script nuevo en `sql/`, que se suma a la tabla de orden de este README.
 - **Estilos:** reutilizar las variables de `:root` (`--ancho-max`, `--lp-*`, `--text-ssp`, etc.) y los componentes existentes (`tn-card`, `ps-*`, `cl-*`, `fv-*`, `mg-*`).
 

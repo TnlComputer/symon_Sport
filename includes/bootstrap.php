@@ -4,7 +4,7 @@
 if (defined('SSP_BOOT')) return;
 define('SSP_BOOT', true);
 
-const VERSION_ASSETS = '20261116';
+const VERSION_ASSETS = '20261117';
 const SITIO_URL = 'https://symonsport.com.ar';
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
